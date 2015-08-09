@@ -3,10 +3,10 @@
 ;; Copyright (C) 2015 Daniel Bordak
 
 ;; Author: Daniel Bordak <dbordak@fastmail.fm>
-;; URL:
+;; URL: https://github.com/dbordak/telephone-line
 ;; Version: 0.1
 ;; Keywords: mode-line
-;; Package-Requires: ((cl-lib "0.2") (memoize "1.0.1") (names "0.5") (s "1.9.0") (seq "1.3"))
+;; Package-Requires: ((cl-lib "0.5") (memoize "1.0.1") (names "0.5") (s "1.9.0") (seq "1.3"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -142,8 +142,7 @@ Secondary separators do not incur a background color change."
     (setq selected-window (frame-selected-window))))
 
 (add-hook 'window-configuration-change-hook #'-set-selected-window)
-(defadvice select-window (after select-window activate)
-  (-set-selected-window))
+(defadvice select-window (after select-window activate) (-set-selected-window))
 
 :autoload
 (defun selected-window-active ()
