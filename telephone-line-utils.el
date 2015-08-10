@@ -24,43 +24,45 @@
 (require 'seq)
 (require 'color)
 
-(defcustom telephone-line-height nil
+(define-namespace telephone-line-
+
+(defcustom height nil
   "Override the mode-line height."
   :group 'telephone-line
   :type '(choice integer (const nil)))
 
-(defcustom telephone-line-separator-extra-padding 1
+(defcustom separator-extra-padding 1
   "Extra spacing around separators."
   :group 'telephone-line
   :type '(choice integer))
 
-(defcustom telephone-line-evil-use-short-tag nil
+(defcustom evil-use-short-tag nil
   "If non-nil, use an abbreviated name for the evil mode tag."
   :type 'boolean
   :group 'telephone-line-evil)
 
-(defun telephone-line-separator-height ()
+(defun separator-height ()
   "Get the height for a telephone-line separator."
-  (or telephone-line-height (frame-char-height)))
+  (or height (frame-char-height)))
 
-(defun telephone-line-separator-width ()
+(defun separator-width ()
   "Get the default width for a telephone-line separator."
-  (ceiling (telephone-line-separator-height) 2))
+  (ceiling (separator-height) 2))
 
-(defun telephone-line-create-axis (length)
+(defun create-axis (length)
   "Create an axis of length LENGTH."
   (let ((middle (1- (ceiling length 2))))
     (append (number-sequence (- middle) 0)
             (number-sequence (if (cl-oddp length) 1 0) middle))))
 
-(defun telephone-line-normalize-axis (seq)
+(defun normalize-axis (seq)
   "Apply an offset to all values of SEQ such that its range begins at 0."
   (let ((minimum (seq-min seq)))
     (if (not (eq minimum 0))
         (mapcar (lambda (i) (- i minimum)) seq)
       seq)))
 
-(defun telephone-line-interpolate-rgb (color1 color2 &optional ratio)
+(defun interpolate-rgb (color1 color2 &optional ratio)
   "Interpolate between COLOR1 and COLOR2, with color1/color2 RATIO.
 When no RATIO is provided, produces the color halfway between
 color1 and color2."
@@ -71,7 +73,7 @@ color1 and color2."
                       (* (- 1 ratio) (nth n (color-name-to-rgb color2)))))
          '(0 1 2))))
 
-(defun telephone-line-color-to-bytestring (color)
+(defun color-to-bytestring (color)
   "Return an RGB bytestring for a given COLOR."
   (seq-mapcat (lambda (subc)
                 (byte-to-string (floor (* 255 subc))))
@@ -81,24 +83,24 @@ color1 and color2."
               'string))
 
 ;; TODO: error on non-rectangular input?
-(defun telephone-line--create-pbm-image (body fg-color bg-color)
+(defun -create-pbm-image (body fg-color bg-color)
   (create-image
    (concat
     (format "P6 %d %d 255 " (length (car body)) (length body))
     (seq-mapcat (lambda (pixel)
-                  (telephone-line-color-to-bytestring
-                   (telephone-line-interpolate-rgb bg-color fg-color pixel)))
+                  (color-to-bytestring
+                   (interpolate-rgb bg-color fg-color pixel)))
                 (seq-mapcat #'identity body)
                 'string))
    'pbm t
    :ascent 'center))
 
-(defun telephone-line-propertize-image (image)
+(defun propertize-image (image)
   "Return a propertized string of IMAGE."
   (propertize (make-string (ceiling (car (image-size image))) ? )
               'display image))
 
-(defun telephone-line-row-pattern (fill total)
+(defun row-pattern (fill total)
   "Make a PBM line that has FILL FG-COLOR bytes out of TOTAL BG-COLOR bytes."
   (seq-let (intfill rem) (floor* fill)
     (nconc
@@ -107,7 +109,7 @@ color1 and color2."
        (list* (- 1 rem) ;AA pixel
               (make-list (- total intfill 1) 1)))))) ;Right gap
 
-(defun telephone-line-row-pattern-hollow (padding total)
+(defun row-pattern-hollow (padding total)
   (seq-let (intpadding rem) (floor* padding)
     (nconc
      (make-list intpadding 1) ;Left gap
@@ -118,10 +120,9 @@ color1 and color2."
         (- 1 rem)  ;Right AA pixel
         (make-list (- total intpadding 2) 1)))))) ;Right gap
 
-(defun telephone-line-create-body (width height axis-func pattern-func)
+(defun create-body (width height axis-func pattern-func)
   "Create a bytestring of a PBM image body of dimensions WIDTH and HEIGHT, and shape created from AXIS-FUNC and PATTERN-FUNC."
-  (let* ((normalized-axis (telephone-line-normalize-axis
-                           (mapcar axis-func (telephone-line-create-axis height))))
+  (let* ((normalized-axis (normalize-axis (mapcar axis-func (create-axis height))))
          (range (1+ (seq-max normalized-axis)))
          (scaling-factor (/ width (float range))))
     (mapcar (lambda (x)
@@ -129,16 +130,16 @@ color1 and color2."
                        (* x scaling-factor) width))
             normalized-axis)))
 
-(defmacro telephone-line-negate-func (func)
+(defmacro negate-func (func)
   `(lambda (x)
      (- (,func x))))
 
-(defun telephone-line--separator-arg-handler (arg)
+(defun -separator-arg-handler (arg)
   (if (facep arg)
       (face-attribute arg :background)
     arg))
 
-(defmacro telephone-line--defseparator-internal (name body)
+(defmacro -defseparator-internal (name body)
   (declare (indent defun))
   `(defmemoize ,name (foreground background)
      (when window-system
@@ -148,7 +149,7 @@ color1 and color2."
          (telephone-line--separator-arg-handler background)
          (telephone-line--separator-arg-handler foreground))))))
 
-(defmacro telephone-line-defseparator (name axis-func pattern-func &optional forced-width)
+(defmacro defseparator (name axis-func pattern-func &optional forced-width)
   "Define a separator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH.
 
 NOTE: Forced-width primary separators are not currently supported."
@@ -157,7 +158,7 @@ NOTE: Forced-width primary separators are not currently supported."
            (width (or ,forced-width (telephone-line-separator-width))))
        (telephone-line-create-body width height ,axis-func ,pattern-func))))
 
-(defmacro telephone-line-defsubseparator (name axis-func pattern-func &optional forced-width)
+(defmacro defsubseparator (name axis-func pattern-func &optional forced-width)
   "Define a subseparator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH."
   `(telephone-line--defseparator-internal ,name
      (let* ((height (telephone-line-separator-height))
@@ -168,7 +169,7 @@ NOTE: Forced-width primary separators are not currently supported."
          (telephone-line-create-body width height ,axis-func ,pattern-func)
          char-width))))
 
-(defun telephone-line-pad-body (body char-width)
+(defun pad-body (body char-width)
   (let* ((body-width (length (car body)))
          (padding-width (- (* char-width (frame-char-width)) body-width))
          (left-padding (make-list (floor padding-width 2) 1))
@@ -178,14 +179,14 @@ NOTE: Forced-width primary separators are not currently supported."
             body)))
 
 :autoload
-(defmacro telephone-line-defsegment (name body)
+(defmacro defsegment (name body)
   "Create function NAME by wrapping BODY with telephone-line padding and propertization."
   (declare (indent defun))
   `(defun ,name (face)
      (telephone-line-raw ,body face)))
 
 :autoload
-(defmacro telephone-line-defsegment* (name body)
+(defmacro defsegment* (name body)
   "Create function NAME by wrapping BODY with telephone-line padding and propertization.
 Segment is not precompiled."
   (declare (indent defun))
@@ -193,7 +194,7 @@ Segment is not precompiled."
      (telephone-line-raw ,body)))
 
 :autoload
-(defmacro telephone-line-defsegment-plist (name plists)
+(defmacro defsegment-plist (name plists)
   (declare (indent defun))
   `(defun ,name (face)
      (telephone-line-raw
@@ -202,7 +203,7 @@ Segment is not precompiled."
                ,plists))))
 
 :autoload
-(defun telephone-line-raw (str &optional compiled)
+(defun raw (str &optional compiled)
   "Conditionally render STR as mode-line data, or just verify output if not COMPILED.
 Return nil for blank/empty strings."
   (let ((trimmed-str (s-trim (format-mode-line str))))
@@ -212,7 +213,7 @@ Return nil for blank/empty strings."
         str))))
 
 ;;Stole this bit from seq.el
-(defun telephone-line--activate-font-lock-keywords ()
+(defun -activate-font-lock-keywords ()
   "Activate font-lock keywords for some symbols defined in telephone-line."
   (font-lock-add-keywords 'emacs-lisp-mode
                           '("\\<telephone-line-defsegment*\\>"
@@ -223,7 +224,9 @@ Return nil for blank/empty strings."
 (unless (fboundp 'elisp--font-lock-flush-elisp-buffers)
   ;; In Emacs≥25, (via elisp--font-lock-flush-elisp-buffers and a few others)
   ;; we automatically highlight macros.
-  (add-hook 'emacs-lisp-mode-hook #'telephone-line--activate-font-lock-keywords))
+  (add-hook 'emacs-lisp-mode-hook #'-activate-font-lock-keywords))
+
+) ; End of namespace
 
 (provide 'telephone-line-utils)
 ;;; telephone-line-utils.el ends here
