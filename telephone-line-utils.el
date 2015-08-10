@@ -130,7 +130,7 @@ color1 and color2."
                        (* x scaling-factor) width))
             normalized-axis)))
 
-(defmacro negate-func (func)
+(defmacro complement (func)
   `(lambda (x)
      (- (,func x))))
 

@@ -56,11 +56,11 @@
 (telephone-line-defseparator telephone-line-abs-right
   #'abs #'telephone-line-row-pattern)
 (telephone-line-defseparator telephone-line-abs-left
-  (telephone-line-negate-func abs) #'telephone-line-row-pattern)
+  (telephone-line-complement abs) #'telephone-line-row-pattern)
 (telephone-line-defsubseparator telephone-line-abs-hollow-right
   #'abs #'telephone-line-row-pattern-hollow)
 (telephone-line-defsubseparator telephone-line-abs-hollow-left
-  (telephone-line-negate-func abs) #'telephone-line-row-pattern-hollow)
+  (telephone-line-complement abs) #'telephone-line-row-pattern-hollow)
 (telephone-line-defseparator telephone-line-cubed-right
   (lambda (x) (expt x 3)) #'telephone-line-row-pattern)
 (telephone-line-defseparator telephone-line-cubed-left
