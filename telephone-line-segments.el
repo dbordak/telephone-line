@@ -24,31 +24,25 @@
 
 (require 'telephone-line-utils)
 
-:autoload
 (telephone-line-defsegment telephone-line-vc-segment
   vc-mode)
 
-:autoload
 (telephone-line-defsegment telephone-line-process-segment
   mode-line-process)
 
-:autoload
 (telephone-line-defsegment telephone-line-position-segment
   (if (eq major-mode 'paradox-menu-mode)
       mode-line-front-space  ;Paradox fills this with position info.
     mode-line-position))
 
-:autoload
 (telephone-line-defsegment telephone-line-airline-position-segment
   (if (eq major-mode 'paradox-menu-mode)
       mode-line-front-space
     '((-3 "%p") " %4l:%3c")))
 
-:autoload
 (telephone-line-defsegment telephone-line-misc-info-segment
   mode-line-misc-info)
 
-:autoload
 (telephone-line-defsegment* telephone-line-buffer-segment
   `(""
     mode-line-mule-info
@@ -58,7 +52,6 @@
     mode-line-frame-identification
     ,(telephone-line-raw mode-line-buffer-identification t)))
 
-:autoload
 (telephone-line-defsegment-plist telephone-line-major-mode-segment
   (let ((recursive-edit-help-echo "Recursive edit, type C-M-c to get out"))
     `((:propertize "%[" help-echo ,recursive-edit-help-echo)
@@ -71,7 +64,6 @@ mouse-3: Toggle minor modes"
                    local-map ,mode-line-major-mode-keymap)
       (:propertize "%]" help-echo ,recursive-edit-help-echo))))
 
-:autoload
 (telephone-line-defsegment-plist telephone-line-minor-mode-segment
   `((:propertize ("" minor-mode-alist)
                  mouse-face mode-line-highlight
@@ -86,7 +78,6 @@ mouse-3: Toggle minor modes"
                  local-map ,(make-mode-line-mouse-map
                              'mouse-2 #'mode-line-widen))))
 
-:autoload
 (telephone-line-defsegment* telephone-line-erc-modified-channels-segment
   (s-with erc-modified-channels-object
     s-trim (s-chop-suffix "]") (s-chop-prefix "[")))
