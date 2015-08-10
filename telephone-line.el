@@ -6,7 +6,7 @@
 ;; URL: https://github.com/dbordak/telephone-line
 ;; Version: 0.1
 ;; Keywords: mode-line
-;; Package-Requires: ((cl-lib "0.5") (memoize "1.0.1") (names "0.5") (s "1.9.0") (seq "1.3"))
+;; Package-Requires: ((cl-lib "0.5") (memoize "1.0.1") (names "0.5") (s "1.9.0") (seq "1.8"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -240,35 +240,37 @@ separators, as they are conditional, are evaluated on-the-fly."
         (separator-width (/ (telephone-line-separator-width)
                             (float (frame-char-width)))))
     (if window-system
-      (+ base-width
-         (* num-separators (- separator-width (ceiling separator-width))))
+        (+ base-width
+           ;; Separators are (ceiling separator-width)-space strings,
+           ;; but their actual width is separator-width. base-width
+           ;; already includes the string width of those spaces, so we
+           ;; need the difference.
+           (* num-separators (- separator-width (ceiling separator-width))))
       base-width)))
 
 (defcustom lhs '((accent . (telephone-line-vc-segment))
-                 (nil . (telephone-line-minor-mode-segment
-                           telephone-line-buffer-segment)))
+                 (nil    . (telephone-line-minor-mode-segment
+                            telephone-line-buffer-segment)))
   "Left hand side segment alist."
   :type '(alist :key-type segment-color :value-type subsegment-list)
   :group 'telephone-line)
 
 (defcustom rhs '((accent . (telephone-line-position-segment))
-                 (nil . (misc-info-segment
-                           telephone-line-major-mode-segment)))
+                 (nil    . (misc-info-segment
+                            telephone-line-major-mode-segment)))
   "Right hand side segment alist."
   :type '(alist :key-type segment-color :value-type subsegment-list)
   :group 'telephone-line)
 
 (defun -generate-mode-line-lhs ()
-  (add-separators
-   (seq-reverse lhs)
-   telephone-line-primary-left-separator
-   telephone-line-secondary-left-separator))
+  (add-separators (seq-reverse lhs)
+                  primary-left-separator
+                  secondary-left-separator))
 
 (defun -generate-mode-line-rhs ()
-  (add-separators
-   rhs
-   telephone-line-primary-right-separator
-   telephone-line-secondary-right-separator))
+  (add-separators rhs
+                  primary-right-separator
+                  secondary-right-separator))
 
 (defun -generate-mode-line ()
   `(,@(telephone-line--generate-mode-line-lhs)
