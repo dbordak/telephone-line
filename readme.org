@@ -9,19 +9,19 @@ _easier customization_ and _antialiased separators_.
 
 First off, this is how they look
 
-[[./abs.png]]
+[[./screenshots/abs.png]]
 
 Classic powerline, called "abs" (you'll see why later).
 
-[[./cubed.png]]
+[[./screenshots/cubed.png]]
 
 Spacemacs' default separator, called "cubed".
 
-[[./gradient.png]]
+[[./screenshots/gradient.png]]
 
 A gradient separator.
 
-[[./to_the_right.png]]
+[[./screenshots/to_the_right.png]]
 
 You can use two right separators instead of a left and right, if you
 want.
