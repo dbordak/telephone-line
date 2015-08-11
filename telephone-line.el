@@ -35,6 +35,7 @@
 
 (require 'seq)
 (require 's)
+(require 'cl-lib)
 
 ;;;###autoload
 (define-namespace telephone-line-
@@ -170,7 +171,7 @@ Secondary separators do not incur a background color change."
 
       (cons
        (if accumulated-segments
-           (list*
+           (cl-list*
             cur-subsegments ;New segment
             ;; Separator
             `(:eval (funcall #',primary-sep
