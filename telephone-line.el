@@ -40,90 +40,73 @@
 (define-namespace telephone-line-
 
 (defface accent-active
-  '((t (:background "grey22" :inherit mode-line)))
+  '((t (:foreground "white" :background "grey22" :inherit mode-line)))
   "Accent face for mode-line."
   :group 'telephone-line)
 
 (defface accent-inactive
-  '((t (:background "grey11" :inherit mode-line-inactive)))
+  '((t (:foreground "white" :background "grey11" :inherit mode-line-inactive)))
   "Accent face for inactive mode-line."
   :group 'telephone-line)
 
+(defface evil
+  '((t (:foreground "white" :weight bold :inherit mode-line)))
+  "Meta-face used for property inheritance on all telephone-line-evil faces."
+  :group 'telephone-line-evil)
+
 (defface evil-insert
-  '((((class color))
-     :background "green" :weight bold :inherit mode-line)
-    (t (:weight bold)))
-  "face to fontify evil insert state"
+  '((t (:foreground "white" :background "green" :weight bold :inherit mode-line)))
+  "Face used in evil color-coded segments when in Insert state."
   :group 'telephone-line-evil)
 
 (defface evil-normal
-  '((((class color))
-     :background "red" :weight bold :inherit mode-line)
-    (t (:weight bold)))
-  "face to fontify evil normal state"
+  '((t (:foreground "white" :background "red" :weight bold :inherit mode-line)))
+  "Face used in evil color-coded segments when in Normal state."
   :group 'telephone-line-evil)
 
 (defface evil-visual
-  '((((class color))
-     :background "orange" :weight bold :inherit mode-line)
-    (t (:weight bold)))
-  "face to fontify evil visual state"
-  :group 'telephone-line-evil)
-
-(defface evil-motion
-  '((((class color))
-     :background "blue" :weight bold :inherit mode-line)
-    (t (:weight bold)))
-  "face to fontify evil motion state"
-  :group 'telephone-line-evil)
-
-(defface evil-emacs
-  '((((class color))
-     :background "blue violet" :weight bold :inherit mode-line)
-    (t (:weight bold)))
-  "face to fontify evil emacs state"
+  '((t (:foreground "white" :background "orange" :weight bold :inherit mode-line)))
+  "Face used in evil color-coded segments when in Visual{,-Block,-Line} state."
   :group 'telephone-line-evil)
 
 (defface evil-replace
-  '((((class color))
-     :background "black" :weight bold :inherit mode-line)
-    (t (:weight bold)))
-  "face to fontify evil replace state"
+  '((t (:foreground "white" :background "black" :weight bold :inherit mode-line)))
+  "Face used in evil color-coded segments when in Replace state."
+  :group 'telephone-line-evil)
+
+(defface evil-motion
+  '((t (:foreground "white" :background "blue" :weight bold :inherit mode-line)))
+  "Face used in evil color-coded segments when in Motion state."
   :group 'telephone-line-evil)
 
 (defface evil-operator
-  '((((class color))
-     :background "sky blue" :weight bold :inherit mode-line)
-    (t (:weight bold)))
-  "face to fontify evil replace state"
+  '((t (:foreground "white" :background "sky blue" :weight bold :inherit mode-line)))
+  "Face used in evil color-coded segments when in Operator state."
   :group 'telephone-line-evil)
 
-(defcustom primary-left-separator (if (window-system)
-                                      #'telephone-line-abs-left
-                                    #'telephone-line-utf-8-filled-left)
+(defface evil-emacs
+  '((t (:foreground "white" :background "blue violet" :weight bold :inherit mode-line)))
+  "Face used in evil color-coded segments when in Emacs state."
+  :group 'telephone-line-evil)
+
+(defcustom primary-left-separator #'telephone-line-abs-left
   "The primary separator to use on the left-hand side."
   :group 'telephone-line
   :type 'function)
 
-(defcustom primary-right-separator (if (window-system)
-                                       #'telephone-line-abs-right
-                                    #'telephone-line-utf-8-filled-right)
+(defcustom primary-right-separator #'telephone-line-abs-right
   "The primary separator to use on the right-hand side."
   :group 'telephone-line
   :type 'function)
 
-(defcustom secondary-left-separator (if (window-system)
-                                        #'telephone-line-abs-hollow-left
-                                    #'telephone-line-utf-8-left)
+(defcustom secondary-left-separator #'telephone-line-abs-hollow-left
   "The secondary separator to use on the left-hand side.
 
 Secondary separators do not incur a background color change."
   :group 'telephone-line
   :type 'function)
 
-(defcustom secondary-right-separator (if (window-system)
-                                       #'telephone-line-abs-hollow-right
-                                    #'telephone-line-utf-8-right)
+(defcustom secondary-right-separator #'telephone-line-abs-hollow-right
   "The secondary separator to use on the right-hand side.
 
 Secondary separators do not incur a background color change."
