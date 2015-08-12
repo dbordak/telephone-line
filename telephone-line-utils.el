@@ -124,8 +124,8 @@ color1 and color2."
     (nconc
      (make-list intfill 0) ;Left fill
      (when (< intfill total)
-       (list* (- 1 rem) ;AA pixel
-              (make-list (- total intfill 1) 1)))))) ;Right gap
+       (cons (- 1 rem) ;AA pixel
+             (make-list (- total intfill 1) 1)))))) ;Right gap
 
 (defun row-pattern-hollow (padding total)
   (seq-let (intpadding rem) (floor* padding)
@@ -134,9 +134,8 @@ color1 and color2."
      (when (< intpadding total)
        (list rem)) ;Left AA pixel
      (when (< (1+ intpadding) total)
-       (list*
-        (- 1 rem)  ;Right AA pixel
-        (make-list (- total intpadding 2) 1)))))) ;Right gap
+       (cons (- 1 rem)  ;Right AA pixel
+             (make-list (- total intpadding 2) 1)))))) ;Right gap
 
 (defun create-body (width height axis-func pattern-func)
   "Create a bytestring of a PBM image body of dimensions WIDTH and HEIGHT, and shape created from AXIS-FUNC and PATTERN-FUNC."
