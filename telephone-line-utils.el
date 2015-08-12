@@ -139,26 +139,29 @@ color1 and color2."
       (face-attribute arg :background)
     arg))
 
-(defmacro -defseparator-internal (name body)
+(defmacro -defseparator-internal (name body &optional alt-string)
   (declare (indent defun))
   `(defmemoize ,name (foreground background)
-     (when window-system
-       (telephone-line-propertize-image
-        (telephone-line--create-pbm-image
-         ,body
-         (telephone-line--separator-arg-handler background)
-         (telephone-line--separator-arg-handler foreground))))))
+     (if window-system
+         (telephone-line-propertize-image
+          (telephone-line--create-pbm-image
+           ,body
+           (telephone-line--separator-arg-handler background)
+           (telephone-line--separator-arg-handler foreground)))
+       (propertize ,alt-string
+                   'face `(:foreground ,foreground :background ,background)))))
 
-(defmacro defseparator (name axis-func pattern-func &optional forced-width)
+(defmacro defseparator (name axis-func pattern-func &optional alt-char forced-width)
   "Define a separator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH.
 
 NOTE: Forced-width primary separators are not currently supported."
   `(telephone-line--defseparator-internal ,name
      (let ((height (telephone-line-separator-height))
            (width (or ,forced-width (telephone-line-separator-width))))
-       (telephone-line-create-body width height ,axis-func ,pattern-func))))
+       (telephone-line-create-body width height ,axis-func ,pattern-func))
+     (char-to-string ,alt-char)))
 
-(defmacro defsubseparator (name axis-func pattern-func &optional forced-width)
+(defmacro defsubseparator (name axis-func pattern-func &optional alt-char forced-width)
   "Define a subseparator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH."
   `(telephone-line--defseparator-internal ,name
      (let* ((height (telephone-line-separator-height))
@@ -167,7 +170,8 @@ NOTE: Forced-width primary separators are not currently supported."
                            telephone-line-separator-extra-padding)))
         (telephone-line-pad-body
          (telephone-line-create-body width height ,axis-func ,pattern-func)
-         char-width))))
+         char-width))
+     (string ?  ,alt-char ? )))
 
 (defun pad-body (body char-width)
   (let* ((body-width (length (car body)))
