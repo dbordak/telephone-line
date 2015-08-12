@@ -45,6 +45,7 @@
 (telephone-line-defsubseparator telephone-line-abs-hollow-left
   (telephone-line-complement abs) #'telephone-line-row-pattern-hollow
   #xe0b1)
+
 (telephone-line-defseparator telephone-line-cubed-right
   (lambda (x) (expt x 3)) #'telephone-line-row-pattern)
 (telephone-line-defseparator telephone-line-cubed-left
@@ -53,12 +54,15 @@
   (lambda (x) (expt x 3)) #'telephone-line-row-pattern-hollow)
 (telephone-line-defseparator telephone-line-cubed-hollow-left
   (lambda (x) (- (expt x 3))) #'telephone-line-row-pattern-hollow)
-(telephone-line-defseparator telephone-line-gradient
-  #'identity #'telephone-line-row-pattern-fixed-gradient)
+
 (telephone-line-defseparator telephone-line-identity-right
   #'identity #'telephone-line-row-pattern)
 (telephone-line-defseparator telephone-line-identity-left
   #'- #'telephone-line-row-pattern)
+
+(telephone-line-defseparator telephone-line-gradient
+  #'identity #'telephone-line-row-pattern-fixed-gradient)
+
 (defmemoize telephone-line-nil (color1 color2)
   nil)
 
