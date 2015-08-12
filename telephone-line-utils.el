@@ -179,19 +179,7 @@ NOTE: Forced-width primary separators are not currently supported."
        (telephone-line-create-body width height ,axis-func ,pattern-func))
      (char-to-string ,alt-char)))
 
-(defmacro defsubseparator (name axis-func pattern-func &optional alt-char forced-width)
-  "Define a subseparator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH."
-  `(telephone-line--defseparator-internal ,name
-     (let* ((height (telephone-line-separator-height))
-            (width (or ,forced-width (telephone-line-separator-width)))
-            (char-width (+ (ceiling width (frame-char-width))
-                           telephone-line-separator-extra-padding)))
-        (telephone-line-pad-body
-         (telephone-line-create-body width height ,axis-func ,pattern-func)
-         char-width))
-     (string ?  ,alt-char ? )))
-
-(defun pad-body (body char-width)
+(defun -pad-body (body char-width)
   (let* ((body-width (length (car body)))
          (padding-width (- (* char-width (frame-char-width)) body-width))
          (left-padding (make-list (floor padding-width 2) 1))
@@ -199,6 +187,18 @@ NOTE: Forced-width primary separators are not currently supported."
     (mapcar (lambda (row)
               (append left-padding row right-padding))
             body)))
+
+(defmacro defsubseparator (name axis-func pattern-func &optional alt-char forced-width)
+  "Define a subseparator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH."
+  `(telephone-line--defseparator-internal ,name
+     (let* ((height (telephone-line-separator-height))
+            (width (or ,forced-width (telephone-line-separator-width)))
+            (char-width (+ (ceiling width (frame-char-width))
+                           telephone-line-separator-extra-padding)))
+        (telephone-line--pad-body
+         (telephone-line-create-body width height ,axis-func ,pattern-func)
+         char-width))
+     (string ?  ,alt-char ? )))
 
 :autoload
 (defmacro defsegment (name body)
