@@ -115,6 +115,12 @@ propertized image. The separators can be defined independently of one
 another -- feel free to use a nominally left separator for your rhs,
 or mix two different types of separators.
 
+** Unicode Separators
+
+The function for defining separators takes an optional argument for a
+character to display when in a terminal. For the abs separator, this
+is set to the usual Powerline symbol.
+
 * Separator Types
 
 You probably also noticed from the screenshots that there are in fact
