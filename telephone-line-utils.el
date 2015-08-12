@@ -50,12 +50,30 @@
   (ceiling (separator-height) 2))
 
 (defun create-axis (length)
-  "Create an axis of length LENGTH."
+  "Create an axis of length LENGTH.
+For odd lengths, this is a sequence from -floor(LENGTH/2) to
++floor(LENGTH/2), so for instance a LENGTH of 9 produces:
+
+  -4 -3 -2 -1 0 +1 +2 +3 +4
+
+For even lengths, the 0 is duplicated to preserve symmetry.
+For instance, a LENGTH of 10 produces:
+
+  -4 -3 -2 -1 0 0 +1 +2 +3 +4"
   (let ((middle (1- (ceiling length 2))))
     (append (number-sequence (- middle) 0)
             (number-sequence (if (cl-oddp length) 1 0) middle))))
 
-(defun normalize-axis (seq)
+(defun create-trig-axis (length)
+  "Create a trig axis with LENGTH steps, ranging from -pi to +pi.
+As with create-axis, on even LENGTHs, the 0 is repeated to
+preserve symmetry."
+  (let* ((integer-axis (create-axis length))
+         (integer-max (seq-max integer-axis)))
+    (mapcar (lambda (x)
+              (/ (* float-pi x) integer-max)))))
+
+(defun -normalize-axis (seq)
   "Apply an offset to all values of SEQ such that its range begins at 0."
   (let ((minimum (seq-min seq)))
     (if (not (eq minimum 0))
@@ -122,7 +140,7 @@ color1 and color2."
 
 (defun create-body (width height axis-func pattern-func)
   "Create a bytestring of a PBM image body of dimensions WIDTH and HEIGHT, and shape created from AXIS-FUNC and PATTERN-FUNC."
-  (let* ((normalized-axis (normalize-axis (mapcar axis-func (create-axis height))))
+  (let* ((normalized-axis (-normalize-axis (mapcar axis-func (create-axis height))))
          (range (1+ (seq-max normalized-axis)))
          (scaling-factor (/ width (float range))))
     (mapcar (lambda (x)
