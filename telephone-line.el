@@ -40,6 +40,10 @@
 ;;;###autoload
 (define-namespace telephone-line-
 
+(defgroup telephone-line nil
+  "Fancy separated mode-line."
+  :group 'mode-line)
+
 (defface accent-active
   '((t (:foreground "white" :background "grey22" :inherit mode-line)))
   "Accent face for mode-line."
@@ -267,16 +271,26 @@ separators, as they are conditional, are evaluated on-the-fly."
 (defvar -default-mode-line mode-line-format)
 
 :autoload
-(defun disable ()
+(defun -disable ()
   "Revert to the default Emacs mode-line."
   (interactive)
   (setq-default mode-line-format -default-mode-line))
 
 :autoload
-(defun enable ()
+(defun -enable ()
   "Setup the default mode-line."
   (interactive)
   (setq-default mode-line-format `("%e" ,@(telephone-line--generate-mode-line))))
+
+:autoload
+(define-minor-mode mode
+  "Toggle telephone-line on or off."
+  :group 'telephone-line
+  :global t
+  :lighter nil
+  (if telephone-line-mode
+      (-enable)
+    (-disable)))
 
 ) ; End of namespace
 
