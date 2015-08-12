@@ -118,7 +118,6 @@ Secondary separators do not incur a background color change."
   :group 'telephone-line
   :type 'function)
 
-:autoload
 (defun fill (reserve &optional face)
   "Return RESERVE empty space on the right, optionally with a FACE." ;;TODO: Add face
   (propertize " "
@@ -132,7 +131,6 @@ Secondary separators do not incur a background color change."
 (add-hook 'window-configuration-change-hook #'-set-selected-window)
 (defadvice select-window (after select-window activate) (-set-selected-window))
 
-:autoload
 (defun selected-window-active ()
   "Return whether the current window is active."
   (and (boundp 'selected-window)
