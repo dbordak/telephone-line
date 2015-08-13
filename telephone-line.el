@@ -242,7 +242,7 @@ separators, as they are conditional, are evaluated on-the-fly."
   :group 'telephone-line)
 
 (defcustom rhs '((accent . (telephone-line-position-segment))
-                 (nil    . (misc-info-segment
+                 (nil    . (telephone-line-misc-info-segment
                             telephone-line-major-mode-segment)))
   "Right hand side segment alist."
   :type '(alist :key-type segment-color :value-type subsegment-list)
