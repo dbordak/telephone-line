@@ -50,15 +50,19 @@
   (lambda (x) (expt x 3)) #'telephone-line-row-pattern)
 (telephone-line-defseparator telephone-line-cubed-left
   (lambda (x) (- (expt x 3))) #'telephone-line-row-pattern)
-(telephone-line-defseparator telephone-line-cubed-hollow-right
+(telephone-line-defsubseparator telephone-line-cubed-hollow-right
   (lambda (x) (expt x 3)) #'telephone-line-row-pattern-hollow)
-(telephone-line-defseparator telephone-line-cubed-hollow-left
+(telephone-line-defsubseparator telephone-line-cubed-hollow-left
   (lambda (x) (- (expt x 3))) #'telephone-line-row-pattern-hollow)
 
 (telephone-line-defseparator telephone-line-identity-right
   #'identity #'telephone-line-row-pattern)
 (telephone-line-defseparator telephone-line-identity-left
   #'- #'telephone-line-row-pattern)
+(telephone-line-defsubseparator telephone-line-identity-hollow-right
+  #'identity #'telephone-line-row-pattern-hollow)
+(telephone-line-defsubseparator telephone-line-identity-hollow-left
+  #'- #'telephone-line-row-pattern-hollow)
 
 (telephone-line-defseparator telephone-line-gradient
   #'identity #'telephone-line-row-pattern-fixed-gradient)
