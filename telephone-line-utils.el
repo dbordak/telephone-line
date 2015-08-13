@@ -71,7 +71,8 @@ preserve symmetry."
   (let* ((integer-axis (create-axis length))
          (integer-max (seq-max integer-axis)))
     (mapcar (lambda (x)
-              (/ (* float-pi x) integer-max)))))
+              (/ (* float-pi x) integer-max))
+            integer-axis)))
 
 (defun -normalize-axis (seq)
   "Apply an offset to all values of SEQ such that its range begins at 0."
@@ -159,14 +160,15 @@ color1 and color2."
 (defmacro -defseparator-internal (name body &optional alt-string)
   (declare (indent defun))
   `(defmemoize ,name (foreground background)
-     (if window-system
-         (telephone-line-propertize-image
-          (telephone-line--create-pbm-image
-           ,body
-           (telephone-line--separator-arg-handler background)
-           (telephone-line--separator-arg-handler foreground)))
-       (propertize ,alt-string
-                   'face `(:foreground ,foreground :background ,background)))))
+     (let ((bg-color (telephone-line--separator-arg-handler background))
+           (fg-color (telephone-line--separator-arg-handler foreground)))
+       (if window-system
+           (telephone-line-propertize-image
+            (telephone-line--create-pbm-image ,body bg-color fg-color))
+         (list :propertize ,alt-string
+               'face (list :foreground fg-color
+                           :background bg-color
+                           :inverse-video t))))))
 
 (defmacro defseparator (name axis-func pattern-func &optional alt-char forced-width)
   "Define a separator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH.
