@@ -1,36 +1,28 @@
 #+Title: Telepone Line
 #+Author: Daniel Bordak
 
+[[http://melpa.org/#/telephone-line][file:http://melpa.org/packages/telephone-line-badge.svg]]
+
+[[./screenshots/abs.png]]
+
+[[./screenshots/cubed.png]]
+
+[[./screenshots/gradient.png]]
+
 Telephone Line is a new implementation of Powerline with a few new
 features that set it apart from the existing Emacs implementations:
 _easier customization_ and _antialiased separators_.
 
-* Antialiased Separators
+* Installation
 
-First off, this is how they look
+The easiest way to install telephone-line is with package.el through
+MELPA. Once you have the package installed, initializing it is the
+usual stuff:
 
-[[./screenshots/abs.png]]
-
-Classic powerline, called "abs" (you'll see why later).
-
-[[./screenshots/cubed.png]]
-
-Spacemacs' default separator, called "cubed".
-
-[[./screenshots/gradient.png]]
-
-A gradient separator.
-
-[[./screenshots/to_the_right.png]]
-
-You can use two right separators instead of a left and right, if you
-want.
-
-Each of these separators is defined programmatically (the existing
-powerline.el does something more along the lines of templating), being
-created from two potentially user-defined functions -- but more on
-that later. For now, just enjoy their
-pixels-wot-have-intermediate-colors
+#+begin_src emacs-lisp
+(require 'telephone-line)
+(telephone-line-mode 1)
+#+end_src
 
 * Easy Customization
 
