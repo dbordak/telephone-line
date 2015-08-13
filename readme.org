@@ -24,7 +24,7 @@ usual stuff:
 (telephone-line-mode 1)
 #+end_src
 
-* Easy Customization
+* Configuration
 
 The screenshots above aren't the default configuration; it's all
 defined in my dotfiles.
@@ -47,12 +47,9 @@ Here's the relevant section:
 
 ...That's it. That's essentially all there is to creating a theme.
 
-Now, as a caveat, this makes things like the spacemacs theme harder to
-create (it could still be done, maybe with a closure that returns
-left/right alternating separators). However, it addresses most of my
-issues with the existing solutions.
+* Advanced Customization
 
-** Separator Customization
+** Separators
 
 I mentioned before that the separators are defined in terms of two
 functions. Here's the way that works:
