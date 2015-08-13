@@ -60,37 +60,37 @@
   :group 'telephone-line-evil)
 
 (defface evil-insert
-  '((t (:background "green" :weight bold :inherit evil)))
+  '((t (:background "green" :inherit telephone-line-evil)))
   "Face used in evil color-coded segments when in Insert state."
   :group 'telephone-line-evil)
 
 (defface evil-normal
-  '((t (:background "red" :weight bold :inherit evil)))
+  '((t (:background "red" :inherit telephone-line-evil)))
   "Face used in evil color-coded segments when in Normal state."
   :group 'telephone-line-evil)
 
 (defface evil-visual
-  '((t (:background "orange" :weight bold :inherit evil)))
+  '((t (:background "orange" :inherit telephone-line-evil)))
   "Face used in evil color-coded segments when in Visual{,-Block,-Line} state."
   :group 'telephone-line-evil)
 
 (defface evil-replace
-  '((t (:background "black" :weight bold :inherit evil)))
+  '((t (:background "black" :inherit telephone-line-evil)))
   "Face used in evil color-coded segments when in Replace state."
   :group 'telephone-line-evil)
 
 (defface evil-motion
-  '((t (:background "blue" :weight bold :inherit evil)))
+  '((t (:background "blue" :inherit telephone-line-evil)))
   "Face used in evil color-coded segments when in Motion state."
   :group 'telephone-line-evil)
 
 (defface evil-operator
-  '((t (:background "sky blue" :weight bold :inherit evil)))
+  '((t (:background "sky blue" :inherit telephone-line-evil)))
   "Face used in evil color-coded segments when in Operator state."
   :group 'telephone-line-evil)
 
 (defface evil-emacs
-  '((t (:background "blue violet" :weight bold :inherit evil)))
+  '((t (:background "blue violet" :inherit telephone-line-evil)))
   "Face used in evil color-coded segments when in Emacs state."
   :group 'telephone-line-evil)
 
