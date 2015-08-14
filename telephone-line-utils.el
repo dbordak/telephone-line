@@ -121,7 +121,7 @@ color1 and color2."
 
 (defun row-pattern (fill total)
   "Make a PBM line that has FILL FG-COLOR bytes out of TOTAL BG-COLOR bytes."
-  (seq-let (intfill rem) (floor* fill)
+  (seq-let (intfill rem) (cl-floor fill)
     (nconc
      (make-list intfill 0) ;Left fill
      (when (< intfill total)
@@ -129,7 +129,7 @@ color1 and color2."
              (make-list (- total intfill 1) 1)))))) ;Right gap
 
 (defun row-pattern-hollow (padding total)
-  (seq-let (intpadding rem) (floor* padding)
+  (seq-let (intpadding rem) (cl-floor padding)
     (nconc
      (make-list intpadding 1) ;Left gap
      (when (< intpadding total)
