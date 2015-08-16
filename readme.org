@@ -1,4 +1,4 @@
-#+Title: Telepone Line
+#+Title: Telephone Line
 #+Author: Daniel Bordak
 
 [[http://melpa.org/#/telephone-line][file:http://melpa.org/packages/telephone-line-badge.svg]]
