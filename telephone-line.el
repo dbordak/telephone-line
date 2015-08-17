@@ -129,7 +129,9 @@ Secondary separators do not incur a background color change."
     (setq selected-window (frame-selected-window))))
 
 (add-hook 'window-configuration-change-hook #'-set-selected-window)
-(defadvice select-window (after select-window activate) (-set-selected-window))
+(defadvice select-window (after select-window activate)
+  "Set telephone-line's selected window value for use in determining the active mode-line."
+  (-set-selected-window))
 
 (defun selected-window-active ()
   "Return whether the current window is active."
