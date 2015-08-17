@@ -9,9 +9,10 @@
 
 [[./screenshots/gradient.png]]
 
-Telephone Line is a new implementation of Powerline with a few new
-features that set it apart from the existing Emacs implementations:
-_easier customization_ and _antialiased separators_.
+Telephone Line is a new implementation of Powerline for emacs with
+_(optional) baked-in evil support_, _antialiased separators_, and an
+_easy configuration language_ which makes it _trivial to write your
+own themes_.
 
 * Installation
 
@@ -24,7 +25,52 @@ usual stuff:
 (telephone-line-mode 1)
 #+end_src
 
+The default theme should suffice for non-evil setups, but if you want
+to further configure it, read on!
+
 * Configuration
+
+Themes are defined by customizing the ~telephone-line-lhs~ and
+~telephone-line-rhs~ variables, for the left and right parts of the
+mode-line, respectively.
+
+The configuration format for both is an alist containing pairs of the form
+
+#+begin_src emacs-lisp
+(COLOR-SYMBOL . (LIST OF SUBSEGMENT FUNCTIONS))
+#+end_src
+
+Each one of these pairs defines a "supersegment" -- a bunch of
+subsegments using the same face. In the screenshots, you can see the
+minor modes and buffer information are in the same color, though they
+aren't the same segment (i.e. "FlyC- ivy U:--- \*scratch\*" consists
+of the subsegments "FlyC- ivy" and "U:--- \*scratch\*"). These
+subsegments are separated by secondary separators, such as the thin
+powerline symbol (it looks like '>', but larger).
+
+The ~Color Symbol~ determines what face is used for the supersegment.
+By default*, the choices are:
+
+#+begin_example
+    nil:    mode-line                                  or mode-line-inactive
+    accent: telephone-line-accent-active               or telephone-line-accent-inactive
+    evil:   telephone-line-evil-{insert, normal, etc.} or mode-line-inactive
+#+end_example
+
+*There is no way of adding more color symbols for now.
+
+** Diagram
+
+[[./screenshots/diagram-1-cropped.png]]
+
+This shows how a config maps to the mode-line. Important to note is
+how the accent supersegment has three subsegments, but only one is
+displayed (and there are no subseparators). This is because
+subsegments are dynamic. When a subsegment has no information to
+display, it doesn't need a subseparator (in contrast, primary
+separators are _always_ displayed).
+
+** Example Configuration
 
 The screenshots above aren't the default configuration; it's all
 defined in my dotfiles.
@@ -75,7 +121,7 @@ separator, defined as 2*abs(x).
      4 |       *
 #+END_EXAMPLE
 
-There you go -- a separator. However, we still need another piece.
+There you go: a separator. However, we still need another piece.
 That second function I mentioned determines the fill -- the difference
 between a solid separator and a hollow one.
 
