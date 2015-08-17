@@ -40,12 +40,16 @@ Here's the relevant section:
           (nil    . (telephone-line-minor-mode-segment
                      telephone-line-buffer-segment))))
 (setq telephone-line-rhs
-        '((evil   . (telephone-line-airline-position-segment))
+        '((nil    . (telephone-line-misc-info-segment))
           (accent . (telephone-line-major-mode-segment))
-          (nil    . (telephone-line-misc-info-segment))))
+          (evil   . (telephone-line-airline-position-segment))))
 #+end_src
 
 ...That's it. That's essentially all there is to creating a theme.
+
+Now, before you go copy-pasting the above config, it's important to
+know that it requires both evil and erc. If you're not using evil,
+though, the defaults should be fine.
 
 * Advanced Customization
 
