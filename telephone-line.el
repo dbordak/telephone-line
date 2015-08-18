@@ -132,6 +132,9 @@ Secondary separators do not incur a background color change."
 (defadvice select-window (after select-window activate)
   "Set telephone-line's selected window value for use in determining the active mode-line."
   (-set-selected-window))
+(defadvice select-frame (after select-frame activate)
+  "Set telephone-line's selected window value for use in determining the active mode-line."
+  (-set-selected-window))
 
 (defun selected-window-active ()
   "Return whether the current window is active."
