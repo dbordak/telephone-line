@@ -79,8 +79,9 @@ mouse-3: Toggle minor modes"
                              'mouse-2 #'mode-line-widen))))
 
 (telephone-line-defsegment* telephone-line-erc-modified-channels-segment
-  (s-with erc-modified-channels-object
-    s-trim (s-chop-suffix "]") (s-chop-prefix "[")))
+  (when (boundp 'erc-modified-channels-object)
+    (s-with erc-modified-channels-object
+      s-trim (s-chop-suffix "]") (s-chop-prefix "["))))
 
 (eval-after-load 'evil
   '(telephone-line-defsegment* telephone-line-evil-tag-segment
