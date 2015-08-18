@@ -4,7 +4,7 @@
 
 ;; Author: Daniel Bordak <dbordak@fastmail.fm>
 ;; URL: https://github.com/dbordak/telephone-line
-;; Version: 0.1
+;; Version: 0.2
 ;; Keywords: mode-line
 ;; Package-Requires: ((emacs "24.3") (cl-lib "0.5") (memoize "1.0.1") (names "0.5") (s "1.9.0") (seq "1.8"))
 
