@@ -2,6 +2,7 @@
 #+Author: Daniel Bordak
 
 [[http://melpa.org/#/telephone-line][file:http://melpa.org/packages/telephone-line-badge.svg]]
+[[http://stable.melpa.org/#/telephone-line][file:http://stable.melpa.org/packages/telephone-line-badge.svg]]
 
 [[./screenshots/abs.png]]
 
