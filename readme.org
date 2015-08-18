@@ -10,9 +10,9 @@
 [[./screenshots/gradient.png]]
 
 Telephone Line is a new implementation of Powerline for emacs with
-_(optional) baked-in evil support_, _antialiased separators_, and an
-_easy configuration language_ which makes it _trivial to write your
-own themes_. It's also _named after a song_ which is what I always
+*(optional) baked-in evil support*, *antialiased separators*, and an
+*easy configuration language* which makes it *trivial to write your
+own themes*. It's also *[[https://www.youtube.com/watch?v=77R1Wp6Y_5Y][named after a song]]* which is what I always
 look for in software.
 
 * Installation
@@ -44,10 +44,10 @@ The configuration format for both is an alist containing pairs of the form
 Each one of these pairs defines a "supersegment" -- a bunch of
 subsegments using the same face. In the screenshots, you can see the
 minor modes and buffer information are in the same color, though they
-aren't the same segment (i.e. "FlyC- ivy U:--- \*scratch\*" consists
-of the subsegments "FlyC- ivy" and "U:--- \*scratch\*"). These
+aren't the same segment (i.e. ~FlyC- ivy U:--- \*scratch\*~ consists
+of the subsegments ~FlyC- ivy~ and ~U:--- \*scratch\*~). These
 subsegments are separated by secondary separators, such as the thin
-powerline symbol (it looks like '>', but larger).
+powerline symbol (it looks like ~>~, but larger).
 
 The ~Color Symbol~ determines what face is used for the supersegment.
 By default*, the choices are:
