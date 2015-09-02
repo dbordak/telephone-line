@@ -27,7 +27,7 @@
 (telephone-line-defsegment telephone-line-vc-segment
   vc-mode)
 
-(telephone-line-defsegment telephone-line-process-segment
+(defun telephone-line-process-segment (face)
   mode-line-process)
 
 (telephone-line-defsegment telephone-line-position-segment
