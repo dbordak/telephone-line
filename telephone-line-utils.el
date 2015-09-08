@@ -19,10 +19,12 @@
 
 ;;; Code:
 
-(require 'memoize)
 (require 'cl-lib)
-(require 'seq)
 (require 'color)
+
+(require 'memoize)
+(require 's)
+(require 'seq)
 
 (defcustom telephone-line-height nil
   "Override the mode-line height."
@@ -101,6 +103,7 @@ color1 and color2."
 
 ;; TODO: error on non-rectangular input?
 (defun telephone-line--create-pbm-image (body fg-color bg-color)
+  "Create a pbm image from a byte list BODY and colors FG-COLOR and BG-COLOR."
   (create-image
    (concat
     (format "P6 %d %d 255 " (length (car body)) (length body))
@@ -118,7 +121,7 @@ color1 and color2."
               'display image))
 
 (defun telephone-line-row-pattern (fill total)
-  "Make a PBM line that has FILL FG-COLOR bytes out of TOTAL BG-COLOR bytes."
+  "Make a list of percentages (0 to 1), with FILL 0s out of TOTAL 1s, with a non-integer in between."
   (seq-let (intfill rem) (cl-floor fill)
     (nconc
      (make-list intfill 0) ;Left fill
@@ -127,6 +130,7 @@ color1 and color2."
              (make-list (- total intfill 1) 1)))))) ;Right gap
 
 (defun telephone-line-row-pattern-hollow (padding total)
+  "Make a list of percentages (0 to 1), with a non-integer positioned PADDING places in out of TOTAL places."
   (seq-let (intpadding rem) (cl-floor padding)
     (nconc
      (make-list intpadding 1) ;Left gap
@@ -148,10 +152,12 @@ color1 and color2."
             normalized-axis)))
 
 (defmacro telephone-line-complement (func)
+  "Return a function which is the complement of FUNC."
   `(lambda (x)
      (- (,func x))))
 
 (defun telephone-line--separator-arg-handler (arg)
+  "Translate ARG into an appropriate color for a separator."
   (if (facep arg)
       (face-attribute arg :background)
     arg))
@@ -180,6 +186,7 @@ NOTE: Forced-width primary separators are not currently supported."
      (char-to-string ,alt-char)))
 
 (defun telephone-line--pad-body (body char-width)
+  "Pad 2d byte-list BODY to a width of CHAR-WIDTH, given as a number of characters."
   (let* ((body-width (length (car body)))
          (padding-width (- (* char-width (frame-char-width)) body-width))
          (left-padding (make-list (floor padding-width 2) 1))

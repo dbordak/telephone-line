@@ -121,6 +121,8 @@ Secondary separators do not incur a background color change."
               'display `((space :align-to (- (+ right right-fringe right-margin)
                                              ,reserve)))))
 
+(defvar telephone-line-selected-window nil)
+
 (defun telephone-line--set-selected-window ()
   (when (not (minibuffer-window-active-p (frame-selected-window)))
     (setq telephone-line-selected-window (frame-selected-window))))
@@ -135,8 +137,7 @@ Secondary separators do not incur a background color change."
 
 (defun telephone-line-selected-window-active ()
   "Return whether the current window is active."
-  (and (boundp 'telephone-line-selected-window)
-       (eq telephone-line-selected-window (selected-window))))
+  (eq telephone-line-selected-window (selected-window)))
 
 (defun telephone-line-face-map (sym)
   "Return the face corresponding to SYM for the selected window's active state."

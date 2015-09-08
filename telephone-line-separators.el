@@ -28,7 +28,7 @@
 (require 'telephone-line-utils)
 
 (defun telephone-line-row-pattern-fixed-gradient (_ width)
-  "Create a gradient bytestring of WIDTH from FG-COLOR to BG-COLOR."
+  "Create a gradient bytestring of WIDTH."
   (mapcar (lambda (num)
             (/ num (float width)))
           (number-sequence 1 width)))
