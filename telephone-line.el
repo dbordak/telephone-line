@@ -128,10 +128,10 @@ Secondary separators do not incur a background color change."
     (setq telephone-line-selected-window (frame-selected-window))))
 
 (add-hook 'window-configuration-change-hook #'telephone-line--set-selected-window)
-(defadvice telephone-line-select-window (after select-window activate)
+(defadvice select-window (after telephone-line-select-window activate)
   "Set telephone-line's selected window value for use in determining the active mode-line."
   (telephone-line--set-selected-window))
-(defadvice telephone-line-select-frame (after select-frame activate)
+(defadvice select-frame (after telephone-line-select-frame activate)
   "Set telephone-line's selected window value for use in determining the active mode-line."
   (telephone-line--set-selected-window))
 
