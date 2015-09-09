@@ -116,7 +116,7 @@ Secondary separators do not incur a background color change."
   :type 'function)
 
 (defun telephone-line-fill (reserve &optional face)
-  "Return RESERVE empty space on the right, optionally with a FACE." ;;TODO: Add face
+  "Return RESERVE empty space on the right, optionally with a FACE."
   (propertize " "
               'display `((space :align-to (- (+ right right-fringe right-margin)
                                              ,reserve)))))
@@ -143,7 +143,6 @@ Secondary separators do not incur a background color change."
   "Return the face corresponding to SYM for the selected window's active state."
   (telephone-line--face-map sym (telephone-line-selected-window-active)))
 
-;;TODO: Custom alist
 (defun telephone-line--face-map (sym active)
   "Return the face corresponding to SYM for the given ACTIVE state."
   (cond ((eq sym 'evil) (telephone-line-evil-face active))
@@ -152,7 +151,6 @@ Secondary separators do not incur a background color change."
         (active 'mode-line)
         (t 'mode-line-inactive)))
 
-;;TODO: Custom alist
 (defun telephone-line-opposite-face-sym (sym)
   "Return the 'opposite' of the given SYM."
   (cdr (assoc

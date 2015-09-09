@@ -19,7 +19,6 @@
 ;;
 ;; Separators for Telephone Line.
 ;; To create your own, look at the functions defined in telephone-line-utils.el
-;; TODO: Trig separators
 
 ;;; Code:
 
