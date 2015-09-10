@@ -11,11 +11,14 @@
 
 [[./screenshots/gradient.png]]
 
+* Features
+
 Telephone Line is a new implementation of Powerline for emacs with
 *(optional) baked-in evil support*, *antialiased separators*, and an
 *easy configuration language* which makes it *trivial to write your
-own themes*. It's also *[[https://www.youtube.com/watch?v=77R1Wp6Y_5Y][named after a song]]* which is what I always
-look for in software.
+own themes*. Additionally, I *dogfood the hell out of it* so bugfixes
+should come quickly. It's also *[[https://www.youtube.com/watch?v=77R1Wp6Y_5Y][named after a song]]* which is what I
+always look for in software.
 
 * Installation
 
