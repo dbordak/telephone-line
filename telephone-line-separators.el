@@ -22,12 +22,11 @@
 
 ;;; Code:
 
-(require 'memoize)
 (require 'color)
 (require 'telephone-line-utils)
 
 (defun telephone-line-row-pattern-fixed-gradient (_ width)
-  "Create a gradient bytestring of WIDTH."
+  "Create a gradient bytestring of WIDTH.  _ is disregarded."
   (mapcar (lambda (num)
             (/ num (float width)))
           (number-sequence 1 width)))
@@ -66,7 +65,8 @@
 (telephone-line-defseparator telephone-line-gradient
   #'identity #'telephone-line-row-pattern-fixed-gradient)
 
-(defmemoize telephone-line-nil (color1 color2)
+(defun telephone-line-nil (color1 color2)
+  "The nil separator.  COLOR1 and COLOR2 are disregarded."
   nil)
 
 (provide 'telephone-line-separators)
