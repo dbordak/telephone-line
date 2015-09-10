@@ -230,8 +230,8 @@ Segment is not precompiled."
   `(defun ,name (face)
      (telephone-line-raw
       (mapcar (lambda (plist)
-                 (plist-put plist 'face face))
-               ,plists))))
+                (plist-put plist 'face face))
+              ,plists))))
 
 :autoload
 (defun telephone-line-raw (str &optional compiled)

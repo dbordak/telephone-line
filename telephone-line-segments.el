@@ -24,6 +24,8 @@
 
 (require 'telephone-line-utils)
 
+(require 's)
+
 (telephone-line-defsegment telephone-line-vc-segment
   vc-mode)
 
@@ -85,17 +87,13 @@ mouse-3: Toggle minor modes"
 
 (eval-after-load 'evil
   '(telephone-line-defsegment* telephone-line-evil-tag-segment
-     (let ((tag
-            (if (evil-visual-state-p)
-                (cond
+     (let ((tag (cond
+                 ((not (evil-visual-state-p)) (upcase (symbol-name evil-state)))
                  ((eq evil-visual-selection 'block)
-                  (if telephone-line-evil-use-short-tag "VB"
-                    "V-BLOCK"))
+                  (if telephone-line-evil-use-short-tag "VB" "V-BLOCK"))
                  ((eq evil-visual-selection 'line)
-                  (if telephone-line-evil-use-short-tag "VL"
-                    "V-LINE"))
-                 (t "VISUAL"))
-              (upcase (symbol-name evil-state)))))
+                  (if telephone-line-evil-use-short-tag "VL" "V-LINE"))
+                 (t "VISUAL"))))
        (if telephone-line-evil-use-short-tag
            (s-left 2 tag)
          tag))))
