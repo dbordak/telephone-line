@@ -179,6 +179,7 @@ color1 and color2."
   "Define a separator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH.
 
 NOTE: Forced-width primary separators are not currently supported."
+  (declare (indent defun))
   `(telephone-line--defseparator-internal ,name
      (let ((height (telephone-line-separator-height))
            (width (or ,forced-width (telephone-line-separator-width))))
@@ -197,6 +198,7 @@ NOTE: Forced-width primary separators are not currently supported."
 
 (defmacro telephone-line-defsubseparator (name axis-func pattern-func &optional alt-char forced-width)
   "Define a subseparator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH."
+  (declare (indent defun))
   `(telephone-line--defseparator-internal ,name
      (let* ((height (telephone-line-separator-height))
             (width (or ,forced-width (telephone-line-separator-width)))

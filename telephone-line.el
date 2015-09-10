@@ -237,28 +237,28 @@ separators, as they are conditional, are evaluated on-the-fly."
       base-width)))
 
 (defcustom telephone-line-lhs '((accent . (telephone-line-vc-segment))
-                                (nil    . (telephone-line-minor-mode-segment
-                                           telephone-line-buffer-segment)))
+                  (nil    . (telephone-line-minor-mode-segment
+                             telephone-line-buffer-segment)))
   "Left hand side segment alist."
   :type '(alist :key-type segment-color :value-type subsegment-list)
   :group 'telephone-line)
 
 (defcustom telephone-line-rhs '((nil    . (telephone-line-misc-info-segment
-                                           telephone-line-major-mode-segment))
-                                (accent . (telephone-line-position-segment)))
+                             telephone-line-major-mode-segment))
+                  (accent . (telephone-line-position-segment)))
   "Right hand side segment alist."
   :type '(alist :key-type segment-color :value-type subsegment-list)
   :group 'telephone-line)
 
 (defun telephone-line--generate-mode-line-lhs ()
   (telephone-line-add-separators telephone-line-lhs
-                                 telephone-line-primary-left-separator
-                                 telephone-line-secondary-left-separator))
+                   telephone-line-primary-left-separator
+                   telephone-line-secondary-left-separator))
 
 (defun telephone-line--generate-mode-line-rhs ()
   (telephone-line-add-separators telephone-line-rhs
-                                 telephone-line-primary-right-separator
-                                 telephone-line-secondary-right-separator))
+                   telephone-line-primary-right-separator
+                   telephone-line-secondary-right-separator))
 
 (defun telephone-line--generate-mode-line ()
   `(,@(telephone-line--generate-mode-line-lhs)
