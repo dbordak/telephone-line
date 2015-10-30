@@ -137,11 +137,34 @@ color1 and color2."
   `(lambda (x)
      (- (,func x))))
 
-(defun telephone-line--separator-arg-handler (arg)
-  "Translate ARG into an appropriate color for a separator."
-  (if (facep arg)
-      (face-attribute arg :background)
-    arg))
+(defclass telephone-line-separator ()
+  ((axis-func :initarg :axis-func)
+   (pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern)
+   (forced-width :initarg :forced-width :initform nil)
+   (alt-char :initarg :alt-char)
+   (image-cache :initform (make-hash-table :test 'equal :size 10))))
+
+(defmethod telephone-line-separator-height ((obj telephone-line-separator))
+  (or telephone-line-height (frame-char-height)))
+
+(defmethod telephone-line-separator-width ((obj telephone-line-separator))
+  (or (oref obj forced-width) (ceiling (telephone-line-separator-height obj) 2)))
+
+(defclass telephone-line-subseparator (telephone-line-separator)
+  ((pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern-hollow)))
+
+(defmethod telephone-line-separator-create-body ((obj telephone-line-separator))
+  "Create a bytestring of a PBM image body of dimensions WIDTH and HEIGHT, and shape created from AXIS-FUNC and PATTERN-FUNC."
+  (let* ((height (telephone-line-separator-height obj))
+         (width (telephone-line-separator-width obj))
+         (normalized-axis (telephone-line--normalize-axis
+                           (mapcar (oref obj axis-func) (telephone-line-create-axis height))))
+         (range (1+ (seq-max normalized-axis)))
+         (scaling-factor (/ width (float range))))
+    (mapcar (lambda (x)
+              (funcall (oref obj pattern-func)
+                       (* x scaling-factor) width))
+            normalized-axis)))
 
 (defun telephone-line--pad-body (body char-width)
   "Pad 2d byte-list BODY to a width of CHAR-WIDTH, given as a number of characters."
@@ -152,6 +175,42 @@ color1 and color2."
     (mapcar (lambda (row)
               (append left-padding row right-padding))
             body)))
+
+(defmethod telephone-line-separator-create-body ((obj telephone-line-subseparator))
+  (telephone-line--pad-body (call-next-method)
+              (+ (ceiling (telephone-line-separator-width obj)
+                          (frame-char-width))
+                 telephone-line-separator-extra-padding)))
+
+(defmethod telephone-line-separator--arg-handler (arg) :static
+  "Translate ARG into an appropriate color for a separator."
+  (if (facep arg)
+      (face-attribute arg :background)
+    arg))
+
+(defmethod telephone-line-separator-render ((obj telephone-line-separator) foreground background)
+  (telephone-line-separator--render obj
+                      (telephone-line-separator--arg-handler foreground)
+                      (telephone-line-separator--arg-handler background)))
+
+(defmethod telephone-line-separator--render ((obj telephone-line-separator) foreground background)
+  (if window-system
+      (let ((hash-key (concat background "_" foreground)))
+        ;; Return cached image if we have it.
+        (or (gethash hash-key (oref obj image-cache))
+            (puthash hash-key
+                     (telephone-line-propertize-image
+                      (telephone-line--create-pbm-image (telephone-line-separator-create-body obj)
+                                          background foreground))
+                     (oref obj image-cache))))
+
+      (list :propertize (char-to-string (oref obj alt-char))
+            'face (list :foreground foreground
+                        :background background
+                        :inverse-video t))))
+
+(defmethod telephone-line-separator-clear-cache ((obj telephone-line-separator))
+  (clrhash (oref obj image-cache)))
 
 :autoload
 (defmacro telephone-line-defsegment (name body)
@@ -186,62 +245,6 @@ Return nil for blank/empty strings."
       (if compiled
           (replace-regexp-in-string "%" "%%" trimmed-str)
         str))))
-
-(defclass telephone-line-separator ()
-  ((axis-func :initarg :axis-func)
-   (pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern)
-   (forced-width :initarg :forced-width :initform nil)
-   (alt-char :initarg :alt-char)
-   (image-cache :initform (make-hash-table :test 'equal :size 10))))
-
-(defmethod telephone-line-separator-height ((obj telephone-line-separator))
-  (or telephone-line-height (frame-char-height)))
-
-(defmethod telephone-line-separator-width ((obj telephone-line-separator))
-  (or (oref obj forced-width) (ceiling (telephone-line-separator-height obj) 2)))
-
-(defclass telephone-line-subseparator (telephone-line-separator)
-  ((pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern-hollow)))
-
-(defmethod telephone-line-separator-create-body ((obj telephone-line-separator))
-  "Create a bytestring of a PBM image body of dimensions WIDTH and HEIGHT, and shape created from AXIS-FUNC and PATTERN-FUNC."
-  (let* ((height (telephone-line-separator-height obj))
-         (width (telephone-line-separator-width obj))
-         (normalized-axis (telephone-line--normalize-axis
-                           (mapcar (oref obj axis-func) (telephone-line-create-axis height))))
-         (range (1+ (seq-max normalized-axis)))
-         (scaling-factor (/ width (float range))))
-    (mapcar (lambda (x)
-              (funcall (oref obj pattern-func)
-                       (* x scaling-factor) width))
-            normalized-axis)))
-
-(defmethod telephone-line-separator-create-body ((obj telephone-line-subseparator))
-  (telephone-line--pad-body (call-next-method)
-              (+ (ceiling (telephone-line-separator-width obj)
-                          (frame-char-width))
-                 telephone-line-separator-extra-padding)))
-
-(defmethod telephone-line-separator-render ((obj telephone-line-separator) foreground background)
-  (let* ((bg-color (telephone-line--separator-arg-handler background))
-         (fg-color (telephone-line--separator-arg-handler foreground))
-         (hash-key (concat bg-color "_" fg-color)))
-    (if window-system
-        ;; Return cached image if we have it.
-        (or (gethash hash-key (oref obj image-cache))
-            (puthash hash-key
-                     (telephone-line-propertize-image
-                      (telephone-line--create-pbm-image (telephone-line-separator-create-body obj)
-                                          bg-color fg-color))
-                     (oref obj image-cache)))
-
-      (list :propertize (char-to-string (oref obj alt-char))
-            'face (list :foreground fg-color
-                        :background bg-color
-                        :inverse-video t)))))
-
-(defmethod telephone-line-separator-clear-cache ((obj telephone-line-separator))
-  (clrhash (oref obj image-cache)))
 
 ;;Stole this bit from seq.el
 (defun telephone-line--activate-font-lock-keywords ()
