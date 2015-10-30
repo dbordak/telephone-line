@@ -140,17 +140,6 @@ color1 and color2."
        (cons (- 1 rem)  ;Right AA pixel
              (make-list (- total intpadding 2) 1)))))) ;Right gap
 
-(defun telephone-line--create-body (width height axis-func pattern-func)
-  "Create a bytestring of a PBM image body of dimensions WIDTH and HEIGHT, and shape created from AXIS-FUNC and PATTERN-FUNC."
-  (let* ((normalized-axis (telephone-line--normalize-axis
-                           (mapcar axis-func (telephone-line-create-axis height))))
-         (range (1+ (seq-max normalized-axis)))
-         (scaling-factor (/ width (float range))))
-    (mapcar (lambda (x)
-              (funcall pattern-func
-                       (* x scaling-factor) width))
-            normalized-axis)))
-
 (defmacro telephone-line-complement (func)
   "Return a function which is the complement of FUNC."
   `(lambda (x)
@@ -209,21 +198,33 @@ Return nil for blank/empty strings."
 (defclass telephone-line-separator ()
   ((axis-func :initarg :axis-func)
    (pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern)
+   (forced-width :initarg :forced-width :initform nil)
    (alt-char :initarg :alt-char)
-   (image-cache :initform (make-hash-table :test 'equal))))
+   (image-cache :initform (make-hash-table :test 'equal :size 10))))
 
 (defclass telephone-line-subseparator (telephone-line-separator)
   ((pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern-hollow)))
 
-(defmethod telephone-line-separator-create-body ((obj telephone-line-separator) &optional forced-width)
-  (telephone-line--create-body (telephone-line-separator-width)
-                (telephone-line-separator-height)
-                (oref obj axis-func)
-                (oref obj pattern-func)))
+(defun telephone-line--create-body (width height axis-func pattern-func)
+  "Create a bytestring of a PBM image body of dimensions WIDTH and HEIGHT, and shape created from AXIS-FUNC and PATTERN-FUNC."
+  (let* ((normalized-axis (telephone-line--normalize-axis
+                           (mapcar axis-func (telephone-line-create-axis height))))
+         (range (1+ (seq-max normalized-axis)))
+         (scaling-factor (/ width (float range))))
+    (mapcar (lambda (x)
+              (funcall pattern-func
+                       (* x scaling-factor) width))
+            normalized-axis)))
 
-(defmethod telephone-line-separator-create-body ((obj telephone-line-subseparator) &optional forced-width)
+(defmethod telephone-line-separator-create-body ((obj telephone-line-separator))
+  (telephone-line--create-body (telephone-line-separator-width)
+                 (telephone-line-separator-height)
+                 (oref obj axis-func)
+                 (oref obj pattern-func)))
+
+(defmethod telephone-line-separator-create-body ((obj telephone-line-subseparator))
   (let* ((height (telephone-line-separator-height))
-         (width (or forced-width (telephone-line-separator-width)))
+         (width (or (oref obj forced-width) (telephone-line-separator-width)))
          (char-width (+ (ceiling width (frame-char-width))
                         telephone-line-separator-extra-padding)))
     (telephone-line--pad-body
@@ -239,13 +240,11 @@ Return nil for blank/empty strings."
     (if window-system
         ;; Return cached image if we have it.
         (or (gethash hash-key (oref obj image-cache))
-            (let ((height (telephone-line-separator-height))
-                  (width (telephone-line-separator-width)))
-              (puthash hash-key
-                       (telephone-line-propertize-image
-                        (telephone-line--create-pbm-image (telephone-line-separator-create-body obj)
-                                            bg-color fg-color))
-                       (oref obj image-cache))))
+            (puthash hash-key
+                     (telephone-line-propertize-image
+                      (telephone-line--create-pbm-image (telephone-line-separator-create-body obj)
+                                          bg-color fg-color))
+                     (oref obj image-cache)))
 
       (list :propertize (char-to-string (oref obj alt-char))
             'face (list :foreground fg-color
