@@ -6,7 +6,7 @@
 ;; URL: https://github.com/dbordak/telephone-line
 ;; Version: 0.2
 ;; Keywords: mode-line
-;; Package-Requires: ((emacs "24.3") (cl-lib "0.5") (memoize "1.0.1") (s "1.9.0") (seq "1.8"))
+;; Package-Requires: ((emacs "24.3") (cl-lib "0.5") (eieio "1.4") (s "1.9.0") (seq "1.8"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -178,8 +178,8 @@ Secondary separators do not incur a background color change."
             cur-subsegments ;New segment
             ;; Separator
             `(:eval (telephone-line-separator-render ,primary-sep
-                             (telephone-line-face-map ',prev-color-sym)
-                             (telephone-line-face-map ',cur-color-sym)))
+                                       (telephone-line-face-map ',prev-color-sym)
+                                       (telephone-line-face-map ',cur-color-sym)))
             accumulated-segments) ;Old segments
          (list cur-subsegments))
        cur-color-sym))))

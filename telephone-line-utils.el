@@ -23,7 +23,6 @@
 (require 'color)
 (require 'eieio)
 
-(require 'memoize)
 (require 's)
 (require 'seq)
 
@@ -163,19 +162,6 @@ color1 and color2."
       (face-attribute arg :background)
     arg))
 
-(defmacro telephone-line--defseparator-internal (name body &optional alt-string)
-  (declare (indent defun))
-  `(defmemoize ,name (foreground background)
-     (let ((bg-color (telephone-line--separator-arg-handler background))
-           (fg-color (telephone-line--separator-arg-handler foreground)))
-       (if window-system
-           (telephone-line-propertize-image
-            (telephone-line--create-pbm-image ,body bg-color fg-color))
-         (list :propertize ,alt-string
-               'face (list :foreground fg-color
-                           :background bg-color
-                           :inverse-video t))))))
-
 (defun telephone-line--pad-body (body char-width)
   "Pad 2d byte-list BODY to a width of CHAR-WIDTH, given as a number of characters."
   (let* ((body-width (length (car body)))
@@ -185,30 +171,6 @@ color1 and color2."
     (mapcar (lambda (row)
               (append left-padding row right-padding))
             body)))
-
-(defmacro telephone-line-defseparator (name axis-func pattern-func &optional alt-char forced-width)
-  "Define a separator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH.
-
-NOTE: Forced-width primary separators are not currently supported."
-  (declare (indent defun))
-  `(telephone-line--defseparator-internal ,name
-     (let ((height (telephone-line-separator-height))
-           (width (or ,forced-width (telephone-line-separator-width))))
-       (telephone-line--create-body width height ,axis-func ,pattern-func))
-     (char-to-string ,alt-char)))
-
-(defmacro telephone-line-defsubseparator (name axis-func pattern-func &optional alt-char forced-width)
-  "Define a subseparator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH."
-  (declare (indent defun))
-  `(telephone-line--defseparator-internal ,name
-     (let* ((height (telephone-line-separator-height))
-            (width (or ,forced-width (telephone-line-separator-width)))
-            (char-width (+ (ceiling width (frame-char-width))
-                           telephone-line-separator-extra-padding)))
-        (telephone-line--pad-body
-         (telephone-line--create-body width height ,axis-func ,pattern-func)
-         char-width))
-     (string ?  ,alt-char ? )))
 
 :autoload
 (defmacro telephone-line-defsegment (name body)
@@ -299,9 +261,7 @@ Return nil for blank/empty strings."
   (font-lock-add-keywords 'emacs-lisp-mode
                           '("\\<telephone-line-defsegment*\\>"
                             "\\<telephone-line-defsegment-plist\\>"
-                            "\\<telephone-line-defsegment\\>"
-                            "\\<telephone-line-defseparator\\>"
-                            "\\<telephone-line-defsubseparator\\>")))
+                            "\\<telephone-line-defsegment\\>")))
 
 (unless (fboundp 'elisp--font-lock-flush-elisp-buffers)
   ;; In Emacs≥25, (via elisp--font-lock-flush-elisp-buffers and a few others)
