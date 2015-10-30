@@ -31,18 +31,22 @@
             (/ num (float width)))
           (number-sequence 1 width)))
 
-(telephone-line-defseparator telephone-line-abs-right
-  #'abs #'telephone-line-row-pattern
-  #xe0b2)
-(telephone-line-defseparator telephone-line-abs-left
-  (telephone-line-complement abs) #'telephone-line-row-pattern
-  #xe0b0)
-(telephone-line-defsubseparator telephone-line-abs-hollow-right
-  #'abs #'telephone-line-row-pattern-hollow
-  #xe0b3)
-(telephone-line-defsubseparator telephone-line-abs-hollow-left
-  (telephone-line-complement abs) #'telephone-line-row-pattern-hollow
-  #xe0b1)
+(defvar telephone-line-abs-right
+  (telephone-line-separator "abs-right"
+              :axis-func #'abs
+              :alt-char #xe0b2))
+(defvar telephone-line-abs-left
+  (telephone-line-separator "abs-left"
+              :axis-func (telephone-line-complement abs)
+              :alt-char #xe0b2))
+(defvar telephone-line-abs-hollow-right
+  (telephone-line-subseparator "abs-hollow-right"
+                 :axis-func #'abs
+                 :alt-char #xe0b2))
+(defvar telephone-line-abs-hollow-left
+  (telephone-line-subseparator "abs-hollow-left"
+                 :axis-func (telephone-line-complement abs)
+                 :alt-char #xe0b2))
 
 (telephone-line-defseparator telephone-line-cubed-right
   (lambda (x) (expt x 3)) #'telephone-line-row-pattern)

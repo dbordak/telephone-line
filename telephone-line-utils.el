@@ -21,6 +21,7 @@
 
 (require 'cl-lib)
 (require 'color)
+(require 'eieio)
 
 (require 'memoize)
 (require 's)
@@ -140,7 +141,7 @@ color1 and color2."
        (cons (- 1 rem)  ;Right AA pixel
              (make-list (- total intpadding 2) 1)))))) ;Right gap
 
-(defun telephone-line-create-body (width height axis-func pattern-func)
+(defun telephone-line--create-body (width height axis-func pattern-func)
   "Create a bytestring of a PBM image body of dimensions WIDTH and HEIGHT, and shape created from AXIS-FUNC and PATTERN-FUNC."
   (let* ((normalized-axis (telephone-line--normalize-axis
                            (mapcar axis-func (telephone-line-create-axis height))))
@@ -175,17 +176,6 @@ color1 and color2."
                            :background bg-color
                            :inverse-video t))))))
 
-(defmacro telephone-line-defseparator (name axis-func pattern-func &optional alt-char forced-width)
-  "Define a separator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH.
-
-NOTE: Forced-width primary separators are not currently supported."
-  (declare (indent defun))
-  `(telephone-line--defseparator-internal ,name
-     (let ((height (telephone-line-separator-height))
-           (width (or ,forced-width (telephone-line-separator-width))))
-       (telephone-line-create-body width height ,axis-func ,pattern-func))
-     (char-to-string ,alt-char)))
-
 (defun telephone-line--pad-body (body char-width)
   "Pad 2d byte-list BODY to a width of CHAR-WIDTH, given as a number of characters."
   (let* ((body-width (length (car body)))
@@ -196,6 +186,17 @@ NOTE: Forced-width primary separators are not currently supported."
               (append left-padding row right-padding))
             body)))
 
+(defmacro telephone-line-defseparator (name axis-func pattern-func &optional alt-char forced-width)
+  "Define a separator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH.
+
+NOTE: Forced-width primary separators are not currently supported."
+  (declare (indent defun))
+  `(telephone-line--defseparator-internal ,name
+     (let ((height (telephone-line-separator-height))
+           (width (or ,forced-width (telephone-line-separator-width))))
+       (telephone-line--create-body width height ,axis-func ,pattern-func))
+     (char-to-string ,alt-char)))
+
 (defmacro telephone-line-defsubseparator (name axis-func pattern-func &optional alt-char forced-width)
   "Define a subseparator named NAME, using AXIS-FUNC and PATTERN-FUNC to create the shape, optionally forcing FORCED-WIDTH."
   (declare (indent defun))
@@ -205,7 +206,7 @@ NOTE: Forced-width primary separators are not currently supported."
             (char-width (+ (ceiling width (frame-char-width))
                            telephone-line-separator-extra-padding)))
         (telephone-line--pad-body
-         (telephone-line-create-body width height ,axis-func ,pattern-func)
+         (telephone-line--create-body width height ,axis-func ,pattern-func)
          char-width))
      (string ?  ,alt-char ? )))
 
@@ -242,6 +243,55 @@ Return nil for blank/empty strings."
       (if compiled
           (replace-regexp-in-string "%" "%%" trimmed-str)
         str))))
+
+(defclass telephone-line-separator ()
+  ((axis-func :initarg :axis-func)
+   (pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern)
+   (alt-char :initarg :alt-char)
+   (image-cache :initform (make-hash-table :test 'equal))))
+
+(defclass telephone-line-subseparator (telephone-line-separator)
+  ((pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern-hollow)))
+
+(defmethod telephone-line-separator-create-body ((obj telephone-line-separator) &optional forced-width)
+  (telephone-line--create-body (telephone-line-separator-width)
+                (telephone-line-separator-height)
+                (oref obj axis-func)
+                (oref obj pattern-func)))
+
+(defmethod telephone-line-separator-create-body ((obj telephone-line-subseparator) &optional forced-width)
+  (let* ((height (telephone-line-separator-height))
+         (width (or forced-width (telephone-line-separator-width)))
+         (char-width (+ (ceiling width (frame-char-width))
+                        telephone-line-separator-extra-padding)))
+    (telephone-line--pad-body
+     (telephone-line--create-body width height
+                   (oref obj axis-func)
+                   (oref obj pattern-func))
+     char-width)))
+
+(defmethod telephone-line-separator-render ((obj telephone-line-separator) foreground background)
+  (let* ((bg-color (telephone-line--separator-arg-handler background))
+         (fg-color (telephone-line--separator-arg-handler foreground))
+         (hash-key (concat bg-color "_" fg-color)))
+    (if window-system
+        ;; Return cached image if we have it.
+        (or (gethash hash-key (oref obj image-cache))
+            (let ((height (telephone-line-separator-height))
+                  (width (telephone-line-separator-width)))
+              (puthash hash-key
+                       (telephone-line-propertize-image
+                        (telephone-line--create-pbm-image (telephone-line-separator-create-body obj)
+                                            bg-color fg-color))
+                       (oref obj image-cache))))
+
+      (list :propertize (char-to-string (oref obj alt-char))
+            'face (list :foreground fg-color
+                        :background bg-color
+                        :inverse-video t)))))
+
+(defmethod telephone-line-separator-clear-cache ((obj telephone-line-separator))
+  (clrhash (oref obj image-cache)))
 
 ;;Stole this bit from seq.el
 (defun telephone-line--activate-font-lock-keywords ()

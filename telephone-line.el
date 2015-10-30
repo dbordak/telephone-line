@@ -82,33 +82,33 @@
   :group 'telephone-line-evil)
 
 (defface telephone-line-evil-operator
-  '((t (:background "sky blue" :inherit telephone-line-evil)))
+  '((t (:background "violet" :inherit telephone-line-evil)))
   "Face used in evil color-coded segments when in Operator state."
   :group 'telephone-line-evil)
 
 (defface telephone-line-evil-emacs
-  '((t (:background "blue violet" :inherit telephone-line-evil)))
+  '((t (:background "dark violet" :inherit telephone-line-evil)))
   "Face used in evil color-coded segments when in Emacs state."
   :group 'telephone-line-evil)
 
-(defcustom telephone-line-primary-left-separator #'telephone-line-abs-left
+(defcustom telephone-line-primary-left-separator 'telephone-line-abs-left
   "The primary separator to use on the left-hand side."
   :group 'telephone-line
   :type 'function)
 
-(defcustom telephone-line-primary-right-separator #'telephone-line-abs-right
+(defcustom telephone-line-primary-right-separator 'telephone-line-abs-right
   "The primary separator to use on the right-hand side."
   :group 'telephone-line
   :type 'function)
 
-(defcustom telephone-line-secondary-left-separator #'telephone-line-abs-hollow-left
+(defcustom telephone-line-secondary-left-separator 'telephone-line-abs-hollow-left
   "The secondary separator to use on the left-hand side.
 
 Secondary separators do not incur a background color change."
   :group 'telephone-line
   :type 'function)
 
-(defcustom telephone-line-secondary-right-separator #'telephone-line-abs-hollow-right
+(defcustom telephone-line-secondary-right-separator 'telephone-line-abs-hollow-right
   "The secondary separator to use on the right-hand side.
 
 Secondary separators do not incur a background color change."
@@ -177,7 +177,7 @@ Secondary separators do not incur a background color change."
            (cl-list*
             cur-subsegments ;New segment
             ;; Separator
-            `(:eval (funcall #',primary-sep
+            `(:eval (telephone-line-separator-render ,primary-sep
                              (telephone-line-face-map ',prev-color-sym)
                              (telephone-line-face-map ',cur-color-sym)))
             accumulated-segments) ;Old segments
@@ -195,7 +195,7 @@ Secondary separators do not incur a background color change."
   (let* ((cur-face (telephone-line-face-map color-sym))
          (opposite-face (telephone-line-face-map
                          (telephone-line-opposite-face-sym color-sym)))
-         (subseparator (funcall sep-func cur-face opposite-face)))
+         (subseparator (telephone-line-separator-render sep-func cur-face opposite-face)))
     (telephone-line-propertize-segment
      color-sym cur-face
      (cdr (seq-mapcat
@@ -218,7 +218,7 @@ separators, as they are conditional, are evaluated on-the-fly."
                     (cons color-sym
                           `(:eval
                             (telephone-line-add-subseparators
-                             ',subsegments #',secondary-sep ',color-sym)))))
+                             ',subsegments ,secondary-sep ',color-sym)))))
                 (seq-reverse segments))
         '(nil . nil))))
 
