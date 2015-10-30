@@ -222,10 +222,10 @@ separators, as they are conditional, are evaluated on-the-fly."
                 (seq-reverse segments))
         '(nil . nil))))
 
-(defun telephone-line-width (values num-separators)
+(defun telephone-line-width (values num-separators separator)
   "Get the column-length of VALUES, with NUM-SEPARATORS interposed."
   (let ((base-width (string-width (format-mode-line values)))
-        (separator-width (/ (telephone-line-separator-width)
+        (separator-width (/ (telephone-line-separator-width separator)
                             (float (frame-char-width)))))
     (if window-system
         (+ base-width
@@ -265,7 +265,8 @@ separators, as they are conditional, are evaluated on-the-fly."
     (:eval (telephone-line-fill
             (telephone-line-width
              ',(telephone-line--generate-mode-line-rhs)
-             ,(- (length telephone-line-rhs) 1))))
+             ,(- (length telephone-line-rhs) 1)
+             ,telephone-line-primary-right-separator)))
     ,@(telephone-line--generate-mode-line-rhs)))
 
 (defvar telephone-line--default-mode-line mode-line-format)

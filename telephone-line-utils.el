@@ -41,14 +41,6 @@
   :type 'boolean
   :group 'telephone-line-evil)
 
-(defun telephone-line-separator-height ()
-  "Get the height for a telephone-line separator."
-  (or telephone-line-height (frame-char-height)))
-
-(defun telephone-line-separator-width ()
-  "Get the default width for a telephone-line separator."
-  (ceiling (telephone-line-separator-height) 2))
-
 (defun telephone-line-create-axis (length)
   "Create an axis of length LENGTH.
 For odd lengths, this is a sequence from -floor(LENGTH/2) to
@@ -202,36 +194,33 @@ Return nil for blank/empty strings."
    (alt-char :initarg :alt-char)
    (image-cache :initform (make-hash-table :test 'equal :size 10))))
 
+(defmethod telephone-line-separator-height ((obj telephone-line-separator))
+  (or telephone-line-height (frame-char-height)))
+
+(defmethod telephone-line-separator-width ((obj telephone-line-separator))
+  (or (oref obj forced-width) (ceiling (telephone-line-separator-height obj) 2)))
+
 (defclass telephone-line-subseparator (telephone-line-separator)
   ((pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern-hollow)))
 
-(defun telephone-line--create-body (width height axis-func pattern-func)
+(defmethod telephone-line-separator-create-body ((obj telephone-line-separator))
   "Create a bytestring of a PBM image body of dimensions WIDTH and HEIGHT, and shape created from AXIS-FUNC and PATTERN-FUNC."
-  (let* ((normalized-axis (telephone-line--normalize-axis
-                           (mapcar axis-func (telephone-line-create-axis height))))
+  (let* ((height (telephone-line-separator-height obj))
+         (width (telephone-line-separator-width obj))
+         (normalized-axis (telephone-line--normalize-axis
+                           (mapcar (oref obj axis-func) (telephone-line-create-axis height))))
          (range (1+ (seq-max normalized-axis)))
          (scaling-factor (/ width (float range))))
     (mapcar (lambda (x)
-              (funcall pattern-func
+              (funcall (oref obj pattern-func)
                        (* x scaling-factor) width))
             normalized-axis)))
 
-(defmethod telephone-line-separator-create-body ((obj telephone-line-separator))
-  (telephone-line--create-body (telephone-line-separator-width)
-                 (telephone-line-separator-height)
-                 (oref obj axis-func)
-                 (oref obj pattern-func)))
-
 (defmethod telephone-line-separator-create-body ((obj telephone-line-subseparator))
-  (let* ((height (telephone-line-separator-height))
-         (width (or (oref obj forced-width) (telephone-line-separator-width)))
-         (char-width (+ (ceiling width (frame-char-width))
-                        telephone-line-separator-extra-padding)))
-    (telephone-line--pad-body
-     (telephone-line--create-body width height
-                   (oref obj axis-func)
-                   (oref obj pattern-func))
-     char-width)))
+  (telephone-line--pad-body (call-next-method)
+              (+ (ceiling (telephone-line-separator-width obj)
+                          (frame-char-width))
+                 telephone-line-separator-extra-padding)))
 
 (defmethod telephone-line-separator-render ((obj telephone-line-separator) foreground background)
   (let* ((bg-color (telephone-line--separator-arg-handler background))
