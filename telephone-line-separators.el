@@ -43,15 +43,15 @@
 (defvar telephone-line-abs-left
   (telephone-line-separator "abs-left"
               :axis-func (telephone-line-complement abs)
-              :alt-char #xe0b2))
+              :alt-char #xe0b0))
 (defvar telephone-line-abs-hollow-right
   (telephone-line-subseparator "abs-hollow-right"
                  :axis-func #'abs
-                 :alt-char #xe0b2))
+                 :alt-char #xe0b3))
 (defvar telephone-line-abs-hollow-left
   (telephone-line-subseparator "abs-hollow-left"
                  :axis-func (telephone-line-complement abs)
-                 :alt-char #xe0b2))
+                 :alt-char #xe0b1))
 
 (defvar telephone-line-cubed-right
   (telephone-line-separator "cubed-right"

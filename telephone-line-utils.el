@@ -188,26 +188,28 @@ color1 and color2."
       (face-attribute arg :background)
     arg))
 
+(defmethod telephone-line-separator-render-image ((obj telephone-line-separator) foreground background)
+  (let ((hash-key (concat background "_" foreground)))
+    ;; Return cached image if we have it.
+    (or (gethash hash-key (oref obj image-cache))
+        (puthash hash-key
+                 (telephone-line-propertize-image
+                  (telephone-line--create-pbm-image (telephone-line-separator-create-body obj)
+                                      background foreground))
+                 (oref obj image-cache)))))
+
+(defmethod telephone-line-separator-render-unicode ((obj telephone-line-separator) foreground background)
+  (list :propertize (char-to-string (oref obj alt-char))
+        'face (list :foreground foreground
+                    :background background
+                    :inverse-video t)))
+
 (defmethod telephone-line-separator-render ((obj telephone-line-separator) foreground background)
-  (telephone-line-separator--render obj
-                      (telephone-line-separator--arg-handler foreground)
-                      (telephone-line-separator--arg-handler background)))
-
-(defmethod telephone-line-separator--render ((obj telephone-line-separator) foreground background)
-  (if window-system
-      (let ((hash-key (concat background "_" foreground)))
-        ;; Return cached image if we have it.
-        (or (gethash hash-key (oref obj image-cache))
-            (puthash hash-key
-                     (telephone-line-propertize-image
-                      (telephone-line--create-pbm-image (telephone-line-separator-create-body obj)
-                                          background foreground))
-                     (oref obj image-cache))))
-
-      (list :propertize (char-to-string (oref obj alt-char))
-            'face (list :foreground foreground
-                        :background background
-                        :inverse-video t))))
+  (let ((fg-color (telephone-line-separator--arg-handler foreground))
+        (bg-color (telephone-line-separator--arg-handler background)))
+    (if window-system
+        (telephone-line-separator-render-image obj fg-color bg-color)
+      (telephone-line-separator-render-unicode obj fg-color bg-color))))
 
 (defmethod telephone-line-separator-clear-cache ((obj telephone-line-separator))
   (clrhash (oref obj image-cache)))
