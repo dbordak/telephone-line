@@ -94,26 +94,26 @@
 (defcustom telephone-line-primary-left-separator 'telephone-line-abs-left
   "The primary separator to use on the left-hand side."
   :group 'telephone-line
-  :type 'function)
+  :type 'symbol)
 
 (defcustom telephone-line-primary-right-separator 'telephone-line-abs-right
   "The primary separator to use on the right-hand side."
   :group 'telephone-line
-  :type 'function)
+  :type 'symbol)
 
 (defcustom telephone-line-secondary-left-separator 'telephone-line-abs-hollow-left
   "The secondary separator to use on the left-hand side.
 
 Secondary separators do not incur a background color change."
   :group 'telephone-line
-  :type 'function)
+  :type 'symbol)
 
 (defcustom telephone-line-secondary-right-separator 'telephone-line-abs-hollow-right
   "The secondary separator to use on the right-hand side.
 
 Secondary separators do not incur a background color change."
   :group 'telephone-line
-  :type 'function)
+  :type 'symbol)
 
 (defun telephone-line-fill (reserve &optional face)
   "Return RESERVE empty space on the right, optionally with a FACE."
