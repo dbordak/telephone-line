@@ -49,8 +49,8 @@ The configuration format for both is an alist containing pairs of the form
 Each one of these pairs defines a "supersegment" -- a bunch of
 subsegments using the same face. In the screenshots, you can see the
 minor modes and buffer information are in the same color, though they
-aren't the same segment (i.e. ~FlyC- ivy U:--- \*scratch\*~ consists
-of the subsegments ~FlyC- ivy~ and ~U:--- \*scratch\*~). These
+aren't the same segment (i.e. ~FlyC- ivy U:--- *scratch*~ consists
+of the subsegments ~FlyC- ivy~ and ~U:--- *scratch*~). These
 subsegments are separated by secondary separators, such as the thin
 powerline symbol (it looks like ~>~, but larger).
 
