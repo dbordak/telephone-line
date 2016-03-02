@@ -6,7 +6,7 @@
 ;; URL: https://github.com/dbordak/telephone-line
 ;; Version: 0.3
 ;; Keywords: mode-line
-;; Package-Requires: ((emacs "24.3") (cl-lib "0.5") (cl-generic "0.2") (s "1.9.0") (seq "1.8"))
+;; Package-Requires: ((emacs "24.4") (cl-lib "0.5") (cl-generic "0.2") (s "1.9.0") (seq "1.8"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -128,6 +128,7 @@ Secondary separators do not incur a background color change."
     (setq telephone-line-selected-window (frame-selected-window))))
 
 (add-hook 'window-configuration-change-hook #'telephone-line--set-selected-window)
+(add-hook 'focus-in-hook #'telephone-line--set-selected-window)
 (defadvice select-window (after telephone-line-select-window activate)
   "Set telephone-line's selected window value for use in determining the active mode-line."
   (telephone-line--set-selected-window))
