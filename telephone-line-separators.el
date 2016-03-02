@@ -32,51 +32,51 @@
           (number-sequence 1 width)))
 
 (defvar telephone-line-gradient
-  (telephone-line-separator "gradient"
-              :axis-func #'identity
-              :pattern-func #'telephone-line-row-pattern-fixed-gradient))
+  (make-instance 'telephone-line-separator
+                 :axis-func #'identity
+                 :pattern-func #'telephone-line-row-pattern-fixed-gradient))
 
 (defvar telephone-line-abs-right
-  (telephone-line-separator "abs-right"
-              :axis-func #'abs
-              :alt-char #xe0b2))
+  (make-instance 'telephone-line-separator
+                 :axis-func #'abs
+                 :alt-char #xe0b2))
 (defvar telephone-line-abs-left
-  (telephone-line-separator "abs-left"
-              :axis-func (telephone-line-complement abs)
-              :alt-char #xe0b0))
+  (make-instance 'telephone-line-separator
+                 :axis-func (telephone-line-complement abs)
+                 :alt-char #xe0b0))
 (defvar telephone-line-abs-hollow-right
-  (telephone-line-subseparator "abs-hollow-right"
+  (make-instance 'telephone-line-subseparator
                  :axis-func #'abs
                  :alt-char #xe0b3))
 (defvar telephone-line-abs-hollow-left
-  (telephone-line-subseparator "abs-hollow-left"
+  (make-instance 'telephone-line-subseparator
                  :axis-func (telephone-line-complement abs)
                  :alt-char #xe0b1))
 
 (defvar telephone-line-cubed-right
-  (telephone-line-separator "cubed-right"
-              :axis-func (lambda (x) (expt x 3))))
+  (make-instance 'telephone-line-separator
+                 :axis-func (lambda (x) (expt x 3))))
 (defvar telephone-line-cubed-left
-  (telephone-line-separator "cubed-left"
-              :axis-func (lambda (x) (- (expt x 3)))))
+  (make-instance 'telephone-line-separator
+                 :axis-func (lambda (x) (- (expt x 3)))))
 (defvar telephone-line-cubed-hollow-right
-  (telephone-line-subseparator "cubed-hollow-right"
+  (make-instance 'telephone-line-subseparator
                  :axis-func (lambda (x) (expt x 3))))
 (defvar telephone-line-cubed-hollow-left
-  (telephone-line-subseparator "cubed-hollow-left"
+  (make-instance 'telephone-line-subseparator
                  :axis-func (lambda (x) (- (expt x 3)))))
 
 (defvar telephone-line-identity-right
-  (telephone-line-separator "identity-right" :axis-func #'identity))
+  (make-instance 'telephone-line-separator :axis-func #'identity))
 (defvar telephone-line-identity-left
-  (telephone-line-separator "identity-left" :axis-func #'-))
+  (make-instance 'telephone-line-separator :axis-func #'-))
 (defvar telephone-line-identity-hollow-right
-  (telephone-line-subseparator "identity-hollow-right" :axis-func #'identity))
+  (make-instance 'telephone-line-subseparator :axis-func #'identity))
 (defvar telephone-line-identity-hollow-left
-  (telephone-line-subseparator "identity-hollow-left" :axis-func #'-))
+  (make-instance 'telephone-line-subseparator :axis-func #'-))
 
 (defvar telephone-line-nil
-  (telephone-line-separator "nil" :axis-func (lambda (c1 c2) nil)))
+  (make-instance 'telephone-line-separator :axis-func (lambda (c1 c2) nil)))
 
 (provide 'telephone-line-separators)
 ;;; telephone-line-separators.el ends here
