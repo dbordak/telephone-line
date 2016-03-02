@@ -1,6 +1,6 @@
 ;;; telephone-line-utils.el --- Functions for defining segparators and segments
 
-;; Copyright (C) 2015 Daniel Bordak
+;; Copyright (C) 2015-2016 Daniel Bordak
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -20,8 +20,8 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'color)
 (require 'cl-generic)
+(require 'color)
 (require 'eieio)
 
 (require 'seq)
