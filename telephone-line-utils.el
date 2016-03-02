@@ -42,10 +42,10 @@
 
 (defun telephone-line-trim (string)
   "Ad-hoc string trim which removes spaces and up to the first brace from STRING."
-  (let ((s (if (string-match "[\])][ ]*\\'" string)
+  (let ((s (if (string-match "[\])]?[ ]*\\'" string)
                (replace-match "" t t string)
              string)))
-    (if (string-match "\\`[ ]*[\[(]" s)
+    (if (string-match "\\`[ ]*[\[(]?" s)
         (replace-match "" t t s)
       s)))
 
@@ -152,16 +152,16 @@ color1 and color2."
    (alt-char :initarg :alt-char)
    (image-cache :initform (make-hash-table :test 'equal :size 10))))
 
-(defmethod telephone-line-separator-height ((obj telephone-line-separator))
+(cl-defmethod telephone-line-separator-height ((obj telephone-line-separator))
   (or telephone-line-height (frame-char-height)))
 
-(defmethod telephone-line-separator-width ((obj telephone-line-separator))
+(cl-defmethod telephone-line-separator-width ((obj telephone-line-separator))
   (or (oref obj forced-width) (ceiling (telephone-line-separator-height obj) 2)))
 
 (defclass telephone-line-subseparator (telephone-line-separator)
   ((pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern-hollow)))
 
-(defmethod telephone-line-separator-create-body ((obj telephone-line-separator))
+(cl-defmethod telephone-line-separator-create-body ((obj telephone-line-separator))
   "Create a bytestring of a PBM image body of dimensions WIDTH and HEIGHT, and shape created from AXIS-FUNC and PATTERN-FUNC."
   (let* ((height (telephone-line-separator-height obj))
          (width (telephone-line-separator-width obj))
@@ -184,19 +184,19 @@ color1 and color2."
               (append left-padding row right-padding))
             body)))
 
-(defmethod telephone-line-separator-create-body ((obj telephone-line-subseparator))
+(cl-defmethod telephone-line-separator-create-body ((obj telephone-line-subseparator))
   (telephone-line--pad-body (call-next-method)
               (+ (ceiling (telephone-line-separator-width obj)
                           (frame-char-width))
                  telephone-line-separator-extra-padding)))
 
-(defmethod telephone-line-separator--arg-handler (arg) :static
+(cl-defmethod telephone-line-separator--arg-handler (arg) :static
   "Translate ARG into an appropriate color for a separator."
   (if (facep arg)
       (face-attribute arg :background)
     arg))
 
-(defmethod telephone-line-separator-render-image ((obj telephone-line-separator) foreground background)
+(cl-defmethod telephone-line-separator-render-image ((obj telephone-line-separator) foreground background)
   (let ((hash-key (concat background "_" foreground)))
     ;; Return cached image if we have it.
     (or (gethash hash-key (oref obj image-cache))
@@ -206,20 +206,20 @@ color1 and color2."
                                       background foreground))
                  (oref obj image-cache)))))
 
-(defmethod telephone-line-separator-render-unicode ((obj telephone-line-separator) foreground background)
+(cl-defmethod telephone-line-separator-render-unicode ((obj telephone-line-separator) foreground background)
   (list :propertize (char-to-string (oref obj alt-char))
         'face (list :foreground foreground
                     :background background
                     :inverse-video t)))
 
-(defmethod telephone-line-separator-render ((obj telephone-line-separator) foreground background)
+(cl-defmethod telephone-line-separator-render ((obj telephone-line-separator) foreground background)
   (let ((fg-color (telephone-line-separator--arg-handler foreground))
         (bg-color (telephone-line-separator--arg-handler background)))
     (if window-system
         (telephone-line-separator-render-image obj fg-color bg-color)
       (telephone-line-separator-render-unicode obj fg-color bg-color))))
 
-(defmethod telephone-line-separator-clear-cache ((obj telephone-line-separator))
+(cl-defmethod telephone-line-separator-clear-cache ((obj telephone-line-separator))
   (clrhash (oref obj image-cache)))
 
 :autoload
