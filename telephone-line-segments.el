@@ -24,8 +24,6 @@
 
 (require 'telephone-line-utils)
 
-(require 's)
-
 (telephone-line-defsegment telephone-line-vc-segment
   vc-mode)
 
@@ -34,12 +32,13 @@
 
 (telephone-line-defsegment telephone-line-position-segment
   (if (eq major-mode 'paradox-menu-mode)
-      mode-line-front-space  ;Paradox fills this with position info.
+      ;;Paradox fills this with position info.
+      (telephone-line-trim (format-mode-line mode-line-front-space))
     mode-line-position))
 
 (telephone-line-defsegment telephone-line-airline-position-segment
   (if (eq major-mode 'paradox-menu-mode)
-      mode-line-front-space
+      (telephone-line-trim (format-mode-line mode-line-front-space))
     '((-3 "%p") " %4l:%3c")))
 
 (telephone-line-defsegment telephone-line-misc-info-segment
@@ -82,8 +81,7 @@ mouse-3: Toggle minor modes"
 
 (telephone-line-defsegment* telephone-line-erc-modified-channels-segment
   (when (boundp 'erc-modified-channels-object)
-    (s-with erc-modified-channels-object
-      s-trim (s-chop-suffix "]") (s-chop-prefix "["))))
+    (telephone-line-trim erc-modified-channels-object)))
 
 (eval-after-load 'evil
   '(telephone-line-defsegment* telephone-line-evil-tag-segment
@@ -95,7 +93,7 @@ mouse-3: Toggle minor modes"
                   (if telephone-line-evil-use-short-tag "VL" "V-LINE"))
                  (t "VISUAL"))))
        (if telephone-line-evil-use-short-tag
-           (s-left 2 tag)
+           (seq-take tag 2)
          tag))))
 
 (provide 'telephone-line-segments)

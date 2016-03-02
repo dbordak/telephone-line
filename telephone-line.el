@@ -6,7 +6,7 @@
 ;; URL: https://github.com/dbordak/telephone-line
 ;; Version: 0.3
 ;; Keywords: mode-line
-;; Package-Requires: ((emacs "24.4") (cl-lib "0.5") (cl-generic "0.2") (s "1.9.0") (seq "1.8"))
+;; Package-Requires: ((emacs "24.4") (cl-lib "0.5") (cl-generic "0.2") (seq "1.8"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -34,7 +34,6 @@
 (require 'telephone-line-segments)
 
 (require 'seq)
-(require 's)
 (require 'cl-lib)
 
 (defgroup telephone-line nil
@@ -186,7 +185,7 @@ Secondary separators do not incur a background color change."
        cur-color-sym))))
 
 (defun telephone-line-propertize-segment (pred face segment)
-  (unless (s-blank? (s-trim (format-mode-line segment)))
+  (unless (seq-empty-p (telephone-line-trim (format-mode-line segment)))
     (if pred
         `(:propertize (" " ,segment " ") face ,face)
       `(" " ,segment " "))))
