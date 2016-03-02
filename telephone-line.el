@@ -1,4 +1,4 @@
-;;; telephone-line.el --- Rewrite of Powerline
+;;; telephone-line.el --- Rewrite of Powerline -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2015 Daniel Bordak
 
@@ -6,7 +6,7 @@
 ;; URL: https://github.com/dbordak/telephone-line
 ;; Version: 0.3
 ;; Keywords: mode-line
-;; Package-Requires: ((emacs "24.3") (cl-lib "0.5") (eieio "1.4") (s "1.9.0") (seq "1.8"))
+;; Package-Requires: ((emacs "24.3") (cl-lib "0.5") (cl-generic "0.2") (s "1.9.0") (seq "1.8"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by

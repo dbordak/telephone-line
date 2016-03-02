@@ -21,7 +21,7 @@
 
 (require 'cl-lib)
 (require 'color)
-(require 'eieio)
+(require 'cl-generic)
 
 (require 's)
 (require 'seq)
