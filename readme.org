@@ -95,9 +95,13 @@ Here's the relevant section:
         '((nil    . (telephone-line-misc-info-segment))
           (accent . (telephone-line-major-mode-segment))
           (evil   . (telephone-line-airline-position-segment))))
+
+(telephone-line t)
 #+end_src
 
 ...That's it. That's essentially all there is to creating a theme.
+Make sure you initialize it after the configuration, though, or
+else some buffers won't have it enabled.
 
 Now, before you go copy-pasting the above config, it's important to
 know that it requires both evil and erc. If you're not using evil,
