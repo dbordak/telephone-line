@@ -96,7 +96,7 @@ Here's the relevant section:
           (accent . (telephone-line-major-mode-segment))
           (evil   . (telephone-line-airline-position-segment))))
 
-(telephone-line t)
+(telephone-line-mode t)
 #+end_src
 
 ...That's it. That's essentially all there is to creating a theme.
