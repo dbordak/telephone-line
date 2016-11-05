@@ -96,5 +96,9 @@ mouse-3: Toggle minor modes"
            (seq-take tag 2)
          tag))))
 
+(eval-after-load 'workgroups2
+  '(telephone-line-defsegment telephone-line-workgroups2-segment
+     (wg-mode-line-string)))
+
 (provide 'telephone-line-segments)
 ;;; telephone-line-segments.el ends here
