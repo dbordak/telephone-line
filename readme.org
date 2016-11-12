@@ -65,6 +65,20 @@ By default*, the choices are:
 
 *There is no way of adding more color symbols for now.
 
+Below is a list of available segments:
+
+ - telephone-line-vc-segment
+ - telephone-line-process-segment
+ - telephone-line-position-segment
+ - telephone-line-airline-position-segment
+ - telephone-line-misc-info-segment
+ - telephone-line-buffer-segment
+ - telephone-line-major-mode-segment
+ - telephone-line-minor-mode-segment
+ - telephone-line-erc-modified-channels-segment
+ - telephone-line-evil-tag-segment
+ - telephone-line-workgroups2-segment
+
 ** Diagram
 
 [[./screenshots/diagram-1-cropped.png]]
