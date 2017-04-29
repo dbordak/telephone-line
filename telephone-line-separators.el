@@ -76,7 +76,7 @@
   (make-instance 'telephone-line-subseparator :axis-func #'-))
 
 (defvar telephone-line-nil
-  (make-instance 'telephone-line-separator :axis-func (lambda (c1 c2) nil)))
+  (make-instance 'telephone-line-separator :axis-func (lambda (c) 0)))
 
 (provide 'telephone-line-separators)
 ;;; telephone-line-separators.el ends here
