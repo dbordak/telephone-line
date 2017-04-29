@@ -141,7 +141,8 @@ Secondary separators do not incur a background color change."
   "Return RESERVE empty space on the right, optionally with a FACE."
   (propertize " "
               'display `((space :align-to (- (+ right right-fringe right-margin)
-                                             ,reserve)))))
+                                             ,reserve)))
+              'face face))
 
 (defvar telephone-line-selected-window nil)
 
@@ -294,7 +295,8 @@ separators, as they are conditional, are evaluated on-the-fly."
             (telephone-line-width
              ',(telephone-line--generate-mode-line-rhs)
              ,(- (length telephone-line-rhs) 1)
-             ,telephone-line-primary-right-separator)))
+             ,telephone-line-primary-right-separator)
+            (telephone-line-face-map (caar telephone-line-rhs))))
     ,@(telephone-line--generate-mode-line-rhs)))
 
 (defvar telephone-line--default-mode-line mode-line-format)
