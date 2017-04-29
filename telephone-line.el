@@ -56,17 +56,17 @@
   :group 'telephone-line-evil)
 
 (defface telephone-line-evil-insert
-  '((t (:background "green" :inherit telephone-line-evil)))
+  '((t (:background "forest green" :inherit telephone-line-evil)))
   "Face used in evil color-coded segments when in Insert state."
   :group 'telephone-line-evil)
 
 (defface telephone-line-evil-normal
-  '((t (:background "red" :inherit telephone-line-evil)))
+  '((t (:background "red3" :inherit telephone-line-evil)))
   "Face used in evil color-coded segments when in Normal state."
   :group 'telephone-line-evil)
 
 (defface telephone-line-evil-visual
-  '((t (:background "orange" :inherit telephone-line-evil)))
+  '((t (:background "dark orange" :inherit telephone-line-evil)))
   "Face used in evil color-coded segments when in Visual{,-Block,-Line} state."
   :group 'telephone-line-evil)
 
@@ -76,7 +76,7 @@
   :group 'telephone-line-evil)
 
 (defface telephone-line-evil-motion
-  '((t (:background "blue" :inherit telephone-line-evil)))
+  '((t (:background "dark blue" :inherit telephone-line-evil)))
   "Face used in evil color-coded segments when in Motion state."
   :group 'telephone-line-evil)
 
@@ -161,7 +161,7 @@ Secondary separators do not incur a background color change."
 (defun telephone-line-evil-face (active)
   "Return an appropriate face for the current evil mode, given whether the frame is ACTIVE."
   (cond ((not active) 'mode-line-inactive)
-        ((and (boundp 'xah-fly-keys) xah-fly-keys)
+        ((bound-and-true-p xah-fly-keys)
          (if xah-fly-insert-state-q
              'telephone-line-evil-insert
            'telephone-line-evil-normal))
