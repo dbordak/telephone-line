@@ -1,0 +1,190 @@
+#+Title: Configuration
+#+Author: Daniel Bordak
+
+* Segment overview
+
+Themes are defined by customizing the ~telephone-line-lhs~ and
+~telephone-line-rhs~ variables, for the left and right parts of the
+mode-line, respectively.
+
+The configuration format for both is an alist containing pairs of the form
+
+#+begin_src emacs-lisp
+(COLOR-SYMBOL . (LIST OF SUBSEGMENT FUNCTIONS))
+#+end_src
+
+Each one of these pairs defines a "supersegment" -- a bunch of
+subsegments using the same face. In the screenshots, you can see the
+minor modes and buffer information are in the same color, though they
+aren't the same segment (i.e. ~FlyC- ivy U:--- *scratch*~ consists
+of the subsegments ~FlyC- ivy~ and ~U:--- *scratch*~). These
+subsegments are separated by secondary separators, such as the thin
+powerline symbol (it looks like ~>~, but larger).
+
+** Color Symbols
+
+The ~Color Symbol~ determines what face is used for the supersegment.
+By default, the choices are:
+
+#+begin_example
+    nil:    mode-line                                  or mode-line-inactive
+    accent: telephone-line-accent-active               or telephone-line-accent-inactive
+    evil:   telephone-line-evil-{insert, normal, etc.} or mode-line-inactive
+#+end_example
+
+You can add more by customizing ~telephone-line-faces~.
+
+Each of these symbols also has a subseparator color associated with
+it, which you can configure by changing
+~telephone-line-subseparator-faces~. By default, ~nil~ uses ~accent~'s
+background color as its subseparator color, and the others use
+~nil~'s. If you ever map a color symbol to itself, this will cause the
+subseparator to have the same foreground as the rest of the text in
+that segment.
+
+** Diagram
+
+[[./screenshots/diagram-1-cropped.png]]
+
+This shows how a config maps to the mode-line. Important to note is
+how the accent supersegment has three subsegments, but only one is
+displayed (and there are no subseparators). This is because
+subsegments are dynamic. When a subsegment has no information to
+display, it doesn't need a subseparator (in contrast, primary
+separators are _always_ displayed).
+
+** Example Configuration
+
+The screenshots above aren't the default configuration; it's all
+defined in my dotfiles.
+
+Here's the relevant section:
+
+#+begin_src emacs-lisp
+(setq telephone-line-lhs
+        '((evil   . (telephone-line-evil-tag-segment))
+          (accent . (telephone-line-vc-segment
+                     telephone-line-erc-modified-channels-segment
+                     telephone-line-process-segment))
+          (nil    . (telephone-line-minor-mode-segment
+                     telephone-line-buffer-segment))))
+(setq telephone-line-rhs
+        '((nil    . (telephone-line-misc-info-segment))
+          (accent . (telephone-line-major-mode-segment))
+          (evil   . (telephone-line-airline-position-segment))))
+
+(telephone-line-mode t)
+#+end_src
+
+...That's it. That's essentially all there is to creating a theme.
+Make sure you initialize it after the configuration, though, or
+else some buffers won't have it enabled.
+
+Now, before you go copy-pasting the above config, it's important to
+know that it requires both evil and erc. If you're not using evil,
+though, the defaults should be fine.
+
+* Creating New Segments
+
+There are a bunch of different ~defsegment~ functions for creating
+your own segments, but when in doubt, try ~defsegment*~. This is
+kinda... Not well defined at the moment, but I'll try to clear it up.
+
+Here's an example of a static segment:
+
+#+begin_src emacs-lisp
+(telephone-line-defsegment my-meme-segment
+  "Meme")
+#+end_src
+
+This segment can now be added as described above. It will match the
+color of the supersegment, and staticly display "Meme".
+
+The ~defsegment~ functions can also take lists of strings.
+
+* Creating New Separators
+
+I mentioned before that the separators are defined in terms of two
+functions. Here's the way that works:
+
+Imagine the cross-section of the mode-line as a number line, ranging
+from -height/2 to +height/2. The first function is applied across this
+number line to get the shape of the separator. Here's the most famous
+separator, defined as 2*abs(x).
+
+#+BEGIN_EXAMPLE
+    -4 |       *
+    -3 |     *
+    -2 |   *
+    -1 | *
+     0 +
+     1 | *
+     2 |   *
+     3 |     *
+     4 |       *
+#+END_EXAMPLE
+
+There you go: a separator. However, we still need another piece.
+That second function I mentioned determines the fill -- the difference
+between a solid separator and a hollow one.
+
+This isn't the sort of function I'd expect to get much customization
+out of, but there are 3 included ones. The first makes a hollow
+separator, which looks more-or-less like the ASCII art above. The
+second provides a fill:
+
+#+BEGIN_EXAMPLE
+    -4 |       *
+    -3 |     *--
+    -2 |   *----
+    -1 | *------
+     0 +--------
+     1 | *------
+     2 |   *----
+     3 |     *--
+     4 |       *
+#+END_EXAMPLE
+
+The third one is a special thing that ignores the first function
+entirely and just produces the same output regardless of the input.
+It's used to make the gradient separator.
+
+Choice of separator can be customized as well, by changing the values
+of =telephone-line-{primary,secondary}-{left,right}-separator=. This
+should be a function which accepts two faces or colors (if provided
+faces, the built-in separators use the background field) and returns a
+propertized image. The separators can be defined independently of one
+another -- feel free to use a nominally left separator for your rhs,
+or mix two different types of separators.
+
+** Unicode Separators
+
+The function for defining separators takes an optional argument for a
+character to display when in a terminal. For the abs separator, this
+is set to the usual Powerline symbol.
+
+* Separator Types
+
+You probably also noticed from the screenshots that there are in fact
+two types of separator on either side of the mode-line. The way this
+works involves the lhs/rhs alists.
+
+Basically, lists of segment functions associated to a color symbol are
+rendered into a 'supersegment'. Supersegments are separated by primary
+separators. Internally, non-nil segment-functions are rendered into
+'subsegments'. Subsegments are separated by secondary separators.
+
+Primary separators are static -- the customization I showed will
+always produce 4 primary separators. Secondaries depend upon the
+subsegments state, so there could be anywhere from 0-3 in my config.
+
+* Package structure
+
+- telephone-line.el: Stuff for setting up the mode-line
+- telephone-line-separators.el: Separator definitions
+- telephone-line-segments.el: Segment definitions
+- telephone-line-utils.el: Functions strictly for defining new
+  Separators and Segments
+
+If you just want the separators, you can just require that. It does
+depend upon utils, however.
