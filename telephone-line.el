@@ -90,6 +90,17 @@
   "Face used in evil color-coded segments when in Emacs state."
   :group 'telephone-line-evil)
 
+(defcustom telephone-line-faces
+  '((evil . telephone-line-evil-face)
+    (accent . (telephone-line-accent-active . telephone-line-accent-inactive))
+    (nil . (mode-line . mode-line-inactive)))
+  "Alist providing all the available face symbols.
+
+Symbols can either map to a pair of faces (ACTIVE . INACTIVE) or
+to a function which takes ACTIVE as a parameter."
+  :group 'telephone-line
+  :type '(alist :key-type color-symbol :value-type pair-or-function))
+
 (defcustom telephone-line-primary-left-separator 'telephone-line-abs-left
   "The primary separator to use on the left-hand side."
   :group 'telephone-line
@@ -145,18 +156,16 @@ Secondary separators do not incur a background color change."
 
 (defun telephone-line--face-map (sym active)
   "Return the face corresponding to SYM for the given ACTIVE state."
-  (cond ((eq sym 'evil) (telephone-line-evil-face active))
-        ((eq sym 'accent) (if active 'telephone-line-accent-active
-                            'telephone-line-accent-inactive))
-        (active 'mode-line)
-        (t 'mode-line-inactive)))
+  (let ((pair-or-func (alist-get sym telephone-line-faces)))
+    (cond ((functionp pair-or-func) (funcall pair-or-func active))
+          (active (car pair-or-func))
+          (t (cdr pair-or-func)))))
 
 (defun telephone-line-opposite-face-sym (sym)
   "Return the 'opposite' of the given SYM."
-  (cdr (assoc
-        sym '((evil . nil)
-              (accent . nil)
-              (nil . accent)))))
+  (alist-get sym '((evil . nil)
+                   (accent . nil)
+                   (nil . accent))))
 
 (defun telephone-line-evil-face (active)
   "Return an appropriate face for the current evil mode, given whether the frame is ACTIVE."
@@ -240,16 +249,18 @@ separators, as they are conditional, are evaluated on-the-fly."
            (* num-separators (- separator-width (ceiling separator-width))))
       base-width)))
 
-(defcustom telephone-line-lhs '((accent . (telephone-line-vc-segment))
-                  (nil    . (telephone-line-minor-mode-segment
-                             telephone-line-buffer-segment)))
+(defcustom telephone-line-lhs
+  '((accent . (telephone-line-vc-segment))
+    (nil    . (telephone-line-minor-mode-segment
+               telephone-line-buffer-segment)))
   "Left hand side segment alist."
   :type '(alist :key-type segment-color :value-type subsegment-list)
   :group 'telephone-line)
 
-(defcustom telephone-line-rhs '((nil    . (telephone-line-misc-info-segment
-                             telephone-line-major-mode-segment))
-                  (accent . (telephone-line-position-segment)))
+(defcustom telephone-line-rhs
+  '((nil    . (telephone-line-misc-info-segment
+               telephone-line-major-mode-segment))
+    (accent . (telephone-line-position-segment)))
   "Right hand side segment alist."
   :type '(alist :key-type segment-color :value-type subsegment-list)
   :group 'telephone-line)
