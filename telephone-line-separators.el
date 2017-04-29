@@ -1,6 +1,6 @@
 ;;; telephone-line-separators.el --- Separators for Telephone Line
 
-;; Copyright (C) 2015-2016 Daniel Bordak
+;; Copyright (C) 2015-2017 Daniel Bordak
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
