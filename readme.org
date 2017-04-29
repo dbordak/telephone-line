@@ -46,6 +46,9 @@ This implicitly calls ~(telephone-line-mode 1)~.
 
 * Configuration
 
+First, remember that all configuration must be done *before* calling
+~(telephone-line-mode 1)~
+
 Segments can be added by configuring the ~telephone-line-lhs~ and
 ~telephone-line-rhs~ variables. Example configuration demonstrating
 the format can be found in [[./examples.org]], and available segments are
