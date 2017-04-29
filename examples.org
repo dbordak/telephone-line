@@ -1,0 +1,148 @@
+#+Title: Examples
+#+Author: Daniel Bordak
+
+Here are some example configurations. Remember that all variables need to be set *before* calling ~(telephone-line-mode t)~
+
+[[./screenshots/abs.png]]
+
+#+begin_src emacs-lisp
+(setq telephone-line-lhs
+      '((evil   . (telephone-line-evil-tag-segment))
+        (accent . (telephone-line-vc-segment
+                   telephone-line-erc-modified-channels-segment
+                   telephone-line-process-segment))
+        (nil    . (telephone-line-minor-mode-segment
+                   telephone-line-buffer-segment))))
+(setq telephone-line-rhs
+      '((nil    . (telephone-line-misc-info-segment))
+        (accent . (telephone-line-major-mode-segment))
+        (evil   . (telephone-line-airline-position-segment))))
+#+end_src
+
+This is a mostly vanilla evil configuration, pretty close to what I use.
+
+[[./screenshots/to_the_right.png]]
+
+#+begin_src emacs-lisp
+(setq telephone-line-primary-right-separator 'telephone-line-abs-left
+      telephone-line-secondary-right-separator 'telephone-line-abs-hollow-left)
+(setq telephone-line-height 24
+      telephone-line-evil-use-short-tag t)
+#+end_src
+
+This one uses only right-facing (i.e. ones intended for the left side)
+separators. The height config is dependent upon your font, but it's
+what I use. The short tag makes the evil tag shorter, since we already
+have enough information from the coloration anyway. It does still help
+to differentiate different VISUAL modes, though.
+
+[[./screenshots/gradient.png]]
+
+#+begin_src emacs-lisp
+(setq telephone-line-primary-left-separator 'telephone-line-gradient
+      telephone-line-secondary-left-separator 'telephone-line-nil
+      telephone-line-primary-right-separator 'telephone-line-gradient
+      telephone-line-secondary-right-separator 'telephone-line-nil)
+(setq telephone-line-height 24
+      telephone-line-evil-use-short-tag t)
+#+end_src
+
+Here I disable subseparators and set both primaries to the gradient
+separator, which isn't really directional.
+
+[[./screenshots/cubed.png]]
+
+#+begin_src emacs-lisp
+(setq telephone-line-primary-left-separator 'telephone-line-cubed-left
+      telephone-line-secondary-left-separator 'telephone-line-cubed-hollow-left
+      telephone-line-primary-right-separator 'telephone-line-cubed-right
+      telephone-line-secondary-right-separator 'telephone-line-cubed-hollow-right)
+(setq telephone-line-height 24
+      telephone-line-evil-use-short-tag t)
+#+end_src
+
+This just uses the cubed separators.
+
+[[./screenshots/sub-color.png]]
+
+#+begin_src emacs-lisp
+(setq telephone-line-subseparator-faces '())
+(setq telephone-line-height 24
+      telephone-line-evil-use-short-tag t)
+#+end_src
+
+For this one, note the color of the subseparator. The way I do this
+here is by unmapping all the subseparator pairings, which won't work
+for any of the other segments. If you want them to all match the
+foreground colors for their segments, you need to make an alist that
+maps every symbol to itself.
+
+[[./screenshots/rainbow.png]]
+
+#+begin_src emacs-lisp
+(setq telephone-line-primary-left-separator 'telephone-line-gradient
+      telephone-line-primary-right-separator 'telephone-line-gradient
+      telephone-line-secondary-left-separator 'telephone-line-nil
+      telephone-line-secondary-right-separator 'telephone-line-nil)
+(defface my-red '((t (:foreground "white" :background "red"))) "")
+(defface my-orangered '((t (:foreground "white" :background "orange red"))) "")
+(defface my-orange '((t (:foreground "white" :background "orange"))) "")
+(defface my-gold '((t (:foreground "white" :background "gold"))) "")
+(defface my-yellow '((t (:foreground "white" :background "yellow"))) "")
+(defface my-chartreuse '((t (:foreground "white" :background "chartreuse"))) "")
+(defface my-green '((t (:foreground "white" :background "green"))) "")
+(defface my-sgreen '((t (:foreground "white" :background "spring green"))) "")
+(defface my-cyan '((t (:foreground "white" :background "cyan"))) "")
+(defface my-blue '((t (:foreground "white" :background "blue"))) "")
+(defface my-dmagenta '((t (:foreground "white" :background "dark magenta"))) "")
+
+(setq telephone-line-faces
+      '((red . (my-red . my-red))
+        (ored . (my-orangered . my-orangered))
+        (orange . (my-orange . my-orange))
+        (gold . (my-gold . my-gold))
+        (yellow . (my-yellow . my-yellow))
+        (chartreuse . (my-chartreuse . my-chartreuse))
+        (green . (my-green . my-green))
+        (sgreen . (my-sgreen . my-sgreen))
+        (cyan . (my-cyan . my-cyan))
+        (blue . (my-blue . my-blue))
+        (dmagenta . (my-dmagenta . my-dmagenta))
+        (evil . telephone-line-evil-face)
+        (accent . (telephone-line-accent-active . telephone-line-accent-inactive))
+        (nil . (mode-line . mode-line-inactive))))
+
+(telephone-line-defsegment s1 "Oh,")
+(telephone-line-defsegment s2 "telephone")
+(telephone-line-defsegment s3 "line,")
+(telephone-line-defsegment s4 "Give")
+(telephone-line-defsegment s5 "me")
+(telephone-line-defsegment s6 "some")
+(telephone-line-defsegment s7 "time,")
+(telephone-line-defsegment s8 "I'm")
+(telephone-line-defsegment s9 "living")
+(telephone-line-defsegment s10 "in")
+(telephone-line-defsegment s11 "twilight")
+
+(setq telephone-line-lhs
+      '((red . (s1))
+        (ored . (s2))
+        (orange . (s3))
+        (gold . (s4))
+        (yellow . (s5))
+        (chartreuse . (s6))
+        (green . (s7))
+        (sgreen . (s8))
+        (cyan . (s9))
+        (blue . (s10))
+        (dmagenta . (s11))
+        (nil    . (telephone-line-minor-mode-segment
+                   telephone-line-buffer-segment))))
+(setq telephone-line-rhs
+      '((nil    . (telephone-line-misc-info-segment))
+        (accent . (telephone-line-major-mode-segment))
+        (evil   . (telephone-line-airline-position-segment))))
+#+end_src
+
+Hoo boy, this one... You know what, if you have any questions on this
+one, just email me or something.
