@@ -35,8 +35,16 @@ usual stuff:
 (telephone-line-mode 1)
 #+end_src
 
-The default theme should suffice for non-evil setups, but if you want
-to further configure it, read on!
+If you want to use it with evil, instead you should do this
+
+#+begin_src emacs-lisp
+(require 'telephone-line-config)
+(telephone-line-evil-config)
+#+end_src
+
+This implicitly calls ~(telephone-line-mode 1)~.
+
+If you want to further configure it, read on!
 
 * Configuration
 
