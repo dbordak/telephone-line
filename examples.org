@@ -3,6 +3,8 @@
 
 Here are some example configurations. Remember that all variables need to be set *before* calling ~(telephone-line-mode t)~
 
+* Abs
+
 [[./screenshots/abs.png]]
 
 #+begin_src emacs-lisp
@@ -21,6 +23,8 @@ Here are some example configurations. Remember that all variables need to be set
 
 This is a mostly vanilla evil configuration, pretty close to what I use.
 
+* Right Abs
+
 [[./screenshots/to_the_right.png]]
 
 #+begin_src emacs-lisp
@@ -36,6 +40,8 @@ what I use. The short tag makes the evil tag shorter, since we already
 have enough information from the coloration anyway. It does still help
 to differentiate different VISUAL modes, though.
 
+* Gradient
+
 [[./screenshots/gradient.png]]
 
 #+begin_src emacs-lisp
@@ -50,6 +56,8 @@ to differentiate different VISUAL modes, though.
 Here I disable subseparators and set both primaries to the gradient
 separator, which isn't really directional.
 
+* Cubed
+
 [[./screenshots/cubed.png]]
 
 #+begin_src emacs-lisp
@@ -62,6 +70,8 @@ separator, which isn't really directional.
 #+end_src
 
 This just uses the cubed separators.
+
+* Subseparator Color
 
 [[./screenshots/sub-color.png]]
 
@@ -76,6 +86,8 @@ here is by unmapping all the subseparator pairings, which won't work
 for any of the other segments. If you want them to all match the
 foreground colors for their segments, you need to make an alist that
 maps every symbol to itself.
+
+* Rainbow
 
 [[./screenshots/rainbow.png]]
 
