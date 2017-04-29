@@ -5,11 +5,13 @@
 [[http://melpa.org/#/telephone-line][file:http://melpa.org/packages/telephone-line-badge.svg]]
 [[http://stable.melpa.org/#/telephone-line][file:http://stable.melpa.org/packages/telephone-line-badge.svg]]
 
-[[./screenshots/abs.png]]
+[[./screenshots/short.png]]
 
 [[./screenshots/cubed.png]]
 
 [[./screenshots/gradient.png]]
+
+[[./screenshots/rainbow.png]]
 
 * Features
 
@@ -55,7 +57,7 @@ subsegments are separated by secondary separators, such as the thin
 powerline symbol (it looks like ~>~, but larger).
 
 The ~Color Symbol~ determines what face is used for the supersegment.
-By default*, the choices are:
+By default, the choices are:
 
 #+begin_example
     nil:    mode-line                                  or mode-line-inactive
@@ -63,7 +65,7 @@ By default*, the choices are:
     evil:   telephone-line-evil-{insert, normal, etc.} or mode-line-inactive
 #+end_example
 
-*There is no way of adding more color symbols for now.
+You can add more by customizing ~telephone-line-faces~.
 
 ** Diagram
 
