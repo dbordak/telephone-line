@@ -161,6 +161,10 @@ Secondary separators do not incur a background color change."
 (defun telephone-line-evil-face (active)
   "Return an appropriate face for the current evil mode, given whether the frame is ACTIVE."
   (cond ((not active) 'mode-line-inactive)
+        ((and (boundp 'xah-fly-keys) xah-fly-keys)
+         (if xah-fly-insert-state-q
+             'telephone-line-evil-insert
+           'telephone-line-evil-normal))
         ((not (boundp 'evil-state)) 'mode-line)
         (t (intern (concat "telephone-line-evil-" (symbol-name evil-state))))))
 
@@ -223,7 +227,7 @@ separators, as they are conditional, are evaluated on-the-fly."
         '(nil . nil))))
 
 (defun telephone-line-width (values num-separators separator)
-  "Get the column-length of VALUES, with NUM-SEPARATORS interposed."
+  "Get the column-length of VALUES, with NUM-SEPARATORS SEPARATORs interposed."
   (let ((base-width (string-width (format-mode-line values)))
         (separator-width (/ (telephone-line-separator-width separator)
                             (float (frame-char-width)))))

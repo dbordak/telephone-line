@@ -96,6 +96,14 @@ mouse-3: Toggle minor modes"
            (seq-take tag 2)
          tag))))
 
+(eval-after-load 'xah-fly-keys
+  '(telephone-line-defsegment* telephone-line-xah-fly-keys-segment
+     (let ((tag (if xah-fly-insert-state-q
+                    "INSERT" "COMMAND")))
+       (if telephone-line-evil-use-short-tag
+           (seq-take tag 1)
+         tag))))
+
 (eval-after-load 'workgroups2
   '(telephone-line-defsegment telephone-line-workgroups2-segment
      (wg-mode-line-string)))
