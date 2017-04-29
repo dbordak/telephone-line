@@ -13,6 +13,8 @@
 
 [[./screenshots/rainbow.png]]
 
+For more information on how to get those screenshots, check out [[./examples.org][the examples]].
+
 * Features
 
 Telephone Line is a new implementation of Powerline for emacs with
