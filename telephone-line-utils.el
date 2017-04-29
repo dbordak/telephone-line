@@ -91,7 +91,7 @@ color1 and color2."
          (mapcar (lambda (n)
                    (+ (* ratio (nth n (color-name-to-rgb color1)))
                       (* (- 1 ratio) (nth n (color-name-to-rgb color2)))))
-         '(0 1 2))))
+                 '(0 1 2))))
 
 (defun telephone-line-color-to-bytestring (color)
   "Return an RGB bytestring for a given COLOR."
@@ -157,17 +157,20 @@ color1 and color2."
   (or telephone-line-height (frame-char-height)))
 
 (cl-defmethod telephone-line-separator-width ((obj telephone-line-separator))
-  (or (oref obj forced-width) (ceiling (telephone-line-separator-height obj) 2)))
+  (or (oref obj forced-width)
+      (ceiling (telephone-line-separator-height obj) 2)))
 
 (defclass telephone-line-subseparator (telephone-line-separator)
-  ((pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern-hollow)))
+  ((pattern-func :initarg :pattern-func
+                 :initform #'telephone-line-row-pattern-hollow)))
 
 (cl-defmethod telephone-line-separator-create-body ((obj telephone-line-separator))
   "Create a bytestring of a PBM image body of dimensions WIDTH and HEIGHT, and shape created from AXIS-FUNC and PATTERN-FUNC."
   (let* ((height (telephone-line-separator-height obj))
          (width (telephone-line-separator-width obj))
          (normalized-axis (telephone-line--normalize-axis
-                           (mapcar (oref obj axis-func) (telephone-line-create-axis height))))
+                           (mapcar (oref obj axis-func)
+                                   (telephone-line-create-axis height))))
          (range (1+ (seq-max normalized-axis)))
          (scaling-factor (/ width (float range))))
     (mapcar (lambda (x)
@@ -187,9 +190,9 @@ color1 and color2."
 
 (cl-defmethod telephone-line-separator-create-body ((obj telephone-line-subseparator))
   (telephone-line--pad-body (cl-call-next-method)
-              (+ (ceiling (telephone-line-separator-width obj)
-                          (frame-char-width))
-                 telephone-line-separator-extra-padding)))
+                            (+ (ceiling (telephone-line-separator-width obj)
+                                        (frame-char-width))
+                               telephone-line-separator-extra-padding)))
 
 (cl-defmethod telephone-line-separator--arg-handler (arg) :static
   "Translate ARG into an appropriate color for a separator."
@@ -203,8 +206,9 @@ color1 and color2."
     (or (gethash hash-key (oref obj image-cache))
         (puthash hash-key
                  (telephone-line-propertize-image
-                  (telephone-line--create-pbm-image (telephone-line-separator-create-body obj)
-                                      background foreground))
+                  (telephone-line--create-pbm-image
+                   (telephone-line-separator-create-body obj)
+                   background foreground))
                  (oref obj image-cache)))))
 
 (cl-defmethod telephone-line-separator-render-unicode ((obj telephone-line-separator) foreground background)
