@@ -101,6 +101,18 @@ to a function which takes ACTIVE as a parameter."
   :group 'telephone-line
   :type '(alist :key-type color-symbol :value-type pair-or-function))
 
+(defcustom telephone-line-subseparator-faces
+  '((evil . nil)
+    (accent . nil)
+    (nil . accent))
+  "Alist pairing segment color-syms to subseparator color-syms.
+
+If any sym is paired to itself, the subseparator will use the
+foreground color for that segment. Otherwise, it will use the
+background color from the paired sym."
+  :group 'telephone-line
+  :type '(alist :key-type color-symbol :value-type color-symbol))
+
 (defcustom telephone-line-primary-left-separator 'telephone-line-abs-left
   "The primary separator to use on the left-hand side."
   :group 'telephone-line
@@ -161,11 +173,13 @@ Secondary separators do not incur a background color change."
           (active (car pair-or-func))
           (t (cdr pair-or-func)))))
 
-(defun telephone-line-opposite-face-sym (sym)
-  "Return the 'opposite' of the given SYM."
-  (alist-get sym '((evil . nil)
-                   (accent . nil)
-                   (nil . accent))))
+(defun telephone-line-subseparator-foreground (sym)
+  "Get the foreground color for a subseparator on a given SYM."
+  (let ((subseparator-sym (alist-get sym telephone-line-subseparator-faces)))
+    (if (equal sym subseparator-sym)
+        (face-attribute (telephone-line-face-map sym) :foreground)
+      (face-attribute (telephone-line-face-map subseparator-sym) :background))))
+
 
 (defun telephone-line-evil-face (active)
   "Return an appropriate face for the current evil mode, given whether the frame is ACTIVE."
@@ -206,9 +220,8 @@ Secondary separators do not incur a background color change."
 ;;TODO: Clean this up
 (defun telephone-line-add-subseparators (subsegments sep-func color-sym)
   (let* ((cur-face (telephone-line-face-map color-sym))
-         (opposite-face (telephone-line-face-map
-                         (telephone-line-opposite-face-sym color-sym)))
-         (subseparator (telephone-line-separator-render sep-func cur-face opposite-face)))
+         (subseparator-foreground (telephone-line-subseparator-foreground color-sym))
+         (subseparator (telephone-line-separator-render sep-func cur-face subseparator-foreground)))
     (telephone-line-propertize-segment
      color-sym cur-face
      (cdr (seq-mapcat
