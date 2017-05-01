@@ -227,14 +227,14 @@ color1 and color2."
 (cl-defmethod telephone-line-separator-clear-cache ((obj telephone-line-separator))
   (clrhash (oref obj image-cache)))
 
-:autoload
+;;;###autoload
 (defmacro telephone-line-defsegment (name body)
   "Create function NAME by wrapping BODY with telephone-line padding and propertization."
   (declare (indent defun))
   `(defun ,name (face)
      (telephone-line-raw ,body face)))
 
-:autoload
+;;;###autoload
 (defmacro telephone-line-defsegment* (name body)
   "Create function NAME by wrapping BODY with telephone-line padding and propertization.
 Segment is not precompiled."
@@ -242,7 +242,7 @@ Segment is not precompiled."
   `(defun ,name (face)
      (telephone-line-raw ,body)))
 
-:autoload
+;;;###autoload
 (defmacro telephone-line-defsegment-plist (name plists)
   (declare (indent defun))
   `(defun ,name (face)
@@ -251,7 +251,7 @@ Segment is not precompiled."
                 (plist-put plist 'face face))
               ,plists))))
 
-:autoload
+;;;###autoload
 (defun telephone-line-raw (str &optional compiled)
   "Conditionally render STR as mode-line data, or just verify output if not COMPILED.
 Return nil for blank/empty strings."
