@@ -23,6 +23,7 @@
 
 (require 'telephone-line)
 
+;;;###autoload
 (defun telephone-line-evil-config ()
   "A simple default for using telephone-line with evil."
   (setq telephone-line-lhs
