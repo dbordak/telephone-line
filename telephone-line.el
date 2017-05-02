@@ -213,7 +213,7 @@ Secondary separators do not incur a background color change."
        cur-color-sym))))
 
 (defun telephone-line-propertize-segment (pred face segment)
-  (unless (seq-empty-p (telephone-line-trim (format-mode-line segment)))
+  (unless (seq-empty-p (string-trim (format-mode-line segment)))
     (if pred
         `(:propertize (" " ,segment " ") face ,face)
       `(" " ,segment " "))))

@@ -33,12 +33,12 @@
 (telephone-line-defsegment telephone-line-position-segment
   (if (eq major-mode 'paradox-menu-mode)
       ;;Paradox fills this with position info.
-      (telephone-line-trim (format-mode-line mode-line-front-space))
+      (string-trim (format-mode-line mode-line-front-space))
     mode-line-position))
 
 (telephone-line-defsegment* telephone-line-airline-position-segment
   (if (eq major-mode 'paradox-menu-mode)
-      (telephone-line-trim (format-mode-line mode-line-front-space))
+      (string-trim (format-mode-line mode-line-front-space))
     '((-3 "%p") " %4l:%3c")))
 
 (telephone-line-defsegment telephone-line-misc-info-segment
@@ -87,7 +87,7 @@ mouse-3: Toggle minor modes"
 
 (telephone-line-defsegment* telephone-line-erc-modified-channels-segment
   (when (boundp 'erc-modified-channels-object)
-    (telephone-line-trim erc-modified-channels-object)))
+    (string-trim erc-modified-channels-object)))
 
 (eval-after-load 'evil
   '(telephone-line-defsegment* telephone-line-evil-tag-segment
