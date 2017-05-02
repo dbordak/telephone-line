@@ -161,7 +161,7 @@ color1 and color2."
          (width (telephone-line-separator-width obj))
          (normalized-axis (telephone-line--normalize-axis
                            (mapcar (oref obj axis-func)
-                                   (telephone-line-create-axis height))))
+                                   (telephone-line-create-trig-axis height))))
          (range (seq-max normalized-axis))
          (scaling-factor (/ (1- width)(float range))))
     (mapcar (lambda (x)
