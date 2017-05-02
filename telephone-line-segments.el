@@ -59,6 +59,9 @@
 (telephone-line-defsegment telephone-line-simple-minor-mode-segment
   minor-mode-alist)
 
+(telephone-line-defsegment telephone-line-narrow-segment
+  "%n")
+
 (telephone-line-defsegment-plist telephone-line-major-mode-segment
   (let ((recursive-edit-help-echo "Recursive edit, type C-M-c to get out"))
     `((:propertize "%[" help-echo ,recursive-edit-help-echo)
