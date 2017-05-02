@@ -149,7 +149,7 @@ color1 and color2."
 
 (cl-defmethod telephone-line-separator-width ((obj telephone-line-separator))
   (or (oref obj forced-width)
-      (1- (ceiling (telephone-line-separator-height obj) 2))))
+      (ceiling (telephone-line-separator-height obj) 2)))
 
 (defclass telephone-line-subseparator (telephone-line-separator)
   ((pattern-func :initarg :pattern-func
@@ -163,7 +163,7 @@ color1 and color2."
                            (mapcar (oref obj axis-func)
                                    (telephone-line-create-axis height))))
          (range (seq-max normalized-axis))
-         (scaling-factor (/ width (float range))))
+         (scaling-factor (/ (1- width)(float range))))
     (mapcar (lambda (x)
               (funcall (oref obj pattern-func)
                        (* x scaling-factor) width))
