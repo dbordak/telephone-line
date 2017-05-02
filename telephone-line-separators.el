@@ -66,6 +66,51 @@
   (make-instance 'telephone-line-subseparator
                  :axis-func (lambda (x) (- (expt x 3)))))
 
+(defvar telephone-line-sin-right
+  (make-instance 'telephone-line-separator :axis-func (telephone-line-complement sin)))
+(defvar telephone-line-sin-left
+  (make-instance 'telephone-line-separator :axis-func #'sin))
+(defvar telephone-line-sin-hollow-right
+  (make-instance 'telephone-line-subseparator :axis-func (telephone-line-complement sin)))
+(defvar telephone-line-sin-hollow-left
+  (make-instance 'telephone-line-subseparator :axis-func #'sin))
+
+(defvar telephone-line-halfsin-right
+  (make-instance 'telephone-line-separator :axis-func (lambda (x) (- (sin (/ x 2))))))
+(defvar telephone-line-halfsin-left
+  (make-instance 'telephone-line-separator :axis-func (lambda (x) (sin (/ x 2)))))
+(defvar telephone-line-halfsin-hollow-right
+  (make-instance 'telephone-line-subseparator :axis-func (lambda (x) (- (sin (/ x 2))))))
+(defvar telephone-line-halfsin-hollow-left
+  (make-instance 'telephone-line-subseparator :axis-func (lambda (x) (sin (/ x 2)))))
+
+(defvar telephone-line-cos-right
+  (make-instance 'telephone-line-separator :axis-func (telephone-line-complement cos)))
+(defvar telephone-line-cos-left
+  (make-instance 'telephone-line-separator :axis-func #'cos))
+(defvar telephone-line-cos-hollow-right
+  (make-instance 'telephone-line-subseparator :axis-func (telephone-line-complement cos)))
+(defvar telephone-line-cos-hollow-left
+  (make-instance 'telephone-line-subseparator :axis-func #'cos))
+
+(defvar telephone-line-halfcos-right
+  (make-instance 'telephone-line-separator :axis-func (lambda (x) (- (cos (/ x 2))))))
+(defvar telephone-line-halfcos-left
+  (make-instance 'telephone-line-separator :axis-func (lambda (x) (cos (/ x 2)))))
+(defvar telephone-line-halfcos-hollow-right
+  (make-instance 'telephone-line-subseparator :axis-func (lambda (x) (- (cos (/ x 2))))))
+(defvar telephone-line-halfcos-hollow-left
+  (make-instance 'telephone-line-subseparator :axis-func (lambda (x) (cos (/ x 2)))))
+
+(defvar telephone-line-tan-right
+  (make-instance 'telephone-line-separator :axis-func (lambda (x) (- (tan (/ x 2.2))))))
+(defvar telephone-line-tan-left
+  (make-instance 'telephone-line-separator :axis-func (lambda (x) (tan (/ x 2.2)))))
+(defvar telephone-line-tan-hollow-right
+  (make-instance 'telephone-line-subseparator :axis-func (lambda (x) (- (tan (/ x 2.2))))))
+(defvar telephone-line-tan-hollow-left
+  (make-instance 'telephone-line-subseparator :axis-func (lambda (x) (tan (/ x 2.2)))))
+
 (defvar telephone-line-identity-right
   (make-instance 'telephone-line-separator :axis-func #'identity))
 (defvar telephone-line-identity-left
