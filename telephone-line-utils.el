@@ -24,6 +24,7 @@
 (require 'color)
 (require 'eieio)
 (require 'seq)
+(require 'subr-x)
 
 (defcustom telephone-line-height nil
   "Override the mode-line height."
@@ -39,15 +40,6 @@
   "If non-nil, use an abbreviated name for the evil mode tag."
   :type 'boolean
   :group 'telephone-line-evil)
-
-(defun telephone-line-trim (string)
-  "Ad-hoc string trim which removes spaces and up to the first brace from STRING."
-  (let ((s (if (string-match "[\])]?[ ]*\\'" string)
-               (replace-match "" t t string)
-             string)))
-    (if (string-match "\\`[ ]*[\[(]?" s)
-        (replace-match "" t t s)
-      s)))
 
 (defun telephone-line-create-axis (length)
   "Create an axis of length LENGTH.
@@ -254,7 +246,7 @@ Segment is not precompiled."
 (defun telephone-line-raw (str &optional compiled)
   "Conditionally render STR as mode-line data, or just verify output if not COMPILED.
 Return nil for blank/empty strings."
-  (let ((trimmed-str (telephone-line-trim (format-mode-line str))))
+  (let ((trimmed-str (string-trim (format-mode-line str))))
     (unless (seq-empty-p trimmed-str)
       (if compiled
           (replace-regexp-in-string "%" "%%" trimmed-str)
