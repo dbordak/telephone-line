@@ -53,6 +53,12 @@
     mode-line-frame-identification
     ,(telephone-line-raw mode-line-buffer-identification t)))
 
+(telephone-line-defsegment telephone-line-simple-major-mode-segment
+  "%[%m%]")
+
+(telephone-line-defsegment telephone-line-simple-minor-mode-segment
+  minor-mode-alist)
+
 (telephone-line-defsegment-plist telephone-line-major-mode-segment
   (let ((recursive-edit-help-echo "Recursive edit, type C-M-c to get out"))
     `((:propertize "%[" help-echo ,recursive-edit-help-echo)
