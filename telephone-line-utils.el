@@ -23,7 +23,6 @@
 (require 'cl-generic)
 (require 'color)
 (require 'eieio)
-
 (require 'seq)
 
 (defcustom telephone-line-height nil
