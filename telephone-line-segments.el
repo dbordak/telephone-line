@@ -36,7 +36,7 @@
       (telephone-line-trim (format-mode-line mode-line-front-space))
     mode-line-position))
 
-(telephone-line-defsegment telephone-line-airline-position-segment
+(telephone-line-defsegment* telephone-line-airline-position-segment
   (if (eq major-mode 'paradox-menu-mode)
       (telephone-line-trim (format-mode-line mode-line-front-space))
     '((-3 "%p") " %4l:%3c")))
