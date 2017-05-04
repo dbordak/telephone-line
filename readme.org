@@ -44,6 +44,52 @@ If you want to use it with evil, instead you should do this
 
 This implicitly calls ~(telephone-line-mode 1)~.
 
+* Separator Gallery
+
+abs
+
+[[./screenshots/separators/telephone-line-abs-left.png]]
+[[./screenshots/separators/telephone-line-abs-hollow-left.png]]
+
+cubed
+
+[[./screenshots/separators/telephone-line-cubed-left.png]]
+[[./screenshots/separators/telephone-line-cubed-hollow-left.png]]
+
+identity
+
+[[./screenshots/separators/telephone-line-identity-left.png]]
+[[./screenshots/separators/telephone-line-identity-hollow-left.png]]
+
+sin
+
+[[./screenshots/separators/telephone-line-sin-left.png]]
+[[./screenshots/separators/telephone-line-sin-hollow-left.png]]
+
+halfsin
+
+[[./screenshots/separators/telephone-line-halfsin-left.png]]
+[[./screenshots/separators/telephone-line-halfsin-hollow-left.png]]
+
+cos
+
+[[./screenshots/separators/telephone-line-cos-left.png]]
+[[./screenshots/separators/telephone-line-cos-hollow-left.png]]
+
+halfcos
+
+[[./screenshots/separators/telephone-line-halfcos-left.png]]
+[[./screenshots/separators/telephone-line-halfcos-hollow-left.png]]
+
+tan
+
+[[./screenshots/separators/telephone-line-tan-left.png]]
+[[./screenshots/separators/telephone-line-tan-hollow-left.png]]
+
+gradient
+
+[[./screenshots/separators/telephone-line-gradient.png]]
+
 * Configuration
 
 First, remember that all configuration must be done *before* calling
