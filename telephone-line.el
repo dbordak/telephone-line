@@ -169,14 +169,14 @@ Secondary separators do not incur a background color change."
 
 (defun telephone-line--face-map (sym active)
   "Return the face corresponding to SYM for the given ACTIVE state."
-  (let ((pair-or-func (alist-get sym telephone-line-faces)))
+  (let ((pair-or-func (telephone-line-alist-get sym telephone-line-faces)))
     (cond ((functionp pair-or-func) (funcall pair-or-func active))
           (active (car pair-or-func))
           (t (cdr pair-or-func)))))
 
 (defun telephone-line-subseparator-foreground (sym)
   "Get the foreground color for a subseparator on a given SYM."
-  (let ((subseparator-sym (alist-get sym telephone-line-subseparator-faces)))
+  (let ((subseparator-sym (telephone-line-alist-get sym telephone-line-subseparator-faces)))
     (if (equal sym subseparator-sym)
         (face-attribute (telephone-line-face-map sym) :foreground)
       (face-attribute (telephone-line-face-map subseparator-sym) :background))))

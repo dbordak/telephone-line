@@ -41,6 +41,14 @@
   :type 'boolean
   :group 'telephone-line-evil)
 
+(if (fboundp #'alist-get)
+    (defalias 'telephone-line-alist-get #'alist-get)
+  (defun telephone-line-alist-get (key alist &optional default remove)
+    "Backport of alist-get for Emacs<25"
+    (ignore remove)
+    (let ((x (assq key alist)))
+      (if x (cdr x) default))))
+
 (defun telephone-line-create-axis (length)
   "Create an axis of length LENGTH.
 For odd lengths, this is a sequence from -floor(LENGTH/2) to
