@@ -246,12 +246,18 @@ Secondary separators do not incur a background color change."
             (if (functionp subsegment)
                 subsegment
               (seq-let (segment-func &rest modifiers) subsegment
-                (if (seq-contains modifiers ':active)
-                    `(lambda (face)
-                       (if (telephone-line-selected-window-active)
-                           (,segment-func face)
-                         nil))
-                  segment-func))))
+                (cond
+                 ((seq-contains modifiers ':active)
+                  `(lambda (face)
+                     (if (telephone-line-selected-window-active)
+                         (,segment-func face)
+                       nil)))
+                 ((seq-contains modifiers ':inactive)
+                  `(lambda (face)
+                     (if (not (telephone-line-selected-window-active))
+                         (,segment-func face)
+                       nil)))
+                 (t segment-func)))))
           subsegments))
 
 ;;TODO: Clean this up
