@@ -113,6 +113,14 @@ mouse-3: Toggle minor modes"
            (seq-take tag 1)
          tag))))
 
+(eval-after-load 'ryo-modal
+  '(telephone-line-defsegment* telephone-line-ryo-modal-segment
+     (let ((tag (if ryo-modal-mode
+                    "RYO" "EMACS")))
+       (if telephone-line-evil-use-short-tag
+           (seq-take tag 1)
+         tag))))
+
 (eval-after-load 'workgroups2
   '(telephone-line-defsegment telephone-line-workgroups2-segment
      (wg-mode-line-string)))

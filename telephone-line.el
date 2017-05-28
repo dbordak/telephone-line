@@ -93,6 +93,7 @@
 (defcustom telephone-line-faces
   '((evil . telephone-line-modal-face)
     (modal . telephone-line-modal-face)
+    (ryo . telephone-line-ryo-modal-face)
     (accent . (telephone-line-accent-active . telephone-line-accent-inactive))
     (nil . (mode-line . mode-line-inactive)))
   "Alist providing all the available face symbols.
@@ -182,6 +183,12 @@ Secondary separators do not incur a background color change."
         (face-attribute (telephone-line-face-map sym) :foreground)
       (face-attribute (telephone-line-face-map subseparator-sym) :background))))
 
+(defun telephone-line-ryo-modal-face (active)
+  "Return an appropriate face depending whether ryo-modal is activated, given whether frame is ACTIVE."
+  (cond ((not active) 'mode-line-inactive)
+        ((not (boundp 'ryo-modal-mode)) 'mode-line)
+        ((not ryo-modal-mode) 'telephone-line-evil-insert)
+        (t 'telephone-line-evil-normal)))
 
 (defun telephone-line-modal-face (active)
   "Return an appropriate face for the current mode, given whether the frame is ACTIVE."
