@@ -240,6 +240,20 @@ Secondary separators do not incur a background color change."
            (mapcar (lambda (f) (funcall f cur-face))
                    subsegments))))))
 
+(defun telephone-line-preprocess-subsegments (subsegments)
+  "Normalize SUBSEGMENTS to create a strict list of functions."
+  (mapcar (lambda (subsegment)
+            (if (functionp subsegment)
+                subsegment
+              (seq-let (segment-func &rest modifiers) subsegment
+                (if (seq-contains modifiers ':active)
+                    `(lambda (face)
+                       (if (telephone-line-selected-window-active)
+                           (,segment-func face)
+                         nil))
+                  segment-func))))
+          subsegments))
+
 ;;TODO: Clean this up
 (defun telephone-line-add-separators (segments primary-sep secondary-sep)
   "Interpolates SEGMENTS with PRIMARY-SEP and SECONDARY-SEP.
@@ -253,7 +267,9 @@ separators, as they are conditional, are evaluated on-the-fly."
                     (cons color-sym
                           `(:eval
                             (telephone-line-add-subseparators
-                             ',subsegments ,secondary-sep ',color-sym)))))
+                             ',(telephone-line-preprocess-subsegments subsegments)
+                             ,secondary-sep
+                             ',color-sym)))))
                 (seq-reverse segments))
         '(nil . nil))))
 
