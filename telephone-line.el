@@ -91,7 +91,8 @@
   :group 'telephone-line-evil)
 
 (defcustom telephone-line-faces
-  '((evil . telephone-line-evil-face)
+  '((evil . telephone-line-modal-face)
+    (modal . telephone-line-modal-face)
     (accent . (telephone-line-accent-active . telephone-line-accent-inactive))
     (nil . (mode-line . mode-line-inactive)))
   "Alist providing all the available face symbols.
@@ -182,8 +183,8 @@ Secondary separators do not incur a background color change."
       (face-attribute (telephone-line-face-map subseparator-sym) :background))))
 
 
-(defun telephone-line-evil-face (active)
-  "Return an appropriate face for the current evil mode, given whether the frame is ACTIVE."
+(defun telephone-line-modal-face (active)
+  "Return an appropriate face for the current mode, given whether the frame is ACTIVE."
   (cond ((not active) 'mode-line-inactive)
         ((bound-and-true-p xah-fly-keys)
          (if xah-fly-insert-state-q
