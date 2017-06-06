@@ -50,9 +50,8 @@
       (if x (cdr x) default))))
 
 (defun telephone-line-create-axis (length)
-  "Create an axis of length LENGTH.
-For odd lengths, this is a sequence from -((LENGTH-1)/2) to
-+((LENGTH-1)/2), so for instance a LENGTH of 9 produces:
+  "Create an axis of length LENGTH from -((LENGTH-1)/2) to +((LENGTH-1)/2).
+For instance a LENGTH of 9 produces:
 
   -4 -3 -2 -1 0 +1 +2 +3 +4
 
