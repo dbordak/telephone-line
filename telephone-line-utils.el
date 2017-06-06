@@ -224,11 +224,11 @@ color1 and color2."
   (clrhash (oref obj image-cache)))
 
 ;;;###autoload
-(cl-defmacro telephone-line-defsegment (name args body &key compiled)
+(cl-defmacro telephone-line-defsegment (name args body &key preformatted)
   "Create function NAME by wrapping BODY with telephone-line padding and propertization."
   (declare (indent defun))
   `(defun ,name (face)
-     (telephone-line-raw ,body ,compiled)))
+     (telephone-line-raw ,body ,preformatted)))
 
 (defalias 'telephone-line-defsegment* #'telephone-line-defsegment)
 
@@ -242,12 +242,12 @@ color1 and color2."
               ,plists))))
 
 ;;;###autoload
-(defun telephone-line-raw (str &optional compiled)
-  "Conditionally render STR as mode-line data, or just verify output if not COMPILED.
+(defun telephone-line-raw (str &optional preformatted)
+  "Conditionally render STR as mode-line data, or just verify output if not PREFORMATTED.
 Return nil for blank/empty strings."
   (let ((trimmed-str (string-trim (format-mode-line str))))
     (unless (seq-empty-p trimmed-str)
-      (if compiled
+      (if preformatted
           (replace-regexp-in-string "%" "%%" trimmed-str)
         str))))
 

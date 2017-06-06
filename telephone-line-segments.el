@@ -26,7 +26,7 @@
 
 (telephone-line-defsegment telephone-line-vc-segment ()
   vc-mode
-  :compiled t)
+  :preformatted t)
 
 (telephone-line-defsegment telephone-line-process-segment ()
   mode-line-process)
@@ -36,7 +36,7 @@
       ;;Paradox fills this with position info.
       (string-trim (format-mode-line mode-line-front-space))
     mode-line-position)
-  :compiled t)
+  :preformatted t)
 
 (telephone-line-defsegment telephone-line-airline-position-segment ()
   (if (eq major-mode 'paradox-menu-mode)
@@ -45,7 +45,7 @@
 
 (telephone-line-defsegment telephone-line-misc-info-segment ()
   mode-line-misc-info
-  :compiled t)
+  :preformatted t)
 
 (telephone-line-defsegment telephone-line-buffer-segment ()
   `(""
@@ -58,15 +58,15 @@
 
 (telephone-line-defsegment telephone-line-simple-major-mode-segment ()
   "%[%m%]"
-  :compiled t)
+  :preformatted t)
 
 (telephone-line-defsegment telephone-line-simple-minor-mode-segment ()
   minor-mode-alist
-  :compiled t)
+  :preformatted t)
 
 (telephone-line-defsegment telephone-line-narrow-segment ()
   "%n"
-  :compiled t)
+  :preformatted t)
 
 (telephone-line--defsegment-plist telephone-line-major-mode-segment ()
   (let ((recursive-edit-help-echo "Recursive edit, type C-M-c to get out"))
@@ -97,7 +97,7 @@ mouse-3: Toggle minor modes"
 (telephone-line-defsegment telephone-line-erc-modified-channels-segment ()
   (when (boundp 'erc-modified-channels-object)
     (string-trim erc-modified-channels-object))
-  :compiled t)
+  :preformatted t)
 
 (eval-after-load 'evil
   '(telephone-line-defsegment telephone-line-evil-tag-segment ()
@@ -131,7 +131,7 @@ mouse-3: Toggle minor modes"
 (eval-after-load 'workgroups2
   '(telephone-line-defsegment telephone-line-workgroups2-segment ()
      (wg-mode-line-string)
-     :compiled t))
+     :preformatted t))
 
 (provide 'telephone-line-segments)
 ;;; telephone-line-segments.el ends here
