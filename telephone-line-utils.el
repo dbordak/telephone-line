@@ -59,7 +59,7 @@ For odd lengths, this is a sequence from -((LENGTH-1)/2) to
 ...And a LENGTH of 10 produces:
 
   -4.5 -3.5 -2.5 -1.5 -0.5 +0.5 +1.5 +2.5 +3.5 +4.5"
-  (let ((bound (/ (1- length) 2)))
+  (let ((bound (/ (1- length) 2.0)))
     (number-sequence (- bound) bound)))
 
 (defun telephone-line-create-trig-axis (length)
