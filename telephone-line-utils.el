@@ -227,22 +227,16 @@ color1 and color2."
   (clrhash (oref obj image-cache)))
 
 ;;;###autoload
-(defmacro telephone-line-defsegment (name body)
+(cl-defmacro telephone-line-defsegment (name args body &key compiled)
   "Create function NAME by wrapping BODY with telephone-line padding and propertization."
   (declare (indent defun))
   `(defun ,name (face)
-     (telephone-line-raw ,body face)))
+     (telephone-line-raw ,body ,compiled)))
+
+(defalias 'telephone-line-defsegment* #'telephone-line-defsegment)
 
 ;;;###autoload
-(defmacro telephone-line-defsegment* (name body)
-  "Create function NAME by wrapping BODY with telephone-line padding and propertization.
-Segment is not precompiled."
-  (declare (indent defun))
-  `(defun ,name (face)
-     (telephone-line-raw ,body)))
-
-;;;###autoload
-(defmacro telephone-line-defsegment-plist (name plists)
+(defmacro telephone-line--defsegment-plist (name args plists)
   (declare (indent defun))
   `(defun ,name (face)
      (telephone-line-raw
@@ -264,9 +258,8 @@ Return nil for blank/empty strings."
 (defun telephone-line--activate-font-lock-keywords ()
   "Activate font-lock keywords for some symbols defined in telephone-line."
   (font-lock-add-keywords 'emacs-lisp-mode
-                          '("\\<telephone-line-defsegment*\\>"
-                            "\\<telephone-line-defsegment-plist\\>"
-                            "\\<telephone-line-defsegment\\>")))
+                  '("\\<telephone-line--defsegment-plist\\>"
+                    "\\<telephone-line-defsegment\\>")))
 
 (unless (fboundp 'elisp--font-lock-flush-elisp-buffers)
   ;; In Emacs≥25, (via elisp--font-lock-flush-elisp-buffers and a few others)
