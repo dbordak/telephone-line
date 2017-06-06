@@ -51,18 +51,16 @@
 
 (defun telephone-line-create-axis (length)
   "Create an axis of length LENGTH.
-For odd lengths, this is a sequence from -floor(LENGTH/2) to
-+floor(LENGTH/2), so for instance a LENGTH of 9 produces:
+For odd lengths, this is a sequence from -((LENGTH-1)/2) to
++((LENGTH-1)/2), so for instance a LENGTH of 9 produces:
 
   -4 -3 -2 -1 0 +1 +2 +3 +4
 
-For even lengths, the 0 is duplicated to preserve symmetry.
-For instance, a LENGTH of 10 produces:
+...And a LENGTH of 10 produces:
 
-  -4 -3 -2 -1 0 0 +1 +2 +3 +4"
-  (let ((middle (1- (ceiling length 2))))
-    (append (number-sequence (- middle) 0)
-            (number-sequence (if (cl-oddp length) 1 0) middle))))
+  -4.5 -3.5 -2.5 -1.5 -0.5 +0.5 +1.5 +2.5 +3.5 +4.5"
+  (let ((bound (/ (1- length) 2)))
+    (number-sequence (- bound) bound)))
 
 (defun telephone-line-create-trig-axis (length)
   "Create a trig axis with LENGTH steps, ranging from -pi to +pi.
