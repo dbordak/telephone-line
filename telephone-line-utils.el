@@ -1,4 +1,4 @@
-;;; telephone-line-utils.el --- Functions for defining segparators and segments
+;;; telephone-line-utils.el --- Functions for defining segparators and segments -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2015-2017 Daniel Bordak
 
@@ -185,18 +185,23 @@ color1 and color2."
             body)))
 
 (cl-defmethod telephone-line-separator-create-body ((obj telephone-line-subseparator))
+  "Create a bytestring of a PBM image body of dimensions WIDTH and HEIGHT, and shape created from AXIS-FUNC and PATTERN-FUNC.
+
+Includes padding."
   (telephone-line--pad-body (cl-call-next-method)
                             (+ (ceiling (telephone-line-separator-width obj)
                                         (frame-char-width))
                                telephone-line-separator-extra-padding)))
 
-(cl-defmethod telephone-line-separator--arg-handler (arg) :static
+(cl-defmethod telephone-line-separator--arg-handler (arg)
   "Translate ARG into an appropriate color for a separator."
   (if (facep arg)
       (face-attribute arg :background)
     arg))
 
 (cl-defmethod telephone-line-separator-render-image ((obj telephone-line-separator) foreground background)
+  "Find cached pbm of OBJ in FOREGROUND and BACKGROUND.
+If it doesn't exist, create and cache it."
   (let ((hash-key (concat background "_" foreground)))
     ;; Return cached image if we have it.
     (or (gethash hash-key (oref obj image-cache))
@@ -224,22 +229,25 @@ color1 and color2."
   (clrhash (oref obj image-cache)))
 
 ;;;###autoload
-(cl-defmacro telephone-line-defsegment (name args body &key preformatted)
-  "Create function NAME by wrapping BODY with telephone-line padding and propertization."
-  (declare (indent defun))
-  `(defun ,name (face)
-     (telephone-line-raw ,body ,preformatted)))
+(defmacro telephone-line-defsegment* (name &rest body)
+  "Define NAME as a segment function.
 
-(defalias 'telephone-line-defsegment* #'telephone-line-defsegment)
+Does not check if segment is empty; will always display on non-nil result."
+  (declare (doc-string 3) (indent defun))
+  `(defun ,name
+     ,@(butlast body)
+     (lambda (face)
+       ,(car (last body)))))
 
 ;;;###autoload
-(defmacro telephone-line--defsegment-plist (name args plists)
-  (declare (indent defun))
-  `(defun ,name (face)
-     (telephone-line-raw
-      (mapcar (lambda (plist)
-                (plist-put plist 'face face))
-              ,plists))))
+(defmacro telephone-line-defsegment (name &rest body)
+  "Define NAME as a segment function.
+
+Empty strings will not render."
+  (declare (doc-string 3) (indent defun))
+  `(telephone-line-defsegment* ,name
+     ,@(butlast body)
+     (telephone-line-raw ,(car (last body)))))
 
 ;;;###autoload
 (defun telephone-line-raw (str &optional preformatted)
@@ -248,6 +256,8 @@ Return nil for blank/empty strings."
   (let ((trimmed-str (string-trim (format-mode-line str))))
     (unless (seq-empty-p trimmed-str)
       (if preformatted
+          ; format-mode-line will condense all escaped %s, so we need
+          ; to re-escape them.
           (replace-regexp-in-string "%" "%%" trimmed-str)
         str))))
 
@@ -255,7 +265,7 @@ Return nil for blank/empty strings."
 (defun telephone-line--activate-font-lock-keywords ()
   "Activate font-lock keywords for some symbols defined in telephone-line."
   (font-lock-add-keywords 'emacs-lisp-mode
-                  '("\\<telephone-line--defsegment-plist\\>"
+                  '("\\<telephone-line-defsegment*\\>"
                     "\\<telephone-line-defsegment\\>")))
 
 (unless (fboundp 'elisp--font-lock-flush-elisp-buffers)

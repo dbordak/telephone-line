@@ -244,7 +244,7 @@ Secondary separators do not incur a background color change."
   "Normalize SUBSEGMENTS to create a strict list of functions."
   (mapcar (lambda (subsegment)
             (if (functionp subsegment)
-                subsegment
+                (funcall subsegment)
               (seq-let (segment-func &rest modifiers) subsegment
                 (cond
                  ((seq-contains modifiers ':active)

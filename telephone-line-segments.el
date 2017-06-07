@@ -1,4 +1,4 @@
-;;; telephone-line-segments.el --- Segments for Telephone Line
+;;; telephone-line-segments.el --- Segments for Telephone Line -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2015-2017 Daniel Bordak
 
@@ -24,30 +24,30 @@
 
 (require 'telephone-line-utils)
 
-(telephone-line-defsegment telephone-line-vc-segment ()
-  vc-mode
-  :preformatted t)
+(telephone-line-defsegment* telephone-line-vc-segment ()
+  (telephone-line-raw vc-mode t))
 
 (telephone-line-defsegment telephone-line-process-segment ()
   mode-line-process)
 
-(telephone-line-defsegment telephone-line-position-segment ()
-  (if (eq major-mode 'paradox-menu-mode)
-      ;;Paradox fills this with position info.
-      (string-trim (format-mode-line mode-line-front-space))
-    mode-line-position)
-  :preformatted t)
+(telephone-line-defsegment* telephone-line-position-segment ()
+  (telephone-line-raw
+   (if (eq major-mode 'paradox-menu-mode)
+       ;;Paradox fills this with position info.
+       mode-line-front-space
+     mode-line-position) t))
 
-(telephone-line-defsegment telephone-line-airline-position-segment ()
-  (if (eq major-mode 'paradox-menu-mode)
-      (string-trim (format-mode-line mode-line-front-space))
-    '((-3 "%p") " %4l:%3c")))
+(telephone-line-defsegment* telephone-line-airline-position-segment (&optional lines columns)
+  (let* ((l (number-to-string (if lines lines 4)))
+         (c (number-to-string (if columns columns 3))))
+    (if (eq major-mode 'paradox-menu-mode)
+        (telephone-line-raw mode-line-front-space t)
+      `((-3 "%p") ,(concat " %" l "l:%" c "c")))))
 
-(telephone-line-defsegment telephone-line-misc-info-segment ()
-  mode-line-misc-info
-  :preformatted t)
+(telephone-line-defsegment* telephone-line-misc-info-segment ()
+  (telephone-line-raw mode-line-misc-info t))
 
-(telephone-line-defsegment telephone-line-buffer-segment ()
+(telephone-line-defsegment* telephone-line-buffer-segment ()
   `(""
     mode-line-mule-info
     mode-line-modified
@@ -56,51 +56,50 @@
     mode-line-frame-identification
     ,(telephone-line-raw mode-line-buffer-identification t)))
 
-(telephone-line-defsegment telephone-line-simple-major-mode-segment ()
-  "%[%m%]"
-  :preformatted t)
+(telephone-line-defsegment* telephone-line-simple-major-mode-segment ()
+  "%[%m%]")
 
-(telephone-line-defsegment telephone-line-simple-minor-mode-segment ()
-  minor-mode-alist
-  :preformatted t)
+(telephone-line-defsegment* telephone-line-simple-minor-mode-segment ()
+  (telephone-line-raw minor-mode-alist t))
 
 (telephone-line-defsegment telephone-line-narrow-segment ()
-  "%n"
-  :preformatted t)
+  "%n")
 
-(telephone-line--defsegment-plist telephone-line-major-mode-segment ()
+(telephone-line-defsegment* telephone-line-major-mode-segment ()
   (let ((recursive-edit-help-echo "Recursive edit, type C-M-c to get out"))
-    `((:propertize "%[" help-echo ,recursive-edit-help-echo)
+    `((:propertize "%[" help-echo ,recursive-edit-help-echo face ,face)
       (:propertize ("" mode-name)
                    help-echo "Major mode\n\
 mouse-1: Display major mode menu\n\
 mouse-2: Show help for major mode\n\
 mouse-3: Toggle minor modes"
                    mouse-face mode-line-highlight
-                   local-map ,mode-line-major-mode-keymap)
-      (:propertize "%]" help-echo ,recursive-edit-help-echo))))
+                   local-map ,mode-line-major-mode-keymap
+                   face ,face)
+      (:propertize "%]" help-echo ,recursive-edit-help-echo face ,face))))
 
-(telephone-line--defsegment-plist telephone-line-minor-mode-segment ()
+(telephone-line-defsegment telephone-line-minor-mode-segment ()
   `((:propertize ("" minor-mode-alist)
                  mouse-face mode-line-highlight
                  help-echo "Minor mode\n\
 mouse-1: Display minor mode menu\n\
 mouse-2: Show help for minor mode\n\
 mouse-3: Toggle minor modes"
-                 local-map ,mode-line-minor-mode-keymap)
+                 local-map ,mode-line-minor-mode-keymap
+                 face ,face)
     (:propertize "%n"
                  mouse-face mode-line-highlight
                  help-echo "mouse-2: Remove narrowing from buffer"
                  local-map ,(make-mode-line-mouse-map
-                             'mouse-2 #'mode-line-widen))))
+                             'mouse-2 #'mode-line-widen)
+                 face ,face)))
 
 (telephone-line-defsegment telephone-line-erc-modified-channels-segment ()
   (when (boundp 'erc-modified-channels-object)
-    (string-trim erc-modified-channels-object))
-  :preformatted t)
+    (string-trim erc-modified-channels-object)))
 
 (eval-after-load 'evil
-  '(telephone-line-defsegment telephone-line-evil-tag-segment ()
+  '(telephone-line-defsegment* telephone-line-evil-tag-segment ()
      (let ((tag (cond
                  ((not (evil-visual-state-p)) (upcase (symbol-name evil-state)))
                  ((eq evil-visual-selection 'block)
@@ -113,7 +112,7 @@ mouse-3: Toggle minor modes"
          tag))))
 
 (eval-after-load 'xah-fly-keys
-  '(telephone-line-defsegment telephone-line-xah-fly-keys-segment ()
+  '(telephone-line-defsegment* telephone-line-xah-fly-keys-segment ()
      (let ((tag (if xah-fly-insert-state-q
                     "INSERT" "COMMAND")))
        (if telephone-line-evil-use-short-tag
@@ -121,7 +120,7 @@ mouse-3: Toggle minor modes"
          tag))))
 
 (eval-after-load 'ryo-modal
-  '(telephone-line-defsegment telephone-line-ryo-modal-segment ()
+  '(telephone-line-defsegment* telephone-line-ryo-modal-segment ()
      (let ((tag (if ryo-modal-mode
                     "RYO" "EMACS")))
        (if telephone-line-evil-use-short-tag
@@ -129,9 +128,8 @@ mouse-3: Toggle minor modes"
          tag))))
 
 (eval-after-load 'workgroups2
-  '(telephone-line-defsegment telephone-line-workgroups2-segment ()
-     (wg-mode-line-string)
-     :preformatted t))
+  '(telephone-line-defsegment* telephone-line-workgroups2-segment ()
+     (telephone-line-raw (wg-mode-line-string) t)))
 
 (provide 'telephone-line-segments)
 ;;; telephone-line-segments.el ends here
