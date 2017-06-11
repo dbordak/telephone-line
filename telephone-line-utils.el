@@ -227,6 +227,9 @@ If it doesn't exist, create and cache it."
         (telephone-line-separator-render-image obj fg-color bg-color)
       (telephone-line-separator-render-unicode obj fg-color bg-color))))
 
+(cl-defmethod telephone-line-separator-render ((obj telephone-line-nil-separator) foreground background)
+  nil)
+
 (cl-defmethod telephone-line-separator-clear-cache ((obj telephone-line-separator))
   (clrhash (oref obj image-cache)))
 
