@@ -131,7 +131,7 @@
   (make-instance 'telephone-line-subseparator :axis-func #'-))
 
 (defvar telephone-line-nil
-  (make-instance 'telephone-line-nil-separator))
+  (make-instance 'telephone-line-nil-separator :forced-width 0))
 
 (provide 'telephone-line-separators)
 ;;; telephone-line-separators.el ends here
