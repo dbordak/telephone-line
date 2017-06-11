@@ -131,5 +131,9 @@ mouse-3: Toggle minor modes"
   '(telephone-line-defsegment* telephone-line-workgroups2-segment ()
      (telephone-line-raw (wg-mode-line-string) t)))
 
+(eval-after-load 'nyan-mode
+  '(telephone-line-defsegment* telephone-line-nyan-segment ()
+     (nyan-create)))
+
 (provide 'telephone-line-segments)
 ;;; telephone-line-segments.el ends here
