@@ -91,7 +91,7 @@ gradient
 [[./screenshots/separators/telephone-line-gradient.png]]
 
 There is also a perfectly flat vertical separator,
-`telephone-line-flat`, though there's not much to look at here ;)
+~telephone-line-flat~, though there's not much to look at here ;)
 
 * Configuration
 
