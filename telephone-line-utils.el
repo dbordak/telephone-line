@@ -160,6 +160,8 @@ color1 and color2."
   ((pattern-func :initarg :pattern-func
                  :initform #'telephone-line-row-pattern-hollow)))
 
+(defclass telephone-line-nil-separator (telephone-line-separator) ())
+
 (cl-defmethod telephone-line-separator-create-body ((obj telephone-line-separator))
   "Create a bytestring of a PBM image body of dimensions WIDTH and HEIGHT, and shape created from AXIS-FUNC and PATTERN-FUNC."
   (let* ((height (telephone-line-separator-height obj))
