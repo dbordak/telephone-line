@@ -25,6 +25,16 @@
 (require 'color)
 (require 'telephone-line-utils)
 
+(defun telephone-line-row-pattern-nil (_ width)
+  "Create a block of 1s of WIDTH. _ is disregarded."
+  (make-list width 1))
+
+(defvar telephone-line-nil
+  (make-instance 'telephone-line-separator
+                 :axis-func #'identity
+                 :forced-width 1
+                 :pattern-func #'telephone-line-row-pattern-nil))
+
 (defun telephone-line-row-pattern-fixed-gradient (_ width)
   "Create a gradient bytestring of WIDTH.  _ is disregarded."
   (mapcar (lambda (num)
@@ -120,8 +130,6 @@
 (defvar telephone-line-identity-hollow-left
   (make-instance 'telephone-line-subseparator :axis-func #'-))
 
-(defvar telephone-line-nil
-  (make-instance 'telephone-line-nil-separator))
 
 (provide 'telephone-line-separators)
 ;;; telephone-line-separators.el ends here
