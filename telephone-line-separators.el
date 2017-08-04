@@ -49,7 +49,8 @@
 (defvar telephone-line-abs-right
   (make-instance 'telephone-line-separator
                  :axis-func #'abs
-                 :alt-char #xe0b2))
+                 :alt-char #xe0b2
+                 :inverse-video nil))
 (defvar telephone-line-abs-left
   (make-instance 'telephone-line-separator
                  :axis-func (telephone-line-complement abs)

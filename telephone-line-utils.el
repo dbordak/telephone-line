@@ -147,6 +147,7 @@ color1 and color2."
    (pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern)
    (forced-width :initarg :forced-width :initform nil)
    (alt-char :initarg :alt-char)
+   (inverse-video :initarg :inverse-video :initform t)
    (image-cache :initform (make-hash-table :test 'equal :size 10))))
 
 (cl-defmethod telephone-line-separator-height ((obj telephone-line-separator))
@@ -218,7 +219,7 @@ If it doesn't exist, create and cache it."
   (list :propertize (char-to-string (oref obj alt-char))
         'face (list :foreground foreground
                     :background background
-                    :inverse-video t)))
+                    :inverse-video (oref obj inverse-video))))
 
 (cl-defmethod telephone-line-separator-render ((obj telephone-line-separator) foreground background)
   (let ((fg-color (telephone-line-separator--arg-handler foreground))
