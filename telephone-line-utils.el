@@ -142,12 +142,15 @@ color1 and color2."
   `(lambda (x)
      (- (,func x))))
 
+(defclass telephone-line-unicode-separator ()
+  ((char :initarg :char)
+   (inverse-video :initarg :inverse-video :initform t)))
+
 (defclass telephone-line-separator ()
   ((axis-func :initarg :axis-func)
    (pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern)
    (forced-width :initarg :forced-width :initform nil)
-   (alt-char :initarg :alt-char)
-   (inverse-video :initarg :inverse-video :initform t)
+   (alt-separator :initarg :alt-separator)
    (image-cache :initform (make-hash-table :test 'equal :size 10))))
 
 (cl-defmethod telephone-line-separator-height ((obj telephone-line-separator))
@@ -215,18 +218,20 @@ If it doesn't exist, create and cache it."
                    background foreground))
                  (oref obj image-cache)))))
 
-(cl-defmethod telephone-line-separator-render-unicode ((obj telephone-line-separator) foreground background)
-  (list :propertize (char-to-string (oref obj alt-char))
-        'face (list :foreground foreground
-                    :background background
-                    :inverse-video (oref obj inverse-video))))
+(cl-defmethod telephone-line-separator-render ((obj telephone-line-unicode-separator) foreground background)
+  (let ((fg-color (telephone-line-separator--arg-handler foreground))
+        (bg-color (telephone-line-separator--arg-handler background)))
+    (list :propertize (char-to-string (oref obj char))
+        'face (list :foreground fg-color
+                    :background bg-color
+                    :inverse-video (oref obj inverse-video)))))
 
 (cl-defmethod telephone-line-separator-render ((obj telephone-line-separator) foreground background)
   (let ((fg-color (telephone-line-separator--arg-handler foreground))
         (bg-color (telephone-line-separator--arg-handler background)))
     (if window-system
         (telephone-line-separator-render-image obj fg-color bg-color)
-      (telephone-line-separator-render-unicode obj fg-color bg-color))))
+      (telephone-line-separator-render (oref obj alt-separator) fg-color bg-color))))
 
 (cl-defmethod telephone-line-separator-render ((obj telephone-line-nil-separator) foreground background)
   nil)

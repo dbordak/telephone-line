@@ -46,23 +46,36 @@
                  :axis-func #'identity
                  :pattern-func #'telephone-line-row-pattern-fixed-gradient))
 
+(defvar telephone-line-u-abs-right
+  (make-instance 'telephone-line-unicode-separator
+                 :char #xe0b2
+                 :inverse-video nil))
+(defvar telephone-line-u-abs-left
+  (make-instance 'telephone-line-unicode-separator
+                 :char #xe0b0))
+(defvar telephone-line-u-abs-hollow-right
+  (make-instance 'telephone-line-unicode-separator
+                 :char #xe0b3))
+(defvar telephone-line-u-abs-hollow-left
+  (make-instance 'telephone-line-unicode-separator
+                 :char #xe0b1))
+
 (defvar telephone-line-abs-right
   (make-instance 'telephone-line-separator
                  :axis-func #'abs
-                 :alt-char #xe0b2
-                 :inverse-video nil))
+                 :alt-separator telephone-line-u-abs-right))
 (defvar telephone-line-abs-left
   (make-instance 'telephone-line-separator
                  :axis-func (telephone-line-complement abs)
-                 :alt-char #xe0b0))
+                 :alt-separator telephone-line-u-abs-left))
 (defvar telephone-line-abs-hollow-right
   (make-instance 'telephone-line-subseparator
                  :axis-func #'abs
-                 :alt-char #xe0b3))
+                 :alt-separator telephone-line-u-abs-hollow-right))
 (defvar telephone-line-abs-hollow-left
   (make-instance 'telephone-line-subseparator
                  :axis-func (telephone-line-complement abs)
-                 :alt-char #xe0b1))
+                 :alt-separator telephone-line-u-abs-hollow-left))
 
 (defvar telephone-line-cubed-right
   (make-instance 'telephone-line-separator
