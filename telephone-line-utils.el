@@ -156,9 +156,15 @@ color1 and color2."
 (cl-defmethod telephone-line-separator-height ((obj telephone-line-separator))
   (or telephone-line-height (frame-char-height)))
 
+(cl-defmethod telephone-line-separator-height ((obj telephone-line-unicode-separator))
+  (frame-char-height))
+
 (cl-defmethod telephone-line-separator-width ((obj telephone-line-separator))
   (or (oref obj forced-width)
       (ceiling (telephone-line-separator-height obj) 2)))
+
+(cl-defmethod telephone-line-separator-width ((obj telephone-line-unicode-separator))
+  (frame-char-width))
 
 (defclass telephone-line-subseparator (telephone-line-separator)
   ((pattern-func :initarg :pattern-func
