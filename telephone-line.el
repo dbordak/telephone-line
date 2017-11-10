@@ -266,18 +266,19 @@ Secondary separators do not incur a background color change."
 
 Primary separators are added at initialization.  Secondary
 separators, as they are conditional, are evaluated on-the-fly."
-  (car (seq-reduce
-        (telephone-line--separator-generator primary-sep)
-        (mapcar (lambda (segment-pair)
-                  (seq-let (color-sym &rest subsegments) segment-pair
-                    (cons color-sym
-                          `(:eval
-                            (telephone-line-add-subseparators
-                             ',(telephone-line-preprocess-subsegments subsegments)
-                             ,secondary-sep
-                             ',color-sym)))))
-                (seq-reverse segments))
-        '(nil . nil))))
+  (when segments
+    (car (seq-reduce
+          (telephone-line--separator-generator primary-sep)
+          (mapcar (lambda (segment-pair)
+                    (seq-let (color-sym &rest subsegments) segment-pair
+                      (cons color-sym
+                            `(:eval
+                              (telephone-line-add-subseparators
+                               ',(telephone-line-preprocess-subsegments subsegments)
+                               ,secondary-sep
+                               ',color-sym)))))
+                  (seq-reverse segments))
+          '(nil . nil)))))
 
 (defun telephone-line-width (values num-separators separator)
   "Get the column-length of VALUES, with NUM-SEPARATORS SEPARATORs interposed."
@@ -301,9 +302,15 @@ separators, as they are conditional, are evaluated on-the-fly."
   :type '(alist :key-type segment-color :value-type subsegment-list)
   :group 'telephone-line)
 
-(defcustom telephone-line-center
+(defcustom telephone-line-center-lhs
   nil
-  "Center segment alist."
+  "Center-left segment alist."
+  :type '(alist :key-type segment-color :value-type subsegment-list)
+  :group 'telephone-line)
+
+(defcustom telephone-line-center-rhs
+  nil
+  "Center-right segment alist."
   :type '(alist :key-type segment-color :value-type subsegment-list)
   :group 'telephone-line)
 
@@ -321,16 +328,12 @@ separators, as they are conditional, are evaluated on-the-fly."
                    telephone-line-secondary-left-separator))
 
 (defun telephone-line--generate-mode-line-center ()
-  (when telephone-line-center
-    (let* ((part (seq-position telephone-line-center 'center))
-           (center-left (seq-take telephone-line-center part))
-           (center-right (seq-drop telephone-line-center (1+ part))))
-      (append (telephone-line-add-separators center-left
-                               telephone-line-primary-right-separator
-                               telephone-line-secondary-right-separator)
-              (telephone-line-add-separators center-right
-                               telephone-line-primary-left-separator
-                               telephone-line-secondary-left-separator)))))
+  (append (telephone-line-add-separators telephone-line-center-lhs
+                           telephone-line-primary-right-separator
+                           telephone-line-secondary-right-separator)
+          (telephone-line-add-separators telephone-line-center-rhs
+                           telephone-line-primary-left-separator
+                           telephone-line-secondary-left-separator)))
 
 (defun telephone-line--generate-mode-line-rhs ()
   (telephone-line-add-separators telephone-line-rhs
@@ -339,7 +342,7 @@ separators, as they are conditional, are evaluated on-the-fly."
 
 (defun telephone-line--generate-mode-line ()
   `(,@(telephone-line--generate-mode-line-lhs)
-    (:eval (when telephone-line-center
+    (:eval (when (or telephone-line-center-lhs telephone-line-center-rhs)
              (telephone-line-fill
               (/ (+ (window-width)
                     (telephone-line-width
@@ -347,7 +350,7 @@ separators, as they are conditional, are evaluated on-the-fly."
                      ,(- (length telephone-line-rhs) 1)
                      ,telephone-line-primary-right-separator))
                  2)
-              (telephone-line-face-map (caar telephone-line-center)))))
+              (telephone-line-face-map (caar telephone-line-center-lhs)))))
     ,@(telephone-line--generate-mode-line-center)
     (:eval (telephone-line-fill
             (telephone-line-width
