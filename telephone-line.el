@@ -246,18 +246,29 @@ Secondary separators do not incur a background color change."
             (if (functionp subsegment)
                 (funcall subsegment)
               (seq-let (segment-func &rest modifiers) subsegment
-                (cond
-                 ((seq-contains modifiers ':active)
-                  `(lambda (face)
-                     (if (telephone-line-selected-window-active)
-                         (funcall (,segment-func) face)
-                       nil)))
-                 ((seq-contains modifiers ':inactive)
-                  `(lambda (face)
-                     (if (not (telephone-line-selected-window-active))
-                         (funcall (,segment-func) face)
-                       nil)))
-                 (t segment-func)))))
+                (if (plist-get modifiers ':args)
+                    (setq segment-func
+                          (apply segment-func (plist-get modifiers ':args)))
+                  (setq segment-func
+                        (funcall segment-func)))
+                (if (plist-get modifiers ':active)
+                    (setq segment-func
+                          `(lambda (face)
+                            (if (telephone-line-selected-window-active)
+                                (,segment-func face)
+                              nil))))
+                (if (plist-get modifiers ':inactive)
+                    (setq segment-func
+                          `(lambda (face)
+                            (if (not (telephone-line-selected-window-active))
+                                (,segment-func face)
+                              nil))))
+                (if (and (plist-get modifiers ':truncate)
+                         (< 0 (plist-get modifiers ':truncate)))
+                    (setq segment-func
+                          `(lambda (face)
+                             (seq-take (format-mode-line (,segment-func face)) ,(plist-get modifiers ':truncate)))))
+                segment-func)))
           subsegments))
 
 ;;TODO: Clean this up
