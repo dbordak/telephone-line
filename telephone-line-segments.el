@@ -98,9 +98,11 @@ mouse-3: Toggle minor modes"
   (when (boundp 'erc-modified-channels-object)
     (string-trim erc-modified-channels-object)))
 
-(telephone-line-defsegment telephone-line-window-number-segment ()
+(telephone-line-defsegment telephone-line-window-number-segment (&optional in-unicode)
   (when (bound-and-true-p winum-mode)
-    (winum-get-number-string)))
+    (if in-unicode
+        (propertize (format "%c" (+ 9311 (winum-get-number))) 'face `winum-face)
+      (winum-get-number-string))))
 
 (telephone-line-defsegment telephone-line-projectile-segment ()
     (if (and (fboundp 'projectile-project-name)
