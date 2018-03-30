@@ -116,43 +116,42 @@ mouse-3: Toggle minor modes"
                                 'mouse-1 (lambda ()
                                            (interactive)
                                            (projectile-switch-project))))))
-  
-(eval-after-load 'evil
-  '(telephone-line-defsegment* telephone-line-evil-tag-segment ()
-     (let ((tag (cond
-                 ((not (evil-visual-state-p)) (upcase (symbol-name evil-state)))
-                 ((eq evil-visual-selection 'block)
-                  (if telephone-line-evil-use-short-tag "VB" "V-BLOCK"))
-                 ((eq evil-visual-selection 'line)
-                  (if telephone-line-evil-use-short-tag "VL" "V-LINE"))
-                 (t "VISUAL"))))
-       (if telephone-line-evil-use-short-tag
-           (seq-take tag 2)
-         tag))))
 
-(eval-after-load 'xah-fly-keys
-  '(telephone-line-defsegment* telephone-line-xah-fly-keys-segment ()
-     (let ((tag (if xah-fly-insert-state-q
-                    "INSERT" "COMMAND")))
-       (if telephone-line-evil-use-short-tag
-           (seq-take tag 1)
-         tag))))
+(telephone-line-defsegment* telephone-line-evil-tag-segment ()
+  (when (bound-and-true-p evil-mode)
+    (let ((tag (cond
+                ((not (evil-visual-state-p)) (upcase (symbol-name evil-state)))
+                ((eq evil-visual-selection 'block)
+                 (if telephone-line-evil-use-short-tag "VB" "V-BLOCK"))
+                ((eq evil-visual-selection 'line)
+                 (if telephone-line-evil-use-short-tag "VL" "V-LINE"))
+                (t "VISUAL"))))
+      (if telephone-line-evil-use-short-tag
+          (seq-take tag 2)
+        tag))))
 
-(eval-after-load 'ryo-modal
-  '(telephone-line-defsegment* telephone-line-ryo-modal-segment ()
-     (let ((tag (if ryo-modal-mode
-                    "RYO" "EMACS")))
-       (if telephone-line-evil-use-short-tag
-           (seq-take tag 1)
-         tag))))
+(telephone-line-defsegment* telephone-line-xah-fly-keys-segment ()
+  (when (boundp xah-fly-insert-state-q)
+    (let ((tag (if xah-fly-insert-state-q
+                   "INSERT" "COMMAND")))
+      (if telephone-line-evil-use-short-tag
+          (seq-take tag 1)
+        tag))))
 
-(eval-after-load 'workgroups2
-  '(telephone-line-defsegment* telephone-line-workgroups2-segment ()
-     (telephone-line-raw (wg-mode-line-string) t)))
+(telephone-line-defsegment* telephone-line-ryo-modal-segment ()
+  (let ((tag (if (bound-and-true-p ryo-modal-mode)
+                 "RYO" "EMACS")))
+    (if telephone-line-evil-use-short-tag
+        (seq-take tag 1)
+      tag)))
 
-(eval-after-load 'nyan-mode
-  '(telephone-line-defsegment* telephone-line-nyan-segment ()
-     (nyan-create)))
+(telephone-line-defsegment* telephone-line-workgroups2-segment ()
+  (when (bound-and-true-p workgroups-mode)
+    (telephone-line-raw (wg-mode-line-string) t)))
+
+(telephone-line-defsegment* telephone-line-nyan-segment ()
+  (when (bound-and-true-p nyan-mode)
+    (nyan-create)))
 
 (provide 'telephone-line-segments)
 ;;; telephone-line-segments.el ends here
