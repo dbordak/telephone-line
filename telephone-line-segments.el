@@ -98,6 +98,25 @@ mouse-3: Toggle minor modes"
   (when (boundp 'erc-modified-channels-object)
     (string-trim erc-modified-channels-object)))
 
+(telephone-line-defsegment telephone-line-window-number-segment (&optional in-unicode)
+  (when (bound-and-true-p winum-mode)
+    (if in-unicode
+        (propertize (format "%c" (+ 9311 (winum-get-number))) 'face `winum-face)
+      (winum-get-number-string))))
+
+(telephone-line-defsegment telephone-line-projectile-segment ()
+    (if (and (fboundp 'projectile-project-name)
+             (projectile-project-name))
+        (propertize (format "[%s]" (concat (projectile-project-name)))
+                    'face '(:inherit)
+                    'display '(raise 0.0)
+                    'help-echo "Switch project"
+                    'mouse-face '(:box 1)
+                    'local-map (make-mode-line-mouse-map
+                                'mouse-1 (lambda ()
+                                           (interactive)
+                                           (projectile-switch-project))))))
+
 (telephone-line-defsegment* telephone-line-evil-tag-segment ()
   (when (bound-and-true-p evil-mode)
     (let ((tag (cond
