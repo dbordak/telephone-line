@@ -25,20 +25,7 @@
 
 ;;;###autoload
 (defun telephone-line-evil-config ()
-  "A simple default for using telephone-line with evil."
-  (setq telephone-line-lhs
-        '((evil   . (telephone-line-evil-tag-segment))
-          (accent . (telephone-line-vc-segment
-                     telephone-line-erc-modified-channels-segment
-                     telephone-line-process-segment))
-          (nil    . (telephone-line-minor-mode-segment
-                     telephone-line-buffer-segment))))
-
-  (setq telephone-line-rhs
-        '((nil    . (telephone-line-misc-info-segment))
-          (accent . (telephone-line-major-mode-segment))
-          (evil   . (telephone-line-airline-position-segment))))
-
+  "Deprecated, just call (telephone-line-mode t) instead."
   (telephone-line-mode t))
 
 (provide 'telephone-line-config)

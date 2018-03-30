@@ -35,15 +35,6 @@ usual stuff:
 (telephone-line-mode 1)
 #+end_src
 
-If you want to use it with evil, instead you should do this
-
-#+begin_src emacs-lisp
-(require 'telephone-line-config)
-(telephone-line-evil-config)
-#+end_src
-
-This implicitly calls ~(telephone-line-mode 1)~.
-
 * Separator Gallery
 
 abs
