@@ -129,7 +129,8 @@ If it doesn't exist, create and cache it."
   (let ((fg (face-attribute face :foreground)))
     (telephone-line-separator-render telephone-line-hud
                                      (if (eq fg 'unspecified)
-                                         (face-attribute 'default :foreground))
+                                         (face-attribute 'default :foreground)
+                                       fg)
                                      face)))
 
 (telephone-line-defsegment telephone-line-erc-modified-channels-segment ()
