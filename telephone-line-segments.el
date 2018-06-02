@@ -143,9 +143,8 @@ If it doesn't exist, create and cache it."
       (winum-get-number-string))))
 
 (telephone-line-defsegment telephone-line-projectile-segment ()
-    (if (and (fboundp 'projectile-project-name)
-             (projectile-project-name))
-        (propertize (format "[%s]" (concat (projectile-project-name)))
+    (if (fboundp 'projectile-project-name)
+        (propertize (projectile-project-name)
                     'face '(:inherit)
                     'display '(raise 0.0)
                     'help-echo "Switch project"
@@ -167,6 +166,37 @@ If it doesn't exist, create and cache it."
       (if telephone-line-evil-use-short-tag
           (seq-take tag 2)
         tag))))
+
+(telephone-line-defsegment telephone-line-flycheck-segment ()
+  (when (bound-and-true-p flycheck-mode)
+    (let* ((text (pcase flycheck-last-status-change
+                   ('finished (if flycheck-current-errors
+                                  (let-alist (flycheck-count-errors flycheck-current-errors)
+                                    (if (or .error .warning)
+                                        (propertize (format "Problems: %s/%s"
+                                                            (or .error 0) (or .warning 0))
+                                                    'face '(:foreground "orange"))
+                                      ""))
+                                ":)"))
+                   ('running     "*")
+                   ('no-checker  "-")
+                   ('not-checked "=")
+                   ('errored     (propertize "!" 'face '(:foreground "tomato")))
+                   ('interrupted (propertize "." 'face '(:foreground "tomato")))
+                   ('suspicious  "?"))))
+      (propertize text
+                  'help-echo (pcase flycheck-last-status-change
+                               ('finished "Display errors found by Flycheck")
+                               ('running "Running...")
+                               ('no-checker "No Checker")
+                               ('not-checked "Not Checked")
+                               ('errored "Error!")
+                               ('interrupted "Interrupted")
+                               ('suspicious "Suspicious?"))
+                  'display '(raise 0.0)
+                  'mouse-face '(:box 1)
+                  'local-map (make-mode-line-mouse-map
+                              'mouse-1 #'flycheck-list-errors)))))
 
 (telephone-line-defsegment* telephone-line-xah-fly-keys-segment ()
   (when (boundp xah-fly-insert-state-q)
