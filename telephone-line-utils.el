@@ -114,7 +114,7 @@ color1 and color2."
 
 (defun telephone-line-propertize-image (image)
   "Return a propertized string of IMAGE."
-  (propertize (make-string (ceiling (car (image-size image))) ? )
+  (propertize (make-string (ceiling (car (image-size image))) ?|)
               'display image))
 
 (defun telephone-line-row-pattern (fill total)
@@ -137,6 +137,11 @@ color1 and color2."
        (cons (- 1 rem)  ;Right AA pixel
              (make-list (- total intpadding 2) 1)))))) ;Right gap
 
+(defun telephone-line-row-pattern-binary (fill total)
+  (if (= fill 0)
+      (make-list total 0)
+    (make-list total 1)))
+
 (defmacro telephone-line-complement (func)
   "Return a function which is the complement of FUNC."
   `(lambda (x)
@@ -148,6 +153,7 @@ color1 and color2."
 
 (defclass telephone-line-separator ()
   ((axis-func :initarg :axis-func)
+   (axis-init :initarg :axis-init :initform #'telephone-line-create-trig-axis)
    (pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern)
    (forced-width :initarg :forced-width :initform nil)
    (alt-separator :initarg :alt-separator)
@@ -178,7 +184,7 @@ color1 and color2."
          (width (telephone-line-separator-width obj))
          (normalized-axis (telephone-line--normalize-axis
                            (mapcar (oref obj axis-func)
-                                   (telephone-line-create-trig-axis height))))
+                                   (funcall (oref obj axis-init) height))))
          (range (seq-max normalized-axis))
          (scaling-factor (/ (1- width)(float range))))
     (mapcar (lambda (x)
