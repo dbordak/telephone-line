@@ -56,6 +56,29 @@
     mode-line-frame-identification
     ,(telephone-line-raw mode-line-buffer-identification t)))
 
+(telephone-line-defsegment* telephone-line-atom-eol-segment (&optional hide-lf)
+  "Displays the eol style of the buffer the same way Atom does.
+Set HIDE-LF to display nothing for unix endings, as it can be an assumed default.
+Adapted from doom-modeline."
+  (pcase (coding-system-eol-type buffer-file-coding-system)
+    (0 (if hide-lf nil
+         "LF")
+       (1 "CRLF")
+       (2 "CR"))))
+
+(telephone-line-defsegment* telephone-line-atom-encoding-segment (&optional hide-utf8)
+  "Displays the encoding of the buffer the same way Atom does.
+Set HIDE-UTF8 to display nothing for UTF-8, as it can be an assumed default.
+Adapted from doom-modeline."
+  (let ((sys (coding-system-plist buffer-file-coding-system)))
+    (cond ((memq (plist-get sys :category) '(coding-category-undecided coding-category-utf-8))
+           (if hide-utf8 nil
+             "UTF-8"))
+          (t (upcase (symbol-name (plist-get sys :name)))))))
+
+(telephone-line-defsegment* telephone-line-filesize-segment ()
+  "%I")
+
 (telephone-line-defsegment* telephone-line-simple-major-mode-segment ()
   "%[%m%]")
 
