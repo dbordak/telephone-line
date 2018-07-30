@@ -50,6 +50,16 @@
   "Accent face for inactive mode-line."
   :group 'telephone-line)
 
+(defface telephone-line-projectile
+  '((t (:foreground "light green" :bold t :inherit mode-line)))
+  "Hightlight face for the projectile segment"
+  :group 'telephone-line)
+
+(defface telephone-line-unimportant
+  '((t (:foreground "dim grey" :inherit mode-line)))
+  "Hightlight face for the projectile segment"
+  :group 'telephone-line)
+
 (defface telephone-line-evil
   '((t (:foreground "white" :weight bold :inherit mode-line)))
   "Meta-face used for property inheritance on all telephone-line-evil faces."

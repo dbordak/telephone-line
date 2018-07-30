@@ -128,16 +128,16 @@ mouse-3: Toggle minor modes"
       (winum-get-number-string))))
 
 (telephone-line-defsegment telephone-line-projectile-segment ()
-    (if (fboundp 'projectile-project-name)
-        (propertize (projectile-project-name)
-                    'face '(:inherit)
-                    'display '(raise 0.0)
-                    'help-echo "Switch project"
-                    'mouse-face '(:box 1)
-                    'local-map (make-mode-line-mouse-map
-                                'mouse-1 (lambda ()
-                                           (interactive)
-                                           (projectile-switch-project))))))
+  (if (fboundp 'projectile-project-name)
+      (propertize (projectile-project-name)
+                  'face 'telephone-line-projectile
+                  'display '(raise 0.0)
+                  'help-echo "Switch project"
+                  'mouse-face '(:box 1)
+                  'local-map (make-mode-line-mouse-map
+                              'mouse-1 (lambda ()
+                                         (interactive)
+                                         (projectile-switch-project))))))
 
 (telephone-line-defsegment* telephone-line-evil-tag-segment ()
   (when (bound-and-true-p evil-mode)
@@ -162,9 +162,9 @@ mouse-3: Toggle minor modes"
                                                             (or .error 0) (or .warning 0))
                                                     'face '(:foreground "orange"))
                                       ""))
-                                ":)"))
+                                (propertize ":)" 'face 'telephone-line-unimportant)))
                    ('running     "*")
-                   ('no-checker  "-")
+                   ('no-checker  (propertize "-" 'face 'telephone-line-unimportant))
                    ('not-checked "=")
                    ('errored     (propertize "!" 'face '(:foreground "tomato")))
                    ('interrupted (propertize "." 'face '(:foreground "tomato")))
