@@ -56,6 +56,9 @@
     mode-line-frame-identification
     ,(telephone-line-raw mode-line-buffer-identification t)))
 
+(telephone-line-defsegment* telephone-line-input-info-segment ()
+  '("" mode-line-mule-info mode-line-modified mode-line-client mode-line-remote))
+
 (telephone-line-defsegment* telephone-line-atom-eol-segment (&optional hide-lf)
   "Displays the eol style of the buffer the same way Atom does.
 Set HIDE-LF to display nothing for unix endings, as it can be an assumed default.
@@ -138,6 +141,45 @@ mouse-3: Toggle minor modes"
                               'mouse-1 (lambda ()
                                          (interactive)
                                          (projectile-switch-project))))))
+
+(defun telephone-line--truncate-dir (dir)
+  "Truncate DIR, respecting word boundaries."
+  (if (string= dir "~")
+      dir
+    (string-join
+     (mapcar (lambda (x) (seq-take x 1))
+             (split-string dir "[^[:word:]]" t)))))
+
+(defun telephone-line--truncate-path (path truncate-until)
+  "Truncate PATH. TRUNCATE-UNTIL indicates how far to truncate; -1 means leave the last element, 0 means truncate all, etc."
+  (let* ((dirs (split-string path "/"))
+         (take (+ truncate-until (length dirs)))
+         (trunc (seq-take dirs take))
+         (leave (seq-drop dirs take)))
+    (string-join (append (mapcar #'telephone-line--truncate-dir trunc) leave) "/")))
+
+(telephone-line-defsegment* telephone-line-projectile-buffer-segment (&optional truncate-until show-project-path)
+  "Combined projectile project segment and filename segment with abbreviated filepath.
+TRUNCATE-UNTIL sets when to stop truncating; -1 for all but one (i.e. filename), 0 for everything, etc.
+If SHOW-PROJECT-PATH is non-nil, shows the abbreviated path leading up to the project dir. Value works the same as TRUNCATE-UNTIL
+Inspired by doom-modeline."
+  (if (and (buffer-file-name)
+           (fboundp 'projectile-project-root)
+           (fboundp 'projectile-project-name))
+      (list ""
+            (if show-project-path
+                (propertize
+                 (telephone-line--truncate-path
+                  (abbreviate-file-name (file-name-directory (directory-file-name (projectile-project-root)))) show-project-path)
+                 'face 'telephone-line-unimportant
+                 'help-echo (buffer-file-name)))
+            (funcall (telephone-line-projectile-segment) face)
+            (propertize
+             (concat "/"
+                     (if-let ((rel-path (file-relative-name (buffer-file-name) (projectile-project-root))))
+                         (telephone-line--truncate-path rel-path (or truncate-until -1))))
+             'help-echo (buffer-file-name)))
+    (telephone-line-raw mode-line-buffer-identification t)))
 
 (telephone-line-defsegment* telephone-line-evil-tag-segment ()
   (when (bound-and-true-p evil-mode)
