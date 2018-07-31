@@ -120,6 +120,45 @@ mouse-3: Toggle minor modes"
                              'mouse-2 #'mode-line-widen)
                  face ,face)))
 
+(defun telephone-line--hud-axis-func (y)
+  (let* ((height (or telephone-line-height (frame-char-height)))
+         (start (floor (* height (float (window-start))) (point-max)))
+         (end (ceiling (* height (float (window-end))) (point-max))))
+    (if (<= start y end) 1 0)))
+
+(defclass telephone-line--hud (telephone-line-separator)
+  ((axis-func :initarg :axis-func :initform #'telephone-line--hud-axis-func)
+   (axis-init :initarg :axis-init
+              :initform (lambda (height) (number-sequence 0 (- height 1))))
+   (pattern-func :initarg :pattern-func :initform #'telephone-line-row-pattern-binary)
+   (image-cache :initform (make-hash-table :test 'equal :size 100))))
+
+(cl-defmethod telephone-line-separator-render-image ((obj telephone-line--hud) foreground background)
+  "Find cached pbm of OBJ in FOREGROUND and BACKGROUND.
+If it doesn't exist, create and cache it."
+  (let* ((height (or telephone-line-height (frame-char-height)))
+         (start (floor (* height (float (window-start))) (point-max)))
+         (end (ceiling (* height (float (window-end))) (point-max)))
+         (hash-key (format "%s_%s_%d_%d" background foreground start end)))
+    ;; Return cached image if we have it.
+    (or (gethash hash-key (oref obj image-cache))
+        (puthash hash-key
+                 (telephone-line-propertize-image
+                  (telephone-line--create-pbm-image
+                   (telephone-line-separator-create-body obj)
+                   background foreground))
+                 (oref obj image-cache)))))
+
+(defvar telephone-line-hud (make-instance 'telephone-line--hud))
+
+(telephone-line-defsegment telephone-line-hud-segment ()
+  (let ((fg (face-attribute face :foreground)))
+    (telephone-line-separator-render telephone-line-hud
+                                     (if (eq fg 'unspecified)
+                                         (face-attribute 'default :foreground)
+                                       fg)
+                                     face)))
+
 (telephone-line-defsegment telephone-line-erc-modified-channels-segment ()
   (when (boundp 'erc-modified-channels-object)
     (string-trim erc-modified-channels-object)))
