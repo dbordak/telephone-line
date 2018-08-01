@@ -241,14 +241,14 @@ Inspired by doom-modeline."
                                     (if (or .error .warning)
                                         (propertize (format "Problems: %s/%s"
                                                             (or .error 0) (or .warning 0))
-                                                    'face '(:foreground "orange"))
+                                                    'face 'telephone-line-warning)
                                       ""))
                                 (propertize ":)" 'face 'telephone-line-unimportant)))
                    ('running     "*")
                    ('no-checker  (propertize "-" 'face 'telephone-line-unimportant))
                    ('not-checked "=")
-                   ('errored     (propertize "!" 'face '(:foreground "tomato")))
-                   ('interrupted (propertize "." 'face '(:foreground "tomato")))
+                   ('errored     (propertize "!" 'face 'telephone-line-error))
+                   ('interrupted (propertize "." 'face 'telephone-line-error))
                    ('suspicious  "?"))))
       (propertize text
                   'help-echo (pcase flycheck-last-status-change

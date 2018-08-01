@@ -60,6 +60,16 @@
   "Hightlight face for the projectile segment"
   :group 'telephone-line)
 
+(defface telephone-line-error
+  '((t (:inherit error :underline nil :strike-through nil)))
+  "Face to higlight errors in telephone-line. "
+  :group 'telephone-line)
+
+(defface telephone-line-warning
+  '((t (:inherit warning :underline nil :strike-through nil)))
+  "Face to higlight warnings in telephone-line."
+  :group 'telephone-line)
+
 (defface telephone-line-evil
   '((t (:foreground "white" :weight bold :inherit mode-line)))
   "Meta-face used for property inheritance on all telephone-line-evil faces."
