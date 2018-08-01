@@ -38,6 +38,7 @@
      mode-line-position) t))
 
 (telephone-line-defsegment* telephone-line-airline-position-segment (&optional lines columns)
+  "Position segment imitating vim-airline's appearance. Optional args set padding on lines/columns."
   (let* ((l (number-to-string (if lines lines 4)))
          (c (number-to-string (if columns columns 3))))
     (if (eq major-mode 'paradox-menu-mode)
@@ -152,6 +153,7 @@ If it doesn't exist, create and cache it."
 (defvar telephone-line-hud (make-instance 'telephone-line--hud))
 
 (telephone-line-defsegment telephone-line-hud-segment ()
+  "Miniature 'scroll bar' segment, as seen in the original emacs powerline."
   (let ((fg (face-attribute face :foreground)))
     (telephone-line-separator-render telephone-line-hud
                                      (if (eq fg 'unspecified)
@@ -170,6 +172,7 @@ If it doesn't exist, create and cache it."
       (winum-get-number-string))))
 
 (telephone-line-defsegment telephone-line-projectile-segment ()
+  "Displays the current project name, according to projectile."
   (if (fboundp 'projectile-project-name)
       (propertize (projectile-project-name)
                   'face 'telephone-line-projectile
@@ -221,6 +224,8 @@ Inspired by doom-modeline."
     (telephone-line-raw mode-line-buffer-identification t)))
 
 (telephone-line-defsegment* telephone-line-evil-tag-segment ()
+  "Displays current evil mode.
+Configure the face group telephone-line-evil to change the colors per-mode."
   (when (bound-and-true-p evil-mode)
     (let ((tag (cond
                 ((not (evil-visual-state-p)) (upcase (symbol-name evil-state)))
@@ -234,6 +239,7 @@ Inspired by doom-modeline."
         tag))))
 
 (telephone-line-defsegment telephone-line-flycheck-segment ()
+  "Displays current checker state."
   (when (bound-and-true-p flycheck-mode)
     (let* ((text (pcase flycheck-last-status-change
                    ('finished (if flycheck-current-errors
