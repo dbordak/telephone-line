@@ -67,7 +67,7 @@
 
 (defface telephone-line-warning
   '((t (:inherit warning :underline nil :strike-through nil)))
-  "Face to higlight errors in telephone-line."
+  "Face to higlight warnings in telephone-line."
   :group 'telephone-line)
 
 (defface telephone-line-evil
