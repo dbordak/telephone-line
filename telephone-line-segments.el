@@ -206,8 +206,8 @@ TRUNCATE-UNTIL sets when to stop truncating; -1 for all but one (i.e. filename),
 If SHOW-PROJECT-PATH is non-nil, shows the abbreviated path leading up to the project dir. Value works the same as TRUNCATE-UNTIL
 Inspired by doom-modeline."
   (if (and (buffer-file-name)
-           (fboundp 'projectile-project-root)
-           (fboundp 'projectile-project-name))
+           (bound-and-true-p projectile-project-root)
+           (bound-and-true-p projectile-project-name))
       (list ""
             (if show-project-path
                 (propertize
