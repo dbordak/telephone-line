@@ -205,9 +205,10 @@ If it doesn't exist, create and cache it."
 TRUNCATE-UNTIL sets when to stop truncating; -1 for all but one (i.e. filename), 0 for everything, etc.
 If SHOW-PROJECT-PATH is non-nil, shows the abbreviated path leading up to the project dir. Value works the same as TRUNCATE-UNTIL
 Inspired by doom-modeline."
-  (if (and (buffer-file-name)
-           (bound-and-true-p projectile-project-root)
-           (bound-and-true-p projectile-project-name))
+  (if (and (bound-and-true-p projectile-mode)
+           (buffer-file-name)
+           (projectile-project-root)
+           (projectile-project-name))
       (list ""
             (if show-project-path
                 (propertize
