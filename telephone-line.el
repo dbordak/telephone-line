@@ -242,7 +242,7 @@ Secondary separators do not incur a background color change."
 
 (defun telephone-line-propertize-segment (pred face segment)
   (unless (seq-empty-p (string-trim (format-mode-line segment)))
-    (if pred
+    (if (or pred (not (telephone-line-selected-window-active)))
         `(:propertize (" " ,segment " ") face ,face)
       `(" " ,segment " "))))
 
@@ -274,9 +274,9 @@ Secondary separators do not incur a background color change."
                 (if (plist-get modifiers ':active)
                     (setq segment-func
                           `(lambda (face)
-                            (if (telephone-line-selected-window-active)
-                                (,segment-func face)
-                              nil))))
+                             (if (telephone-line-selected-window-active)
+                                 (,segment-func face)
+                               nil))))
                 (if (plist-get modifiers ':inactive)
                     (setq segment-func
                           `(lambda (face)
