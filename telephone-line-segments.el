@@ -219,7 +219,7 @@ Inspired by doom-modeline."
             (funcall (telephone-line-projectile-segment) face)
             (propertize
              (concat "/"
-                     (if-let ((rel-path (file-relative-name (projectile-file-truename (buffer-file-name))
+                     (if-let ((rel-path (file-relative-name (file-truename (buffer-file-name))
                                                             (projectile-project-root))))
                          (telephone-line--truncate-path rel-path (or truncate-until -1))))
              'help-echo (buffer-file-name)))
