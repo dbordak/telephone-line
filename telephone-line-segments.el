@@ -27,6 +27,18 @@
 (telephone-line-defsegment* telephone-line-vc-segment ()
   (telephone-line-raw vc-mode t))
 
+(telephone-line-defsegment* telephone-vc-dir-segment ()
+  (if (null vc-mode)
+      (elt 
+       (mapcar (function (lambda (c) (replace-regexp-in-string "[\t ]" "" c))) 
+	       (split-string (apply 'string
+				    (string-to-list 
+				     (vc-call-backend (elt vc-handled-backends 6)
+						      'dir-extra-headers
+						      (expand-file-name "."))))
+			     "\n"))
+       0)))
+
 (telephone-line-defsegment telephone-line-process-segment ()
   mode-line-process)
 
