@@ -89,6 +89,9 @@ Adapted from doom-modeline."
 (telephone-line-defsegment* telephone-line-simple-minor-mode-segment ()
   (telephone-line-raw minor-mode-alist t))
 
+(telephone-line-defsegment* telephone-line-minions-mode-segment ()
+  (telephone-line-raw minions-mode-line-modes t))
+
 (telephone-line-defsegment telephone-line-narrow-segment ()
   "%n")
 
@@ -122,6 +125,7 @@ mouse-3: Toggle minor modes"
                  face ,face)))
 
 (defun telephone-line--hud-axis-func (y)
+  "This function does something with Y.  And it has a docstring now!"
   (let* ((height (or telephone-line-height (frame-char-height)))
          (start (floor (* height (float (window-start))) (point-max)))
          (end (ceiling (* height (float (window-end))) (point-max))))
@@ -193,7 +197,7 @@ If it doesn't exist, create and cache it."
              (split-string dir "[^[:word:]]" t)))))
 
 (defun telephone-line--truncate-path (path truncate-until)
-  "Truncate PATH. TRUNCATE-UNTIL indicates how far to truncate; -1 means leave the last element, 0 means truncate all, etc."
+  "Truncate PATH.  TRUNCATE-UNTIL indicates how far to truncate; -1 means leave the last element, 0 means truncate all, etc."
   (let* ((dirs (split-string path "/"))
          (take (+ truncate-until (length dirs)))
          (trunc (seq-take dirs take))
