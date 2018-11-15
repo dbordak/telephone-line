@@ -125,7 +125,7 @@ mouse-3: Toggle minor modes"
                  face ,face)))
 
 (defun telephone-line--hud-axis-func (y)
-  "This function does something with Y.  And it has a docstring now!"
+  "Generate a HUD axis value given the current position Y."
   (let* ((height (or telephone-line-height (frame-char-height)))
          (start (floor (* height (float (window-start))) (point-max)))
          (end (ceiling (* height (float (window-end))) (point-max))))
