@@ -92,6 +92,14 @@ Adapted from doom-modeline."
 (telephone-line-defsegment* telephone-line-minions-mode-segment ()
   (telephone-line-raw minions-mode-line-modes t))
 
+(telephone-line-defsegment* telephone-line-buffer-name-segment ()
+  (telephone-line-raw (buffer-name)))
+
+(telephone-line-defsegment* telephone-line-buffer-modified-segment ()
+    (if (buffer-modified-p)
+        (telephone-line-raw "!")
+      (telephone-line-raw "-")))
+
 (telephone-line-defsegment telephone-line-narrow-segment ()
   "%n")
 
