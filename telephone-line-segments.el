@@ -95,10 +95,40 @@ Adapted from doom-modeline."
 (telephone-line-defsegment* telephone-line-buffer-name-segment ()
   (telephone-line-raw (buffer-name)))
 
-(telephone-line-defsegment* telephone-line-buffer-modified-segment ()
-    (if (buffer-modified-p)
-        (telephone-line-raw "!")
-      (telephone-line-raw "-")))
+(defface telephone-line-buffer-modified '((t (:foreground "red")))
+  "Show the telephone-line-buffer-modified-display-string in this face when the buffer has been modified
+
+    Modified means 'changed in memory since it was last saved to disk'
+    Remember that you need to set a nil face-pair in your config for this to work, like so:
+    (setq telephone-line-lhs
+    	'( (nil . telephone-line-buffer-modified-segment) ) )"
+  :group 'telephone-line )
+
+(defcustom telephone-line-buffer-modified-display-string "!"
+  "text to display when the buffer has been modified since the last time the buffer was saved to disk"
+  :type '(string)
+  :group 'telephone-line)
+
+(defface telephone-line-buffer-unmodified '((t (:foreground "SlateGray2")))
+  "Show the telephone-line-buffer-unmodified-display-string in this face when the buffer has not been modified
+
+    Modified means 'changed in memory since it was last saved to disk'
+    Remember that you need to set a nil face-pair in your config for this to work, like so:
+    (setq telephone-line-lhs
+    	'( (nil . telephone-line-buffer-modified-segment) ) )"
+  )
+
+(defcustom telephone-line-buffer-unmodified-display-string "-"
+  "text to display when the buffer has not been changed since the last time the buffer was saved to disk"
+  :type '(string)
+  :group 'telephone-line)
+
+(telephone-line-defsegment telephone-line-buffer-modified-segment ()
+  (if (buffer-modified-p)
+      (telephone-line-raw (propertize telephone-line-buffer-modified-display-string 'face 'telephone-line-buffer-modified))
+    (telephone-line-raw (propertize telephone-line-buffer-unmodified-display-string 'face 'telephone-line-buffer-unmodified))
+    )
+  )
 
 (telephone-line-defsegment telephone-line-narrow-segment ()
   "%n")
