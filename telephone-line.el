@@ -357,10 +357,47 @@ separators, as they are conditional, are evaluated on-the-fly."
   :type '(alist :key-type segment-color :value-type subsegment-list)
   :group 'telephone-line)
 
+(defun test ()
+  (let* ((right (telephone-line--generate-mode-line-lhs))
+	 (mine (telephone-line--generate-chunk 'left telephone-line-lhs )))
+    (message "LHS:\n\tright: %s" right)
+    (message "\tmine: %s" mine)
+    (message "\tsame? %s" (equal right mine))
+    )
+  (let* ((right (telephone-line--generate-mode-line-rhs))
+	 (mine (telephone-line--generate-chunk 'right telephone-line-rhs )))
+    (message "RHS:\n\tright: %s" right)
+    (message "\tmine: %s" mine)
+    (message "\tsame? %s" (equal right mine))
+    )
+  (let* ((right (telephone-line--generate-mode-line-center))
+	 (mine (append
+		(telephone-line--generate-chunk 'right telephone-line-center-lhs )
+		(telephone-line--generate-chunk 'left telephone-line-center-rhs )
+		)))
+    (message "CENTER:\n\tright: %s" right)
+    (message "\tmine: %s" mine)
+    (message "\tsame? %s" (equal right mine))
+    )
+  )
+
+(defun telephone-line--generate-chunk ( side parts )
+  (cond
+   ((equal 'left side)
+    (telephone-line-add-separators parts
+				   telephone-line-primary-left-separator
+				   telephone-line-secondary-left-separator))
+   ((equal 'right side)
+    (telephone-line-add-separators parts
+				   telephone-line-primary-right-separator
+				   telephone-line-secondary-right-separator))
+   )
+  )
+
 (defun telephone-line--generate-mode-line-lhs ()
   (telephone-line-add-separators telephone-line-lhs
-                   telephone-line-primary-left-separator
-                   telephone-line-secondary-left-separator))
+				 telephone-line-primary-left-separator
+				 telephone-line-secondary-left-separator))
 
 (defun telephone-line--generate-mode-line-center ()
   (append (telephone-line-add-separators telephone-line-center-lhs
@@ -376,24 +413,34 @@ separators, as they are conditional, are evaluated on-the-fly."
                    telephone-line-secondary-right-separator))
 
 (defun telephone-line--generate-mode-line ()
-  `(,@(telephone-line--generate-mode-line-lhs)
+  ;;  `(,@(telephone-line--generate-mode-line-lhs)
+  `(,@(telephone-line--generate-chunk 'left telephone-line-lhs)
     (:eval (when (or telephone-line-center-lhs telephone-line-center-rhs)
              (telephone-line-fill
               (/ (+ (window-width)
                     (telephone-line-width
-                     ',(telephone-line--generate-mode-line-center)
+                     ',(append
+			(telephone-line--generate-chunk 'right telephone-line-center-lhs )
+			(telephone-line--generate-chunk 'left telephone-line-center-rhs )
+			)
                      ,(- (length telephone-line-rhs) 1)
                      ,telephone-line-primary-right-separator))
-                 2)
+		 2)
               (telephone-line-face-map (caar telephone-line-center-lhs)))))
-    ,@(telephone-line--generate-mode-line-center)
+    ;;    ,@(telephone-line--generate-mode-line-center)
+    ,@(append
+       (telephone-line--generate-chunk 'right telephone-line-center-lhs )
+       (telephone-line--generate-chunk 'left telephone-line-center-rhs )
+       )
     (:eval (telephone-line-fill
             (telephone-line-width
-             ',(telephone-line--generate-mode-line-rhs)
+             ',(telephone-line--generate-chunk 'right telephone-line-rhs)
              ,(- (length telephone-line-rhs) 1)
              ,telephone-line-primary-right-separator)
             (telephone-line-face-map (caar telephone-line-rhs))))
-    ,@(telephone-line--generate-mode-line-rhs)))
+    ;;    ,@(telephone-line--generate-mode-line-rhs)
+    ,@(telephone-line--generate-chunk 'right telephone-line-rhs )
+    ))
 
 (defvar telephone-line--default-mode-line mode-line-format)
 
