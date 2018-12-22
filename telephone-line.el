@@ -357,29 +357,31 @@ separators, as they are conditional, are evaluated on-the-fly."
   :type '(alist :key-type segment-color :value-type subsegment-list)
   :group 'telephone-line)
 
-(defun test ()
-  (let* ((right (telephone-line--generate-mode-line-lhs))
-	 (mine (telephone-line--generate-chunk 'left telephone-line-lhs )))
-    (message "LHS:\n\tright: %s" right)
-    (message "\tmine: %s" mine)
-    (message "\tsame? %s" (equal right mine))
-    )
-  (let* ((right (telephone-line--generate-mode-line-rhs))
-	 (mine (telephone-line--generate-chunk 'right telephone-line-rhs )))
-    (message "RHS:\n\tright: %s" right)
-    (message "\tmine: %s" mine)
-    (message "\tsame? %s" (equal right mine))
-    )
-  (let* ((right (telephone-line--generate-mode-line-center))
-	 (mine (append
-		(telephone-line--generate-chunk 'right telephone-line-center-lhs )
-		(telephone-line--generate-chunk 'left telephone-line-center-rhs )
-		)))
-    (message "CENTER:\n\tright: %s" right)
-    (message "\tmine: %s" mine)
-    (message "\tsame? %s" (equal right mine))
-    )
-  )
+;; header lines aren't (yet :) ) common, so disable them by default
+(defcustom telephone-line-header-lhs
+  nil
+  "Header line's left hand side segment alist."
+  :type '(alist :key-type segment-color :value-type subsegment-list)
+  :group 'telephone-line)
+
+(defcustom telephone-line-header-center-lhs
+  nil
+  "Header line's center-left segment alist."
+  :type '(alist :key-type segment-color :value-type subsegment-list)
+  :group 'telephone-line)
+
+(defcustom telephone-line-header-center-rhs
+  nil
+  "Header line's center-right segment alist."
+  :type '(alist :key-type segment-color :value-type subsegment-list)
+  :group 'telephone-line)
+
+(defcustom telephone-line-header-rhs
+  nil
+  "Header line's right hand side segment alist"
+  :type '(alist :key-type segment-color :value-type subsegment-list)
+  :group 'telephone-line)
+
 
 (defun telephone-line--generate-chunk ( side parts )
   (cond
@@ -394,55 +396,59 @@ separators, as they are conditional, are evaluated on-the-fly."
    )
   )
 
-(defun telephone-line--generate-mode-line-lhs ()
-  (telephone-line-add-separators telephone-line-lhs
-				 telephone-line-primary-left-separator
-				 telephone-line-secondary-left-separator))
-
-(defun telephone-line--generate-mode-line-center ()
-  (append (telephone-line-add-separators telephone-line-center-lhs
-                           telephone-line-primary-right-separator
-                           telephone-line-secondary-right-separator)
-          (telephone-line-add-separators telephone-line-center-rhs
-                           telephone-line-primary-left-separator
-                           telephone-line-secondary-left-separator)))
-
-(defun telephone-line--generate-mode-line-rhs ()
-  (telephone-line-add-separators telephone-line-rhs
-                   telephone-line-primary-right-separator
-                   telephone-line-secondary-right-separator))
-
 (defun telephone-line--generate-mode-line ()
-  ;;  `(,@(telephone-line--generate-mode-line-lhs)
-  `(,@(telephone-line--generate-chunk 'left telephone-line-lhs)
-    (:eval (when (or telephone-line-center-lhs telephone-line-center-rhs)
-             (telephone-line-fill
-              (/ (+ (window-width)
-                    (telephone-line-width
-                     ',(append
-			(telephone-line--generate-chunk 'right telephone-line-center-lhs )
-			(telephone-line--generate-chunk 'left telephone-line-center-rhs )
-			)
-                     ,(- (length telephone-line-rhs) 1)
-                     ,telephone-line-primary-right-separator))
-		 2)
-              (telephone-line-face-map (caar telephone-line-center-lhs)))))
-    ;;    ,@(telephone-line--generate-mode-line-center)
-    ,@(append
-       (telephone-line--generate-chunk 'right telephone-line-center-lhs )
-       (telephone-line--generate-chunk 'left telephone-line-center-rhs )
-       )
-    (:eval (telephone-line-fill
-            (telephone-line-width
-             ',(telephone-line--generate-chunk 'right telephone-line-rhs)
-             ,(- (length telephone-line-rhs) 1)
-             ,telephone-line-primary-right-separator)
-            (telephone-line-face-map (caar telephone-line-rhs))))
-    ;;    ,@(telephone-line--generate-mode-line-rhs)
-    ,@(telephone-line--generate-chunk 'right telephone-line-rhs )
-    ))
+  `,(telephone-line--generate-line
+     'telephone-line-lhs
+     'telephone-line-center-lhs
+     'telephone-line-center-rhs
+     'telephone-line-rhs
+     )
+  )
+
+(defun telephone-line--generate-header-line ()
+  `,(telephone-line--generate-line
+     'telephone-line-header-lhs
+     'telephone-line-header-center-lhs
+     'telephone-line-header-center-rhs
+     'telephone-line-header-rhs
+     )
+  )
+
+(defun telephone-line--generate-line ( lhs-sym center-lhs-sym center-rhs-sym rhs-sym)
+  (let ((lhs (eval lhs-sym))
+	(center-lhs (eval center-lhs-sym))
+	(center-rhs (eval center-rhs-sym))
+	(rhs (eval rhs-sym)))
+    (if (not (or lhs center-lhs center-rhs rhs))
+	nil
+      `(,@(telephone-line--generate-chunk 'left lhs)
+	(:eval (when (or ,center-lhs ,center-rhs)
+		 (telephone-line-fill
+		  (/ (+ (window-width)
+			(telephone-line-width
+			 ',(append
+			    (telephone-line--generate-chunk 'right center-lhs )
+			    (telephone-line--generate-chunk 'left center-rhs )
+			    )
+			 ,(- (length rhs) 1)
+			 ,telephone-line-primary-right-separator))
+		     2)
+		  (telephone-line-face-map (caar ,center-lhs-sym)))))
+	,@(append
+	   (telephone-line--generate-chunk 'right center-lhs )
+	   (telephone-line--generate-chunk 'left center-rhs )
+	   )
+	(:eval (telephone-line-fill
+		(telephone-line-width
+		 ',(telephone-line--generate-chunk 'right rhs )
+		 ,(- (length rhs) 1)
+		 ,telephone-line-primary-right-separator)
+		(telephone-line-face-map (caar ,rhs-sym ))))
+	,@(telephone-line--generate-chunk 'right rhs )
+	))))
 
 (defvar telephone-line--default-mode-line mode-line-format)
+(defvar telephone-line--default-header-line nil)
 
 ;;;###autoload
 (define-minor-mode telephone-line-mode
@@ -450,10 +456,29 @@ separators, as they are conditional, are evaluated on-the-fly."
   :group 'telephone-line
   :global t
   :lighter nil
+  (setq-default header-line-format
+                (if telephone-line-mode
+		    (if (not (or
+			      telephone-line-header-lhs
+			      telephone-line-header-center-lhs
+			      telephone-line-header-center-rhs
+			      telephone-line-header-rhs))
+			nil
+		      `,(telephone-line--generate-header-line)
+		      )
+                  telephone-line--default-header-line))
+
   (setq-default mode-line-format
                 (if telephone-line-mode
-                    `("%e" ,@(telephone-line--generate-mode-line))
-                  telephone-line--default-mode-line)))
+		    (if (not (or
+			      telephone-line-lhs
+			      telephone-line-center-lhs
+			      telephone-line-center-rhs
+			      telephone-line-rhs))
+			nil
+                      `("%e" ,@(telephone-line--generate-mode-line)))
+                  telephone-line--default-mode-line))
+  )
 
 (provide 'telephone-line)
 ;;; telephone-line.el ends here
