@@ -456,17 +456,6 @@ separators, as they are conditional, are evaluated on-the-fly."
   :group 'telephone-line
   :global t
   :lighter nil
-  (setq-default header-line-format
-                (if telephone-line-mode
-		    (if (not (or
-			      telephone-line-header-lhs
-			      telephone-line-header-center-lhs
-			      telephone-line-header-center-rhs
-			      telephone-line-header-rhs))
-			nil
-		      `,(telephone-line--generate-header-line)
-		      )
-                  telephone-line--default-header-line))
 
   (setq-default mode-line-format
                 (if telephone-line-mode
@@ -478,6 +467,24 @@ separators, as they are conditional, are evaluated on-the-fly."
 			nil
                       `("%e" ,@(telephone-line--generate-mode-line)))
                   telephone-line--default-mode-line))
+  )
+
+(define-minor-mode telephone-line-header-mode
+  "Toggle telephone-line formatting for the header on or off."
+  :group 'telephone-line
+  :global t
+  :lighter nil
+  (setq-default header-line-format
+                (if telephone-line-mode
+		    (if (not (or
+			      telephone-line-header-lhs
+			      telephone-line-header-center-lhs
+			      telephone-line-header-center-rhs
+			      telephone-line-header-rhs))
+			nil
+		      `,(telephone-line--generate-header-line)
+		      )
+                  telephone-line--default-header-line))
   )
 
 (provide 'telephone-line)
