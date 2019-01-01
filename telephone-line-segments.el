@@ -104,8 +104,8 @@ Ex:
 For more font options please see
 https://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html#Face-Attributes"
   (if (buffer-modified-p)
-      (telephone-line-raw (propertize "!" 'face '((t (:foreground "red") ) ) ))
-    (telephone-line-raw (propertize "-" 'face '((t (:foreground "green") ) )))
+      (telephone-line-raw (propertize "***" 'face '(:foreground "red") ) )
+    (telephone-line-raw (propertize "---" 'face '(:foreground "SlateGray3") ) )
     )
   )
 
