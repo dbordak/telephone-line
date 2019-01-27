@@ -92,8 +92,16 @@ Adapted from doom-modeline."
 (telephone-line-defsegment* telephone-line-minions-mode-segment ()
   (telephone-line-raw minions-mode-line-modes t))
 
-(telephone-line-defsegment* telephone-line-buffer-name-segment ()
-  (telephone-line-raw (buffer-name)))
+;; For a file like /a/b/c/file.txt, this should display
+;; file.txt
+(telephone-line-defsegment telephone-line-buffer-name-segment ()
+  mode-line-buffer-identification
+  )
+
+;; For a file like /a/b/c/file.txt, this should display
+;; /a/b/c/file.txt
+(telephone-line-defsegment telephone-line-file-name-absolute-path-segment ()
+  buffer-file-name)
 
 (telephone-line-defsegment* telephone-line-buffer-modified-segment ()
     (if (buffer-modified-p)
