@@ -43,7 +43,8 @@
          (c (number-to-string (if columns columns 3))))
     (if (eq major-mode 'paradox-menu-mode)
         (telephone-line-raw mode-line-front-space t)
-      `((-3 "%p") ,(concat " %" l "l:%" c "c")))))
+      `((-3 "%p") ,(concat " %" l "l"
+                           ":%" c (if (bound-and-true-p column-number-indicator-zero-based) "c" "C"))))))
 
 (telephone-line-defsegment* telephone-line-misc-info-segment ()
   (telephone-line-raw mode-line-misc-info t))
