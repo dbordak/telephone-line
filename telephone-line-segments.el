@@ -90,6 +90,25 @@ Adapted from doom-modeline."
 (telephone-line-defsegment* telephone-line-simple-minor-mode-segment ()
   (telephone-line-raw minor-mode-alist t))
 
+(telephone-line-defsegment* telephone-line-minions-mode-segment ()
+  (telephone-line-raw minions-mode-line-modes t))
+
+;; For a file like /a/b/c/file.txt, this should display
+;; file.txt
+(telephone-line-defsegment telephone-line-buffer-name-segment ()
+  mode-line-buffer-identification
+  )
+
+;; For a file like /a/b/c/file.txt, this should display
+;; /a/b/c/file.txt
+(telephone-line-defsegment telephone-line-file-name-absolute-path-segment ()
+  buffer-file-name)
+
+(telephone-line-defsegment* telephone-line-buffer-modified-segment ()
+    (if (buffer-modified-p)
+        (telephone-line-raw "!")
+      (telephone-line-raw "-")))
+
 (telephone-line-defsegment telephone-line-narrow-segment ()
   "%n")
 
@@ -195,7 +214,7 @@ If it doesn't exist, create and cache it."
              (split-string dir "[^[:word:]]" t)))))
 
 (defun telephone-line--truncate-path (path truncate-until)
-  "Truncate PATH. TRUNCATE-UNTIL indicates how far to truncate; -1 means leave the last element, 0 means truncate all, etc."
+  "Truncate PATH.  TRUNCATE-UNTIL indicates how far to truncate; -1 means leave the last element, 0 means truncate all, etc."
   (let* ((dirs (split-string path "/"))
          (take (+ truncate-until (length dirs)))
          (trunc (seq-take dirs take))
