@@ -43,7 +43,8 @@
          (c (number-to-string (if columns columns 3))))
     (if (eq major-mode 'paradox-menu-mode)
         (telephone-line-raw mode-line-front-space t)
-      `((-3 "%p") ,(concat " %" l "l:%" c "c")))))
+      `((-3 "%p") ,(concat " %" l "l"
+                           ":%" c (if (bound-and-true-p column-number-indicator-zero-based) "c" "C"))))))
 
 (telephone-line-defsegment* telephone-line-misc-info-segment ()
   (telephone-line-raw mode-line-misc-info t))
@@ -92,8 +93,16 @@ Adapted from doom-modeline."
 (telephone-line-defsegment* telephone-line-minions-mode-segment ()
   (telephone-line-raw minions-mode-line-modes t))
 
-(telephone-line-defsegment* telephone-line-buffer-name-segment ()
-  (telephone-line-raw (buffer-name)))
+;; For a file like /a/b/c/file.txt, this should display
+;; file.txt
+(telephone-line-defsegment telephone-line-buffer-name-segment ()
+  mode-line-buffer-identification
+  )
+
+;; For a file like /a/b/c/file.txt, this should display
+;; /a/b/c/file.txt
+(telephone-line-defsegment telephone-line-file-name-absolute-path-segment ()
+  buffer-file-name)
 
 (telephone-line-defsegment* telephone-line-buffer-modified-segment ()
     (if (buffer-modified-p)
