@@ -30,6 +30,23 @@
 (telephone-line-defsegment telephone-line-process-segment ()
   mode-line-process)
 
+(telephone-line-defsegment* telephone-line-vc-nobackend-segment ()
+  (if vc-mode
+      (replace-regexp-in-string ".*?[-:@!?]" "" (substring-no-properties vc-mode))
+    " - "))
+
+(telephone-line-defsegment* telephone-line-buffer-shortname-segment ()
+  ;; Avoids the padding in the regular "buffer only" segment
+  (buffer-name))
+
+(telephone-line-defsegment* telephone-line-position+region-segment ()
+  (let ((region-size (when (use-region-p)
+                       (format " (%sL:%sC)"
+                               (count-lines (region-beginning)
+                                            (region-end))
+                               (- (region-end) (region-beginning))))))
+    (list "%l:%c" region-size)))
+
 (telephone-line-defsegment* telephone-line-position-segment ()
   (telephone-line-raw
    (if (eq major-mode 'paradox-menu-mode)
