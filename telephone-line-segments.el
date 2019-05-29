@@ -32,7 +32,7 @@
 
 (telephone-line-defsegment* telephone-line-vc-nobackend-segment ()
   (if vc-mode
-      (replace-regexp-in-string ".*?[-:@!?]" "" (substring-no-properties vc-mode))
+      (substring-no-properties vc-mode (+ 1 (string-match "[-:@!?]" vc-mode)))
     " - "))
 
 (telephone-line-defsegment* telephone-line-buffer-shortname-segment ()
