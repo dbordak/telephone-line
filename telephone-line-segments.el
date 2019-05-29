@@ -122,9 +122,10 @@ Adapted from doom-modeline."
   buffer-file-name)
 
 (telephone-line-defsegment* telephone-line-buffer-modified-segment ()
-    (if (buffer-modified-p)
-        (telephone-line-raw "!")
-      (telephone-line-raw "-")))
+  (cond
+   (buffer-read-only "·")
+   ((buffer-modified-p) "!")
+   (t "-")))
 
 (telephone-line-defsegment telephone-line-narrow-segment ()
   "%n")
