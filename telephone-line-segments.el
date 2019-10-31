@@ -31,6 +31,7 @@
   mode-line-process)
 
 (telephone-line-defsegment* telephone-line-vc-nobackend-segment ()
+  "Like `telephone-line-vc-segment', but without the backend prefix, only the branch name."
   (if vc-mode
       (substring-no-properties vc-mode (+ 1 (string-match "[-:@!?]" vc-mode)))
     " - "))
@@ -40,6 +41,7 @@
   (buffer-name))
 
 (telephone-line-defsegment* telephone-line-position+region-segment ()
+  "Minimal position segment, combines line:column, and chars:lines in the region, if active."
   (let ((region-size (when (use-region-p)
                        (format " (%sL:%sC)"
                                (count-lines (region-beginning)
@@ -122,9 +124,11 @@ Adapted from doom-modeline."
   buffer-file-name)
 
 (telephone-line-defsegment* telephone-line-buffer-modified-segment ()
+  "Small, text only segment for the buffer state.
+Uses the standard modeline chars."
   (cond
-   (buffer-read-only "·")
-   ((buffer-modified-p) "!")
+   (buffer-read-only "%")
+   ((buffer-modified-p) "*")
    (t "-")))
 
 (telephone-line-defsegment telephone-line-narrow-segment ()
