@@ -186,6 +186,10 @@ If it doesn't exist, create and cache it."
   (when (boundp 'erc-modified-channels-object)
     (string-trim erc-modified-channels-object)))
 
+(telephone-line-defsegment telephone-line-tracking-segment ()
+  (when (boundp 'tracking-mode-line-buffers)
+    tracking-mode-line-buffers))
+
 (telephone-line-defsegment telephone-line-window-number-segment (&optional in-unicode)
   (when (bound-and-true-p winum-mode)
     (if in-unicode
