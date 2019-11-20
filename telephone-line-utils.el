@@ -220,7 +220,8 @@ Includes padding."
 (cl-defmethod telephone-line-separator-render-image ((obj telephone-line-separator) foreground background)
   "Find cached pbm of OBJ in FOREGROUND and BACKGROUND.
 If it doesn't exist, create and cache it."
-  (let ((hash-key (concat background "_" foreground)))
+  (let* ((height (telephone-line-separator-height obj))
+         (hash-key (format "%s_%s_%s" background foreground height)))
     ;; Return cached image if we have it.
     (or (gethash hash-key (oref obj image-cache))
         (puthash hash-key
