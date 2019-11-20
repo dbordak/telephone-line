@@ -166,24 +166,21 @@ Secondary separators do not incur a background color change."
                                              ,reserve)))
               'face face))
 
-(defvar telephone-line-selected-window nil)
+;; Active Window
 
-(defun telephone-line--set-selected-window ()
-  (when (not (minibuffer-window-active-p (frame-selected-window)))
+(defvar telephone-line-selected-window (frame-selected-window))
+
+(defun telephone-line--set-selected-window (_)
+  (unless (minibuffer-window-active-p (frame-selected-window))
     (setq telephone-line-selected-window (frame-selected-window))))
 
-(add-hook 'window-configuration-change-hook #'telephone-line--set-selected-window)
-(add-hook 'focus-in-hook #'telephone-line--set-selected-window)
-(defadvice select-window (after telephone-line-select-window activate)
-  "Set telephone-line's selected window value for use in determining the active mode-line."
-  (telephone-line--set-selected-window))
-(defadvice select-frame (after telephone-line-select-frame activate)
-  "Set telephone-line's selected window value for use in determining the active mode-line."
-  (telephone-line--set-selected-window))
+(add-hook 'pre-redisplay-functions #'telephone-line--set-selected-window)
 
 (defun telephone-line-selected-window-active ()
   "Return whether the current window is active."
   (eq telephone-line-selected-window (selected-window)))
+
+;; Face Functions
 
 (defun telephone-line-face-map (sym)
   "Return the face corresponding to SYM for the selected window's active state."
@@ -219,6 +216,8 @@ Secondary separators do not incur a background color change."
            'telephone-line-evil-normal))
         ((not (bound-and-true-p evil-mode)) 'mode-line)
         (t (intern (concat "telephone-line-evil-" (symbol-name evil-state))))))
+
+;; Modeline generation
 
 ;;TODO: Clean this up
 (defun telephone-line--separator-generator (primary-sep)
