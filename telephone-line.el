@@ -110,6 +110,13 @@
   "Face used in evil color-coded segments when in Emacs state."
   :group 'telephone-line-evil)
 
+(defface telephone-line-evil-god
+  '((t (:background "sky blue" :inherit telephone-line-evil)))
+  "Face used in evil color-coded segments when in God state.
+
+God state is provided by the package evil-god-state."
+  :group 'telephone-line-evil)
+
 (defcustom telephone-line-faces
   '((evil . telephone-line-modal-face)
     (modal . telephone-line-modal-face)
