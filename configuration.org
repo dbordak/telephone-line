@@ -93,7 +93,7 @@ kinda... Not well defined at the moment, but I'll try to clear it up.
 Here's an example of a static segment:
 
 #+begin_src emacs-lisp
-(telephone-line-defsegment my-meme-segment
+(telephone-line-defsegment my-meme-segment ()
   "Meme")
 #+end_src
 
