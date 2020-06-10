@@ -67,9 +67,9 @@ Set HIDE-LF to display nothing for unix endings, as it can be an assumed default
 Adapted from doom-modeline."
   (pcase (coding-system-eol-type buffer-file-coding-system)
     (0 (if hide-lf nil
-         "LF")
+         "LF"))
        (1 "CRLF")
-       (2 "CR"))))
+       (2 "CR")))
 
 (telephone-line-defsegment* telephone-line-atom-encoding-segment (&optional hide-utf8)
   "Displays the encoding of the buffer the same way Atom does.
