@@ -68,8 +68,8 @@ Adapted from doom-modeline."
   (pcase (coding-system-eol-type buffer-file-coding-system)
     (0 (if hide-lf nil
          "LF"))
-       (1 "CRLF")
-       (2 "CR")))
+    (1 "CRLF")
+    (2 "CR")))
 
 (telephone-line-defsegment* telephone-line-atom-encoding-segment (&optional hide-utf8)
   "Displays the encoding of the buffer the same way Atom does.
@@ -96,8 +96,7 @@ Adapted from doom-modeline."
 ;; For a file like /a/b/c/file.txt, this should display
 ;; file.txt
 (telephone-line-defsegment telephone-line-buffer-name-segment ()
-  mode-line-buffer-identification
-  )
+  mode-line-buffer-identification)
 
 ;; For a file like /a/b/c/file.txt, this should display
 ;; /a/b/c/file.txt
