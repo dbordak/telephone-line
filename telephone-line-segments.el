@@ -103,10 +103,19 @@ Adapted from doom-modeline."
 (telephone-line-defsegment telephone-line-file-name-absolute-path-segment ()
   buffer-file-name)
 
-(telephone-line-defsegment* telephone-line-buffer-modified-segment ()
-    (if (buffer-modified-p)
-        (telephone-line-raw "!")
-      (telephone-line-raw "-")))
+(telephone-line-defsegment telephone-line-buffer-modified-segment ()
+  "Displays - if the buffer is NOT modified, and ! if it is modified.
+
+If you use nil as the face for the segment, then ! will be red, and - will be green
+Ex:
+	  (nil . (telephone-line-buffer-modified-segment))
+For more font options please see
+https://www.gnu.org/software/emacs/manual/html_node/elisp/Face-Attributes.html#Face-Attributes"
+  (if (buffer-modified-p)
+      (telephone-line-raw (propertize "*" 'face '(:foreground "red") ) )
+    (telephone-line-raw (propertize "-" 'face '(:foreground "green") ) )
+    )
+  )
 
 (telephone-line-defsegment telephone-line-narrow-segment ()
   "%n")
