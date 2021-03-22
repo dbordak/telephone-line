@@ -110,6 +110,7 @@ color1 and color2."
                 (seq-mapcat #'identity body)
                 'string))
    'pbm t
+   :scale 1.0
    :ascent 'center))
 
 (defun telephone-line-propertize-image (image)
