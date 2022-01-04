@@ -1,6 +1,6 @@
 ;;; telephone-line.el --- Rewrite of Powerline -*- lexical-binding: t -*-
 
-;; Copyright (C) 2015-2017 Daniel Bordak
+;; Copyright (C) 2015-2022 Daniel Bordak
 
 ;; Author: Daniel Bordak <dbordak@fastmail.fm>
 ;; URL: https://github.com/dbordak/telephone-line
