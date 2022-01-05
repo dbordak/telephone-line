@@ -27,9 +27,9 @@ always look for in software.
 
 * Installation
 
-The easiest way to install telephone-line is with package.el through
-MELPA. Once you have the package installed, initializing it is the
-usual stuff:
+The easiest way to install telephone-line is with package.el through [[https://elpa.nongnu.org/][NonGNU ELPA]]
+or MELPA. Once you have the package installed, initializing it is the usual
+stuff:
 
 #+begin_src emacs-lisp
 (require 'telephone-line)
