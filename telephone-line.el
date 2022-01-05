@@ -207,6 +207,7 @@ Secondary separators do not incur a background color change."
         (face-attribute (telephone-line-face-map sym) :foreground)
       (face-attribute (telephone-line-face-map subseparator-sym) :background))))
 
+(defvar ryo-modal-mode) ; silence byte-compiler
 (defun telephone-line-ryo-modal-face (active)
   "Return an appropriate face depending whether ryo-modal is activated, given whether frame is ACTIVE."
   (cond ((not active) 'mode-line-inactive)
@@ -214,6 +215,7 @@ Secondary separators do not incur a background color change."
         ((not ryo-modal-mode) 'telephone-line-evil-insert)
         (t 'telephone-line-evil-normal)))
 
+(defvar xah-fly-insert-state-q) ; silence byte-compiler
 (defun telephone-line-modal-face (active)
   "Return an appropriate face for the current mode, given whether the frame is ACTIVE."
   (cond ((not active) 'mode-line-inactive)
