@@ -276,7 +276,9 @@ Empty strings will not render."
 
 ;;;###autoload
 (defun telephone-line-raw (str &optional preformatted)
-  "Conditionally render STR as mode-line data, or just verify output if not PREFORMATTED.
+  "Conditionally render STR as mode-line data.
+If optional argument PREFORMATTED is non-nil, verify the output
+instead.
 Return nil for blank/empty strings."
   (let ((trimmed-str (string-trim (format-mode-line str))))
     (unless (seq-empty-p trimmed-str)
