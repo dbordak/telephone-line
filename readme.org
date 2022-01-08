@@ -2,6 +2,7 @@
 #+Author: Daniel Bordak
 
 [[http://www.gnu.org/licenses/gpl-3.0.txt][file:https://img.shields.io/badge/license-GPL_3-green.svg]]
+[[https://elpa.nongnu.org/nongnu/telephone-line.html][https://elpa.nongnu.org/nongnu/telephone-line.svg]]
 [[http://melpa.org/#/telephone-line][file:http://melpa.org/packages/telephone-line-badge.svg]]
 [[http://stable.melpa.org/#/telephone-line][file:http://stable.melpa.org/packages/telephone-line-badge.svg]]
 
@@ -26,9 +27,9 @@ always look for in software.
 
 * Installation
 
-The easiest way to install telephone-line is with package.el through
-MELPA. Once you have the package installed, initializing it is the
-usual stuff:
+The easiest way to install telephone-line is with package.el through [[https://elpa.nongnu.org/][NonGNU ELPA]]
+or MELPA. Once you have the package installed, initializing it is the usual
+stuff:
 
 #+begin_src emacs-lisp
 (require 'telephone-line)
