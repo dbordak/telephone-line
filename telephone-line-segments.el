@@ -319,6 +319,13 @@ Configure the face group telephone-line-evil to change the colors per-mode."
         (seq-take tag 1)
       tag)))
 
+(telephone-line-defsegment* telephone-line-meow-tag-segment ()
+  (when (bound-and-true-p meow-mode)
+    (let ((tag (meow--get-state-name (meow--current-state))))
+      (if telephone-line-evil-use-short-tag
+          (seq-take tag 1)
+        tag))))
+
 (telephone-line-defsegment* telephone-line-workgroups2-segment ()
   (when (bound-and-true-p workgroups-mode)
     (telephone-line-raw (wg-mode-line-string) t)))
