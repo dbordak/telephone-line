@@ -208,6 +208,26 @@ If it doesn't exist, create and cache it."
                                          (interactive)
                                          (projectile-switch-project))))))
 
+(defcustom telephone-line-project-custom-name nil
+  "A custom directory-local name for a project.el project."
+  :type 'string
+  :group 'telephone-line)
+
+(telephone-line-defsegment telephone-line-project-segment ()
+  "Displays the project name, according to project.el"
+  (if (project-current)
+      (propertize (if (stringp telephone-line-project-custom-name)
+          telephone-line-project-custom-name
+        (file-name-nondirectory
+         (directory-file-name
+          (project-root (project-current)))))
+                  'face 'telephone-line-projectile
+                  'display '(raise 0.0)
+                  'help-echo "Switch project"
+                  'mouse-face '(:box 1)
+                  'local-map (make-mode-line-mouse-map
+                              'mouse-1 #'project-switch-project))))
+
 (defun telephone-line--truncate-dir (dir)
   "Truncate DIR, respecting word boundaries."
   (if (string= dir "~")
@@ -268,7 +288,7 @@ Configure the face group telephone-line-evil to change the colors per-mode."
   "Wraps `flymake-mode' mode-line information in a telephone-line segment."
   (when (bound-and-true-p flymake-mode)
     (telephone-line-raw
-     (if (boundp flymake--mode-line-format) 
+     (if (boundp flymake--mode-line-format)
          flymake--mode-line-format
        flymake-mode-line-format) t)))
 
