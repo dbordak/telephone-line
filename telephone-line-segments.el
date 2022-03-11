@@ -267,10 +267,7 @@ Configure the face group telephone-line-evil to change the colors per-mode."
 (telephone-line-defsegment telephone-line-flymake-segment ()
   "Wraps `flymake-mode' mode-line information in a telephone-line segment."
   (when (bound-and-true-p flymake-mode)
-    (telephone-line-raw
-     (if (boundp flymake--mode-line-format) 
-         flymake--mode-line-format
-       flymake-mode-line-format) t)))
+    (telephone-line-raw flymake-mode-line-format t)))
 
 (telephone-line-defsegment telephone-line-flycheck-segment ()
   "Displays current checker state."
