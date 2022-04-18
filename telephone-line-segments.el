@@ -350,6 +350,10 @@ Configure the face group telephone-line-evil to change the colors per-mode."
   (when (bound-and-true-p workgroups-mode)
     (telephone-line-raw (wg-mode-line-string) t)))
 
+(telephone-line-defsegment* telephone-line-perspective-segment ()
+  (when (bound-and-true-p persp-mode)
+    (telephone-line-raw (persp-mode-line) t)))
+
 (telephone-line-defsegment* telephone-line-nyan-segment ()
   (when (bound-and-true-p nyan-mode)
     (nyan-create)))
