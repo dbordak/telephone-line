@@ -166,6 +166,12 @@ Secondary separators do not incur a background color change."
   :group 'telephone-line
   :type 'symbol)
 
+(defcustom telephone-line-target 'mode-line
+  "The target line to display telephone-line."
+  :group 'telephone-line
+  :type '(choice (const :tag "Mode line" mode-line)
+                 (const :tag "Header line (Emacs 28+)" header-line)))
+
 (defun telephone-line-fill (reserve &optional face)
   "Return RESERVE empty space on the right, optionally with a FACE."
   (propertize " "
@@ -411,10 +417,12 @@ separators, as they are conditional, are evaluated on-the-fly."
   :group 'telephone-line
   :global t
   :lighter nil
-  (setq-default mode-line-format
-                (if telephone-line-mode
-                    `("%e" ,@(telephone-line--generate-mode-line))
-                  telephone-line--default-mode-line)))
+  (let ((line (if telephone-line-mode
+                          `("%e" ,@(telephone-line--generate-mode-line))
+                        telephone-line--default-mode-line)))
+    (if (eq telephone-line-target 'mode-line)
+          (setq-default mode-line-format line)
+        (setq-default header-line-format line))))
 
 (provide 'telephone-line)
 ;;; telephone-line.el ends here
