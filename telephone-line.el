@@ -221,12 +221,12 @@ Secondary separators do not incur a background color change."
         ((not ryo-modal-mode) 'telephone-line-evil-insert)
         (t 'telephone-line-evil-normal)))
 
-(defvar xah-fly-insert-state-q) ; silence byte-compiler
+(defvar xah-fly-insert-state-p) ; silence byte-compiler
 (defun telephone-line-modal-face (active)
   "Return an appropriate face for the current mode, given whether the frame is ACTIVE."
   (cond ((not active) 'mode-line-inactive)
         ((bound-and-true-p xah-fly-keys)
-         (if xah-fly-insert-state-q
+         (if xah-fly-insert-state-p
              'telephone-line-evil-insert
            'telephone-line-evil-normal))
         ((not (bound-and-true-p evil-mode)) 'mode-line)

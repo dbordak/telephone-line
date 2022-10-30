@@ -325,8 +325,9 @@ Configure the face group telephone-line-evil to change the colors per-mode."
                               'mouse-1 #'flycheck-list-errors)))))
 
 (telephone-line-defsegment* telephone-line-xah-fly-keys-segment ()
-  (when (boundp xah-fly-insert-state-q)
-    (let ((tag (if xah-fly-insert-state-q
+  "Display the current mode for Xah Fly Keys."
+  (when (boundp xah-fly-insert-state-p)
+    (let ((tag (if xah-fly-insert-state-p
                    "INSERT" "COMMAND")))
       (if telephone-line-evil-use-short-tag
           (seq-take tag 1)
