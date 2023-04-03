@@ -269,6 +269,35 @@ Inspired by doom-modeline."
              'help-echo (buffer-file-name)))
     (telephone-line-raw mode-line-buffer-identification t)))
 
+(telephone-line-defsegment* telephone-line-project-buffer-segment (&optional truncate-until show-project-path)
+  "Combined project.el project and filename with abbreviated filepath.
+
+TRUNCATE-UNTIL sets when to stop truncating; -1 for all but
+one (i.e. filename), 0 for everything, etc.  If SHOW-PROJECT-PATH
+is non-nil, shows the abbreviated path leading up to the project
+dir. Value works the same as TRUNCATE-UNTIL Inspired by
+doom-modeline."
+  (if-let ((buffer-file (buffer-file-name))
+           (project (project-current))
+           (project-directory (project-root project)))
+      (list ""
+            (if show-project-path
+                (propertize
+                 (telephone-line--truncate-path
+                  (abbreviate-file-name
+                   (file-name-directory (directory-file-name project-directory)))
+                  show-project-path)
+                 'face 'telephone-line-unimportant
+                 'help-echo buffer-file))
+            (funcall (telephone-line-project-segment) face)
+            (propertize
+             (concat "/"
+                     (if-let ((rel-path (file-relative-name (file-truename buffer-file)
+                                                            project-directory)))
+                         (telephone-line--truncate-path rel-path (or truncate-until -1))))
+             'help-echo (buffer-file-name)))
+    (telephone-line-raw mode-line-buffer-identification t)))
+
 (telephone-line-defsegment* telephone-line-evil-tag-segment ()
   "Displays current evil mode.
 Configure the face group telephone-line-evil to change the colors per-mode."
