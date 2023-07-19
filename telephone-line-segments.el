@@ -298,7 +298,7 @@ Configure the face group telephone-line-evil to change the colors per-mode."
                    ('finished (if flycheck-current-errors
                                   (let-alist (flycheck-count-errors flycheck-current-errors)
                                     (if (or .error .warning)
-                                        (propertize (format "Problems: %s/%s"
+                                        (propertize (format "Errors: %s/%s"
                                                             (or .error 0) (or .warning 0))
                                                     'face 'telephone-line-warning)
                                       ""))
