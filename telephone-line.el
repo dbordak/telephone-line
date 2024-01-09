@@ -255,10 +255,14 @@ Secondary separators do not incur a background color change."
        cur-color-sym))))
 
 (defun telephone-line-propertize-segment (pred face segment)
-  (unless (seq-empty-p (string-trim (format-mode-line segment)))
-    (if (or pred (not (telephone-line-selected-window-active)))
-        `(:propertize (" " ,segment " ") face ,face)
-      `(" " ,segment " "))))
+  "Apply FACE to SEGMENT if PRED is non-nil or the window is active."
+  (let* ((segment-string (format-mode-line `(" " ,segment " ")))
+         (segment-blank (seq-empty-p (string-trim segment-string))))
+    (unless segment-blank
+      (when (or pred (not (telephone-line-selected-window-active)))
+        (add-face-text-property 0 (seq-length segment-string)
+                                face 'append segment-string))
+      segment-string)))
 
 ;;TODO: Clean this up
 (defun telephone-line-add-subseparators (subsegments sep-func color-sym)
